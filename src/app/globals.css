@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gold: #E2B84A;
+    --gold-hover: #ECC85E;
+    --bg: #FAF8F4;
+    --bg-secondary: #F0EBE0;
+    --border: #E8DFC8;
+    --text: #1C1008;
+    --text-secondary: #7A6A4A;
+  }
+
+  .dark {
+    --bg: #161410;
+    --bg-secondary: #1E1B14;
+    --border: #2A2318;
+    --text: #FFFFFF;
+    --text-secondary: #A89878;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
