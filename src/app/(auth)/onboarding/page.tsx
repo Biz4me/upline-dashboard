@@ -83,7 +83,7 @@ export default function OnboardingPage() {
     const societeFinale = societe === 'Autres' && autresSociete ? autresSociete : societe
     localStorage.setItem('upline_societe', societeFinale)
     localStorage.setItem('upline_niveau', niveau)
-    router.push('/')
+    window.location.href = '/'
   }
 
   // ─── Barre de progression ───
