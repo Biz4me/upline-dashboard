@@ -6,20 +6,23 @@
   :root {
     --bg: #FAF8F4;
     --bg-secondary: #F0EBE0;
-    --bg-card: #FFFFFF;
-    --border: #E8DFC8;
+    --bg-card: #F0EBE0;
+    --bg-input: #EDE5D0;
+    --border: #E0D4B8;
     --text: #1C1008;
-    --text-secondary: #7A6A4A;
+    --text-secondary: #5A4A2A;
     --text-muted: #9A8A6A;
-    --gold: #E2B84A;
-    --gold-hover: #ECC85E;
-    --gold-muted: #8B6914;
+    --gold: #8B6914;
+    --gold-hover: #6B4F0E;
+    --gold-muted: #C9A84C;
+    --gold-bg: rgba(139,105,20,0.1);
   }
 
   .dark {
     --bg: #161410;
     --bg-secondary: #1E1B14;
     --bg-card: #1E1B14;
+    --bg-input: #0e0c09;
     --border: #2A2318;
     --text: #FFFFFF;
     --text-secondary: #A89878;
@@ -27,6 +30,7 @@
     --gold: #E2B84A;
     --gold-hover: #ECC85E;
     --gold-muted: #3d3420;
+    --gold-bg: rgba(226,184,74,0.1);
   }
 
   * {
