@@ -29,12 +29,58 @@ export async function POST(req: Request) {
       )
     }
 
-    // Relayer le stream de Flowise directement au client
+    // Relayer le stream de Flowise avec parsing SSE
     if (flowiseResponse.body) {
-      return new Response(flowiseResponse.body, {
+      const reader = flowiseResponse.body.getReader()
+      const decoder = new TextDecoder()
+      const encoder = new TextEncoder()
+
+      const stream = new ReadableStream({
+        async start(controller) {
+          let buffer = ''
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) {
+              controller.close()
+              return
+            }
+            buffer += decoder.decode(value, { stream: true })
+            const lines = buffer.split('\n')
+            buffer = lines.pop() || ''
+
+            for (const line of lines) {
+              if (line.startsWith('data: ') || line.startsWith('data:')) {
+                const data = line.replace(/^data:\s*/, '').trim()
+                if (!data) continue
+                try {
+                  const parsed = JSON.parse(data)
+                  if (parsed.event === 'token' && parsed.data) {
+                    controller.enqueue(
+                      encoder.encode(`data: ${JSON.stringify({ token: parsed.data })}\n\n`)
+                    )
+                  } else if (parsed.event === 'end' || parsed.data === '[DONE]') {
+                    controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+                    controller.close()
+                    return
+                  }
+                } catch {
+                  if (data && data !== '[DONE]') {
+                    controller.enqueue(
+                      encoder.encode(`data: ${JSON.stringify({ token: data })}\n\n`)
+                    )
+                  }
+                }
+              }
+            }
+          }
+        },
+      })
+
+      return new Response(stream, {
         headers: {
-          'Content-Type': 'text/plain; charset=utf-8',
+          'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
         },
       })
     }
