@@ -22,6 +22,7 @@ export default function AtlasChat({
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [isStreaming, setIsStreaming] = useState(false)
   const [sessionId, setSessionId] = useState<string>(() => `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -34,7 +35,7 @@ export default function AtlasChat({
   }, [messages])
 
   const sendMessage = async (text: string) => {
-    if (!text.trim() || loading) return
+    if (!text.trim() || loading || isStreaming) return
 
     const userMsg: Message = { role: 'user', content: text }
     setMessages(prev => [...prev, userMsg])
@@ -51,20 +52,67 @@ export default function AtlasChat({
         }),
       })
 
-      const data = await res.json()
-
-      if (data.error) {
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({ error: 'Erreur inconnue' }))
         setMessages(prev => [
           ...prev,
-          { role: 'assistant', content: '❌ ' + data.error },
+          { role: 'assistant', content: '❌ ' + (data.error || 'Erreur serveur') },
         ])
-      } else {
-        setMessages(prev => [
-          ...prev,
-          { role: 'assistant', content: data.text || 'Pas de réponse' },
-        ])
-        if (data.sessionId) setSessionId(data.sessionId)
+        setLoading(false)
+        return
       }
+
+      setLoading(false)
+      setIsStreaming(true)
+
+      // Créer un message assistant vide pour le stream
+      setMessages(prev => [...prev, { role: 'assistant', content: '' }])
+
+      const reader = res.body?.getReader()
+      const decoder = new TextDecoder()
+
+      if (!reader) {
+        setMessages(prev => [
+          ...prev.slice(0, -1),
+          { role: 'assistant', content: '❌ Pas de réponse' },
+        ])
+        setIsStreaming(false)
+        return
+      }
+
+      let fullText = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value, { stream: true })
+        fullText += chunk
+
+        setMessages(prev => {
+          const newMessages = [...prev]
+          newMessages[newMessages.length - 1] = {
+            role: 'assistant',
+            content: fullText,
+          }
+          return newMessages
+        })
+      }
+
+      // Dernier décodage pour s'assurer qu'il n'y a pas de bytes restants
+      const finalChunk = decoder.decode()
+      if (finalChunk) {
+        fullText += finalChunk
+        setMessages(prev => {
+          const newMessages = [...prev]
+          newMessages[newMessages.length - 1] = {
+            role: 'assistant',
+            content: fullText,
+          }
+          return newMessages
+        })
+      }
+
     } catch {
       setMessages(prev => [
         ...prev,
@@ -72,12 +120,19 @@ export default function AtlasChat({
       ])
     } finally {
       setLoading(false)
+      setIsStreaming(false)
     }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     sendMessage(input)
+  }
+
+  const getStatusText = () => {
+    if (loading) return 'Réflexion en cours...'
+    if (isStreaming) return 'Écrit...'
+    return 'En ligne'
   }
 
   return (
@@ -90,7 +145,7 @@ export default function AtlasChat({
         <div>
           <div className="text-[var(--text-on-card)] text-sm font-medium">Atlas — Coach IA</div>
           <div className="text-[var(--text-muted)] text-xs">
-            {loading ? 'Réflexion en cours...' : 'En ligne'}
+            {getStatusText()}
           </div>
         </div>
       </div>
@@ -139,7 +194,7 @@ export default function AtlasChat({
             </div>
           )
         )}
-        {loading && (
+        {loading && !isStreaming && (
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
             {/* Avatar Atlas */}
             <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
@@ -178,12 +233,12 @@ export default function AtlasChat({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={placeholder}
-          disabled={loading}
+          disabled={loading || isStreaming}
           className="flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] placeholder-[var(--text-muted)] outline-none focus:border-[#E2B84A] transition-colors disabled:opacity-50"
         />
         <button
           type="submit"
-          disabled={loading || !input.trim()}
+          disabled={loading || isStreaming || !input.trim()}
           className="bg-[#E2B84A] hover:bg-[#ECC85E] text-black font-bold px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
         >
           →

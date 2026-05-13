@@ -8,20 +8,40 @@ export async function POST(req: Request) {
     const { message, sessionId } = await req.json()
     if (!message) return NextResponse.json({ error: 'Message manquant' }, { status: 400 })
 
-    const response = await fetch(`${FLOWISE_URL}/api/v1/prediction/${FLOWISE_FLOW_ID}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        question: message,
-        sessionId: sessionId || 'default',
-      }),
-    })
+    const flowiseResponse = await fetch(
+      `${FLOWISE_URL}/api/v1/prediction/${FLOWISE_FLOW_ID}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: message,
+          sessionId: sessionId || 'default',
+          streaming: true,
+        }),
+      }
+    )
 
-    const data = await response.json()
-    return NextResponse.json({
-      text: data.text,
-      sessionId: data.sessionId || data.chatId,
-    })
+    if (!flowiseResponse.ok) {
+      const errorText = await flowiseResponse.text()
+      return NextResponse.json(
+        { error: 'Erreur Flowise: ' + errorText },
+        { status: flowiseResponse.status }
+      )
+    }
+
+    // Relayer le stream de Flowise directement au client
+    if (flowiseResponse.body) {
+      return new Response(flowiseResponse.body, {
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'no-cache',
+        },
+      })
+    }
+
+    // Fallback si pas de body stream
+    const data = await flowiseResponse.json()
+    return NextResponse.json({ text: data.text })
   } catch (error) {
     console.error('Atlas API error:', error)
     return NextResponse.json(
