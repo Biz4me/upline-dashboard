@@ -49,7 +49,7 @@ const statutConfig = {
 }
 
 export default function Business() {
-  const [vue, setVue] = useState<'pipeline' | 'liste'>('pipeline')
+  const [vue, setVue] = useState<'pipeline' | 'liste'>('liste')
   const [prospectActif, setProspectActif] = useState<Prospect | null>(null)
   const [recherche, setRecherche] = useState('')
 
@@ -95,7 +95,7 @@ export default function Business() {
         <div className="flex bg-[#1E1B14] border border-[#2A2318] rounded-xl p-1 gap-1">
           <button
             onClick={() => setVue('pipeline')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vue === 'pipeline' ? 'bg-[#E2B84A] text-black' : 'text-[#6A5A3A] hover:text-white'}`}
+            className={`hidden md:block px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vue === 'pipeline' ? 'bg-[#E2B84A] text-black' : 'text-[#6A5A3A] hover:text-white'}`}
           >
             Pipeline
           </button>
@@ -117,7 +117,7 @@ export default function Business() {
 
       {/* Vue Pipeline */}
       {vue === 'pipeline' && (
-        <div className="grid grid-cols-5 gap-3">
+        <div className="hidden md:grid grid-cols-5 gap-3">
           {colonnes.map(statut => (
             <div key={statut} className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-3">
               <div className="text-xs font-medium mb-3 flex items-center justify-between">
@@ -163,7 +163,7 @@ export default function Business() {
 
       {/* Vue Liste */}
       {vue === 'liste' && (
-        <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl overflow-hidden">
+        <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl overflow-hidden w-full">
           <div className="space-y-0">
             {prospectsFiltres.map((p, i) => (
               <div
@@ -211,8 +211,8 @@ export default function Business() {
 
       {/* Modal prospect */}
       {prospectActif && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setProspectActif(null)}>
-          <div className="bg-[#1E1B14] border border-[#2A2318] rounded-2xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 p-0 md:p-4" onClick={() => setProspectActif(null)}>
+          <div className="bg-[#1E1B14] border border-[#2A2318] rounded-t-2xl md:rounded-2xl p-6 w-full md:max-w-md" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-[#E2B84A] flex items-center justify-center text-black font-bold">

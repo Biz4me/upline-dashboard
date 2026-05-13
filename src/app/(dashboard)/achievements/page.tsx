@@ -231,23 +231,23 @@ export default function Achievements() {
         </div>
         <div className="space-y-3">
           {defis.map(d => (
-            <div key={d.id} className="flex items-center gap-3 p-3 bg-[#161410] rounded-lg">
-              <span
-                className="text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0"
-                style={{ color: typeConfig[d.type].color, background: typeConfig[d.type].bg }}
-              >
-                {d.type}
-              </span>
+            <div key={d.id} className="flex flex-col md:flex-row md:items-center gap-2 p-3 bg-[#161410] rounded-lg">
+              <div className="flex items-center gap-2">
+                <span
+                  className="text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0"
+                  style={{ color: typeConfig[d.type].color, background: typeConfig[d.type].bg }}
+                >
+                  {d.type}
+                </span>
+                <span className="text-xs flex-shrink-0" style={{ color: statutDefiConfig[d.statut].color }}>
+                  {statutDefiConfig[d.statut].label}
+                </span>
+              </div>
               <div className="flex-1 min-w-0">
                 <div className="text-white text-sm">{d.texte}</div>
                 <div className="text-[#6A5A3A] text-xs">{d.detail}</div>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-xs text-[#E2B84A]">+{d.xp} XP</span>
-                <span className="text-xs" style={{ color: statutDefiConfig[d.statut].color }}>
-                  {statutDefiConfig[d.statut].label}
-                </span>
-              </div>
+              <span className="text-xs text-[#E2B84A] flex-shrink-0">+{d.xp} XP</span>
             </div>
           ))}
         </div>

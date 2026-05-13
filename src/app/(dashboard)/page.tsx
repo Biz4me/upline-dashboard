@@ -9,7 +9,7 @@ export default function Accueil() {
       </div>
 
       {/* StatsCards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-4">
           <div className="text-2xl font-bold text-[#E2B84A]">12</div>
           <div className="text-sm text-[#6A5A3A] mt-1">Sessions</div>

@@ -116,12 +116,12 @@ export default function Formation() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h1 className="text-2xl font-semibold text-white">Formation</h1>
           <p className="text-[#A89878] mt-1">Programme 12 semaines — Du débutant au professionnel</p>
         </div>
-        <div className="text-right">
+        <div className="sm:text-right">
           <div className="text-[#E2B84A] font-bold text-lg">Module 2/8</div>
           <div className="text-[#6A5A3A] text-sm">60% du module en cours</div>
         </div>
@@ -138,9 +138,9 @@ export default function Formation() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Liste modules */}
-        <div className="lg:col-span-1 space-y-3">
+        <div className="lg:col-span-1 space-y-2">
           {modules.map((module) => {
             const statut = statutConfig[module.statut]
             const actif = moduleActif === module.id
@@ -269,9 +269,9 @@ export default function Formation() {
                 <h3 className="text-white font-medium mb-3">📚 Lectures recommandées</h3>
                 <div className="space-y-2">
                   {moduleSelectionne.livres.map((livre, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-[#161410] rounded-lg">
+                    <div key={i} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 bg-[#161410] rounded-lg">
                       <span className="text-[#A89878] text-sm">{livre}</span>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-shrink-0">
                         <a href="#" className="text-xs bg-[#2A2318] hover:bg-[#E2B84A] hover:text-black text-[#A89878] px-2 py-1 rounded transition-colors">
                           Audible
                         </a>
