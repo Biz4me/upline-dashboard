@@ -1,17 +1,16 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, GraduationCap, Briefcase, Users, Trophy, GitFork, User, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Home, Rocket, BarChart2, MessageCircle, Trophy, Share2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSidebar } from '@/context/SidebarContext'
 
 const navItems = [
-  { href: '/', icon: LayoutDashboard, label: 'Accueil' },
-  { href: '/formation', icon: GraduationCap, label: 'Formation' },
-  { href: '/business', icon: Briefcase, label: 'Business' },
-  { href: '/communaute', icon: Users, label: 'Communauté' },
+  { href: '/', icon: Home, label: 'Accueil' },
+  { href: '/formation', icon: Rocket, label: 'Formation' },
+  { href: '/business', icon: BarChart2, label: 'Business' },
+  { href: '/communaute', icon: MessageCircle, label: 'Communauté' },
   { href: '/achievements', icon: Trophy, label: 'Succès' },
-  { href: '/parrainage', icon: GitFork, label: 'Parrainage' },
-  { href: '/profil', icon: User, label: 'Profil' },
+  { href: '/parrainage', icon: Share2, label: 'Parrainage' },
 ]
 
 export default function Sidebar() {
@@ -60,7 +59,13 @@ export default function Sidebar() {
                   justifyContent: collapsed ? 'center' : 'flex-start',
                 }}
               >
-                <Icon size={18} strokeWidth={1.8} style={{ flexShrink: 0 }} />
+                {active ? (
+                  <div style={{ background:'rgba(226,184,74,0.15)', border:'1px solid var(--gold)', borderRadius:'8px', padding:'6px', display:'flex' }}>
+                    <Icon size={18} strokeWidth={1.8} style={{ flexShrink: 0, color: 'var(--gold)' }} />
+                  </div>
+                ) : (
+                  <Icon size={18} strokeWidth={1.8} style={{ flexShrink: 0, color: 'var(--text-secondary)' }} />
+                )}
                 {!collapsed && (
                   <span className="text-sm font-medium whitespace-nowrap" style={{ fontFamily: 'var(--font-body)' }}>
                     {label}

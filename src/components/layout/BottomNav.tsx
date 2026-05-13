@@ -3,28 +3,26 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
-  LayoutDashboard,
-  GraduationCap,
-  Briefcase,
+  Home,
+  Rocket,
+  BarChart2,
   Trophy,
   MoreHorizontal,
-  Users,
-  GitFork,
-  User,
+  MessageCircle,
+  Share2,
   X,
 } from 'lucide-react'
 
 const mainItems = [
-  { href: '/', label: 'Accueil', icon: LayoutDashboard },
-  { href: '/formation', label: 'Formation', icon: GraduationCap },
-  { href: '/business', label: 'Business', icon: Briefcase },
+  { href: '/', label: 'Accueil', icon: Home },
+  { href: '/formation', label: 'Formation', icon: Rocket },
+  { href: '/business', label: 'Business', icon: BarChart2 },
   { href: '/achievements', label: 'Succès', icon: Trophy },
 ]
 
 const moreItems = [
-  { href: '/communaute', label: 'Communauté', icon: Users },
-  { href: '/parrainage', label: 'Parrainage', icon: GitFork },
-  { href: '/profil', label: 'Profil', icon: User },
+  { href: '/communaute', label: 'Communauté', icon: MessageCircle },
+  { href: '/parrainage', label: 'Parrainage', icon: Share2 },
 ]
 
 export default function BottomNav() {
