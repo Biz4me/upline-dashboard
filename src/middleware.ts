@@ -5,7 +5,11 @@ import { getToken } from 'next-auth/jwt'
 export async function middleware(req: NextRequest) {
   const token = await getToken({ 
     req, 
-    secret: process.env.AUTH_SECRET || 'upline-atlas-secret-2026' 
+    secret: process.env.AUTH_SECRET || 'upline-atlas-secret-2026',
+    cookieName: process.env.NODE_ENV === 'production' 
+      ? '__Secure-authjs.session-token' 
+      : 'authjs.session-token',
+    secureCookie: process.env.NODE_ENV === 'production',
   })
   
   const isAuthPage = req.nextUrl.pathname.startsWith('/login') || 
