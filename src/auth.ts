@@ -1,3 +1,5 @@
+/** @type {import('next-auth').NextAuthConfig} */
+
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { Pool } from 'pg'
@@ -46,6 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/login',
   },
   session: { strategy: 'jwt' },
+  trustHost: true,
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.id = user.id
