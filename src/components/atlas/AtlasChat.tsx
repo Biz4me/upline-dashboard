@@ -96,35 +96,55 @@ export default function AtlasChat({
       </div>
 
       {/* Messages */}
-      <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
+      <div
+        style={{
+          minHeight: '200px',
+          maxHeight: '500px',
+          overflowY: 'auto',
+          padding: '16px',
+        }}
+      >
         {messages.length === 0 && (
-          <div className="bg-[var(--bg)] rounded-lg p-3">
-            <p className="text-[#D4C8A8] text-sm">
-              {context
-                ? `Je suis ton coach pour : ${context}. Pose-moi des questions !`
-                : 'Bonjour ! Je suis Atlas, ton coach MLM. Comment puis-je t\'aider aujourd\'hui ?'}
-            </p>
-          </div>
-        )}
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`rounded-lg px-3 py-2 text-sm max-w-[85%] ${
-                msg.role === 'user'
-                  ? 'bg-[#E2B84A] text-black'
-                  : 'bg-[var(--bg)] text-[var(--text-secondary)]'
-              }`}
-            >
-              {msg.role === 'user' ? msg.content : <div className="atlas-markdown"><ReactMarkdown>{msg.content}</ReactMarkdown></div>}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
+            {/* Avatar Atlas */}
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
+            {/* Bulle */}
+            <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
+              <p className="text-sm">
+                {context
+                  ? `Je suis ton coach pour : ${context}. Pose-moi des questions !`
+                  : "Bonjour ! Je suis Atlas, ton coach MLM. Comment puis-je t'aider aujourd'hui ?"}
+              </p>
             </div>
           </div>
-        ))}
+        )}
+        {messages.map((msg, i) =>
+          msg.role === 'assistant' ? (
+            /* Messages Atlas (gauche) */
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
+              {/* Avatar Atlas */}
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
+              {/* Bulle */}
+              <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
+              </div>
+            </div>
+          ) : (
+            /* Messages Utilisateur (droite) */
+            <div key={i} style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+              {/* Bulle */}
+              <div style={{ maxWidth: '75%', background: 'var(--gold)', borderRadius: '18px 4px 18px 18px', padding: '10px 16px', color: 'var(--bg)', fontWeight: '500' }}>
+                {msg.content}
+              </div>
+            </div>
+          )
+        )}
         {loading && (
-          <div className="flex justify-start">
-            <div className="bg-[var(--bg)] rounded-lg px-3 py-2 text-sm text-[var(--text-muted)]">
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
+            {/* Avatar Atlas */}
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
+            {/* Bulle */}
+            <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text-muted)' }}>
               <span className="inline-flex gap-1">
                 <span className="animate-bounce">●</span>
                 <span className="animate-bounce" style={{ animationDelay: '0.15s' }}>●</span>
