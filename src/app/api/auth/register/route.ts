@@ -4,8 +4,8 @@ import bcrypt from 'bcryptjs'
 
 export async function POST(req: Request) {
   try {
-    const { email, password, prenom, nom, username } = await req.json()
-    if (!email || !password || !prenom || !nom || !username) {
+    const { email, password, prenom, nom, username, societe } = await req.json()
+    if (!email || !password || !username) {
       return NextResponse.json({ error: 'Champs manquants' }, { status: 400 })
     }
     if (username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) {
@@ -22,9 +22,21 @@ export async function POST(req: Request) {
     const hash = await bcrypt.hash(password, 12)
     const result = await pool.query(
       'INSERT INTO users (email, password_hash, prenom, nom, username, created_at) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING id, email, prenom, nom, username',
-      [email, hash, prenom, nom, username]
+      [email, hash, prenom || '', nom || '', username]
     )
-    return NextResponse.json({ user: result.rows[0] }, { status: 201 })
+
+    const user = result.rows[0]
+
+    if (societe) {
+      await pool.query(
+        `INSERT INTO user_memory (user_id, cle, valeur, categorie, importance)
+         VALUES ($1, 'profil', $2::jsonb, 'identite', 10)
+         ON CONFLICT (user_id, cle) DO UPDATE SET valeur = $2::jsonb, updated_at = NOW()`,
+        [user.id, JSON.stringify({ societe, username })]
+      )
+    }
+
+    return NextResponse.json({ user }, { status: 201 })
   } catch (error) {
     console.error('Register error:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
