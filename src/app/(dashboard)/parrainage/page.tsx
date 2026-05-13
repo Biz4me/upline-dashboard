@@ -33,8 +33,8 @@ export default function Parrainage() {
       </div>
 
       {/* Lien unique */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-        <h3 className="text-[var(--text)] font-medium mb-4">🔗 Mon lien unique</h3>
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
+        <h3 className="text-[var(--text-on-card)] font-medium mb-4">🔗 Mon lien unique</h3>
         <div className="flex gap-2 mb-4">
           <div className="flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg px-4 py-3 text-[#E2B84A] text-sm font-mono">
             {lienParrainage}
@@ -69,8 +69,8 @@ export default function Parrainage() {
       </div>
 
       {/* Récompenses */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-        <h3 className="text-[var(--text)] font-medium mb-4">🎁 Mes récompenses</h3>
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
+        <h3 className="text-[var(--text-on-card)] font-medium mb-4">🎁 Mes récompenses</h3>
 
         {/* Phase 1 active */}
         <div className="p-4 bg-[#E2B84A]/5 border border-[#E2B84A]/20 rounded-xl mb-4">
@@ -78,7 +78,7 @@ export default function Parrainage() {
             <div className="text-[#E2B84A] font-semibold text-sm">Phase 1 — Mois gratuits</div>
             <span className="text-xs bg-[#E2B84A]/20 text-[#E2B84A] px-2 py-1 rounded-full">Active</span>
           </div>
-          <p className="text-[var(--text-secondary)] text-sm mb-3">
+          <p className="text-[var(--text-secondary-on-card)] text-sm mb-3">
             Chaque filleul Premium converti = <span className="text-[#E2B84A] font-medium">1 mois gratuit</span> pour toi et pour lui
           </p>
           <div className="flex items-center gap-3">
@@ -102,23 +102,23 @@ export default function Parrainage() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 text-center">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 text-center text-[var(--text-on-card)]">
           <div className="text-[#E2B84A] font-bold text-[var(--text-muted)]xl">2</div>
           <div className="text-[var(--text-muted)] text-xs mt-1">Filleuls actifs</div>
         </div>
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 text-center">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 text-center text-[var(--text-on-card)]">
           <div className="text-[#E2B84A] font-bold text-[var(--text-muted)]xl">1</div>
           <div className="text-[var(--text-muted)] text-xs mt-1">Premium convertis</div>
         </div>
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 text-center">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 text-center text-[var(--text-on-card)]">
           <div className="text-[#E2B84A] font-bold text-[var(--text-muted)]xl">1</div>
           <div className="text-[var(--text-muted)] text-xs mt-1">Mois gratuits gagnés</div>
         </div>
       </div>
 
       {/* Mes filleuls */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-        <h3 className="text-[var(--text)] font-medium mb-4">👥 Mes filleuls</h3>
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
+        <h3 className="text-[var(--text-on-card)] font-medium mb-4">👥 Mes filleuls</h3>
         <div className="space-y-3">
           {filleuls.map((f, i) => (
             <div key={i} className="flex items-center gap-3 p-3 bg-[var(--bg)] rounded-lg">
@@ -126,7 +126,7 @@ export default function Parrainage() {
                 {f.avatar}
               </div>
               <div className="flex-1">
-                <div className="text-[var(--text)] text-sm font-medium">{f.nom}</div>
+                <div className="text-[var(--text-on-card)] text-sm font-medium">{f.nom}</div>
                 <div className="text-[var(--text-muted)] text-xs">Inscrit le {f.date}</div>
               </div>
               <span className={`text-xs px-2 py-1 rounded-full`}
@@ -139,9 +139,9 @@ export default function Parrainage() {
       </div>
 
       {/* Carte de visite digitale */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[var(--text)] font-medium">💳 Carte de visite digitale</h3>
+          <h3 className="text-[var(--text-on-card)] font-medium">💳 Carte de visite digitale</h3>
           <button className="text-xs bg-[var(--gold-muted)] hover:bg-[var(--gold-muted)] text-[var(--text-secondary)] px-3 py-1.5 rounded-lg transition-colors">
             Personnaliser
           </button>
@@ -151,7 +151,7 @@ export default function Parrainage() {
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-full bg-[#E2B84A] flex items-center justify-center text-black font-bold">P</div>
             <div>
-              <div className="text-[var(--text)] font-semibold">Patrice Haure-Pallesi</div>
+              <div className="text-[var(--text-on-card)] font-semibold">Patrice Haure-Pallesi</div>
               <div className="text-[var(--text-muted)] text-sm">Coach MLM · Herbalife</div>
             </div>
             <div className="ml-auto w-8 h-8 bg-[#E2B84A] rounded-lg flex items-center justify-center text-black font-bold text-sm">A</div>

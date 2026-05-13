@@ -125,7 +125,7 @@ export default function Communaute() {
 
       {/* Nouveau post */}
       {showPost && (
-        <div className="bg-[var(--bg-card)] border border-[#E2B84A]/30 rounded-xl p-4">
+        <div className="bg-[var(--bg-card)] border border-[#E2B84A]/30 rounded-xl p-4 text-[var(--text-on-card)]">
           <textarea
             value={nouveauPost}
             onChange={e => setNouveauPost(e.target.value)}
@@ -155,7 +155,7 @@ export default function Communaute() {
         <div className="lg:col-span-2 space-y-4">
 
           {/* Onglets */}
-          <div className="flex bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-1 gap-1">
+          <div className="flex bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-1 gap-1 text-[var(--text-on-card)]">
             {([
               { id: 'general', label: '🌍 Général' },
               { id: 'societe', label: '🟠 Herbalife' },
@@ -178,7 +178,7 @@ export default function Communaute() {
           {/* Posts */}
           <div className="space-y-4">
             {postsFiltres.length === 0 ? (
-              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 text-center">
+              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 text-center text-[var(--text-on-card)]">
                 <div className="text-[var(--text-muted)]xl mb-2">💬</div>
                 <p className="text-[var(--text-muted)]">Aucun post dans cet espace pour l'instant</p>
                 <button
@@ -190,7 +190,7 @@ export default function Communaute() {
               </div>
             ) : (
               postsFiltres.map(post => (
-                <div key={post.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
+                <div key={post.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
                   {/* Header post */}
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-8 h-8 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] font-bold text-sm flex-shrink-0">
@@ -198,7 +198,7 @@ export default function Communaute() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[var(--text)] text-sm font-medium">{post.auteur}</span>
+                        <span className="text-[var(--text-on-card)] text-sm font-medium">{post.auteur}</span>
                         <span className="text-xs bg-[var(--gold-muted)] text-[var(--text-muted)] px-2 py-0.5 rounded-full">{post.societe}</span>
                       </div>
                       <div className="text-[#3d3420] text-xs">{post.temps}</div>
@@ -236,8 +236,8 @@ export default function Communaute() {
         <div className="space-y-4">
 
           {/* Espaces société */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
-            <h3 className="text-[var(--text)] font-medium mb-3">🏢 Espaces société</h3>
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
+            <h3 className="text-[var(--text-on-card)] font-medium mb-3">🏢 Espaces société</h3>
             <div className="space-y-2">
               {societes.map((s, i) => (
                 <div
@@ -265,8 +265,8 @@ export default function Communaute() {
           </div>
 
           {/* Top contributeurs */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
-            <h3 className="text-[var(--text)] font-medium mb-3">🏅 Top contributeurs</h3>
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
+            <h3 className="text-[var(--text-on-card)] font-medium mb-3">🏅 Top contributeurs</h3>
             <div className="space-y-2">
               {topContributeurs.map((c, i) => (
                 <div
@@ -293,8 +293,8 @@ export default function Communaute() {
           </div>
 
           {/* Règles communauté */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
-            <h3 className="text-[var(--text)] font-medium mb-3">📋 Règles</h3>
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
+            <h3 className="text-[var(--text-on-card)] font-medium mb-3">📋 Règles</h3>
             <div className="space-y-2 text-xs text-[var(--text-muted)]">
               <div className="flex gap-2"><span>✅</span><span>Partagez vos victoires et apprentissages</span></div>
               <div className="flex gap-2"><span>✅</span><span>Posez des questions constructives</span></div>

@@ -128,7 +128,7 @@ export default function Formation() {
       </div>
 
       {/* Barre progression globale */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 text-[var(--text-on-card)]">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[var(--text)] text-sm font-medium">Progression globale</span>
           <span className="text-[#E2B84A] text-sm">~14%</span>
@@ -165,7 +165,7 @@ export default function Formation() {
                     }`}>
                       {module.statut === 'termine' ? '✓' : module.id}
                     </div>
-                    <span className="text-[var(--text)] text-sm font-medium truncate">{module.titre}</span>
+                    <span className="text-[var(--text-on-card)] text-sm font-medium truncate">{module.titre}</span>
                   </div>
                   <span className="text-[var(--text-muted)] text-xs flex-shrink-0 ml-2">{module.duree}</span>
                 </div>
@@ -187,17 +187,17 @@ export default function Formation() {
           {moduleSelectionne ? (
             <>
               {/* Header module */}
-              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
+              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <div className="text-[var(--text-muted)] text-xs mb-1">MODULE {moduleSelectionne.id}</div>
-                    <h2 className="text-[var(--text)] text-xl font-semibold">{moduleSelectionne.titre}</h2>
+                    <h2 className="text-[var(--text-on-card)] text-xl font-semibold">{moduleSelectionne.titre}</h2>
                   </div>
                   <span className="text-[#E2B84A] text-sm bg-[#E2B84A]/10 px-3 py-1 rounded-full border border-[#E2B84A]/20">
                     {statutConfig[moduleSelectionne.statut].label}
                   </span>
                 </div>
-                <p className="text-[var(--text-secondary)] text-sm mb-4">{moduleSelectionne.description}</p>
+                <p className="text-[var(--text-secondary-on-card)] text-sm mb-4">{moduleSelectionne.description}</p>
 
                 {/* Formats */}
                 <div className="flex gap-2 flex-wrap mb-4">
@@ -229,11 +229,11 @@ export default function Formation() {
               </div>
 
               {/* Chat Atlas pour ce module */}
-              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
+              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-7 h-7 bg-[#E2B84A] rounded-lg flex items-center justify-center text-black font-bold text-xs">A</div>
                   <div>
-                    <div className="text-[var(--text)] text-sm font-medium">Atlas — Coach du module</div>
+                    <div className="text-[var(--text-on-card)] text-sm font-medium">Atlas — Coach du module</div>
                     <div className="text-[var(--text-muted)] text-xs">Questions, quiz oral, travaux pratiques</div>
                   </div>
                 </div>
@@ -265,8 +265,8 @@ export default function Formation() {
               </div>
 
               {/* Livres recommandés */}
-              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
-                <h3 className="text-[var(--text)] font-medium mb-3">📚 Lectures recommandées</h3>
+              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
+                <h3 className="text-[var(--text-on-card)] font-medium mb-3">📚 Lectures recommandées</h3>
                 <div className="space-y-2">
                   {moduleSelectionne.livres.map((livre, i) => (
                     <div key={i} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 bg-[var(--bg)] rounded-lg">
@@ -285,7 +285,7 @@ export default function Formation() {
               </div>
             </>
           ) : (
-            <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 text-center">
+            <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 text-center text-[var(--text-on-card)]">
               <div className="text-[var(--text-muted)]xl mb-3">📚</div>
               <p className="text-[var(--text-secondary)]">Sélectionne un module pour voir son contenu</p>
             </div>

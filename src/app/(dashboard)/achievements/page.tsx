@@ -183,14 +183,14 @@ export default function Achievements() {
       </div>
 
       {/* Niveau & XP */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-16 h-16 rounded-2xl bg-[#E2B84A]/20 border-[var(--border)] border-[#E2B84A]/40 flex items-center justify-center text-[var(--text-muted)]xl">
             🏔️
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between mb-1">
-              <div className="text-[var(--text)] font-bold text-lg">{niveauActuel}</div>
+              <div className="text-[var(--text-on-card)] font-bold text-lg">{niveauActuel}</div>
               <div className="text-[#E2B84A] text-sm font-medium">{xpTotal} / {xpProchain} XP</div>
             </div>
             <div className="w-full bg-[var(--gold-muted)] rounded-full h-3 mb-1">
@@ -200,7 +200,7 @@ export default function Achievements() {
               ></div>
             </div>
             <div className="text-[var(--text-muted)] text-xs">
-              Prochain niveau : <span className="text-[var(--text-secondary)]">{niveauSuivant}</span> — encore {xpProchain - xpTotal} XP
+              Prochain niveau : <span className="text-[var(--text-secondary-on-card)]">{niveauSuivant}</span> — encore {xpProchain - xpTotal} XP
             </div>
           </div>
         </div>
@@ -221,11 +221,11 @@ export default function Achievements() {
       </div>
 
       {/* Défis de la semaine */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-7 h-7 bg-[#E2B84A] rounded-lg flex items-center justify-center text-black font-bold text-xs">A</div>
           <div>
-            <div className="text-[var(--text)] font-medium text-sm">Atlas — Défis de la semaine</div>
+            <div className="text-[var(--text-on-card)] font-medium text-sm">Atlas — Défis de la semaine</div>
             <div className="text-[var(--text-muted)] text-xs">Les défis TERRAIN sont à réaliser dans ton business Herbalife — pas dans la formation !</div>
           </div>
         </div>
@@ -244,7 +244,7 @@ export default function Achievements() {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-[var(--text)] text-sm">{d.texte}</div>
+                <div className="text-[var(--text-on-card)] text-sm">{d.texte}</div>
                 <div className="text-[var(--text-muted)] text-xs">{d.detail}</div>
               </div>
               <span className="text-xs text-[#E2B84A] flex-shrink-0">+{d.xp} XP</span>
@@ -254,8 +254,8 @@ export default function Achievements() {
       </div>
 
       {/* Badges obtenus */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-        <h3 className="text-[var(--text)] font-medium mb-4">🏆 Badges obtenus ({badgesObtenus.length})</h3>
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
+        <h3 className="text-[var(--text-on-card)] font-medium mb-4">🏆 Badges obtenus ({badgesObtenus.length})</h3>
         <div className="grid grid-cols-3 gap-3">
           {badgesObtenus.map(b => (
             <div
@@ -273,8 +273,8 @@ export default function Achievements() {
       </div>
 
       {/* Badges à débloquer */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-        <h3 className="text-[var(--text)] font-medium mb-4">🔒 À débloquer ({badgesVerrouilles.length})</h3>
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
+        <h3 className="text-[var(--text-on-card)] font-medium mb-4">🔒 À débloquer ({badgesVerrouilles.length})</h3>
         <div className="space-y-3">
           {badgesVerrouilles.map(b => (
             <div
@@ -307,9 +307,9 @@ export default function Achievements() {
       </div>
 
       {/* Streak calendrier */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[var(--text)] font-medium">🔥 Mon Streak</h3>
+          <h3 className="text-[var(--text-on-card)] font-medium">🔥 Mon Streak</h3>
           <div className="text-[#E2B84A] font-bold">7 jours</div>
         </div>
         <div className="mb-4">
@@ -342,8 +342,8 @@ export default function Achievements() {
       </div>
 
       {/* Leaderboard */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-        <h3 className="text-[var(--text)] font-medium mb-4">🏅 Leaderboard équipe</h3>
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
+        <h3 className="text-[var(--text-on-card)] font-medium mb-4">🏅 Leaderboard équipe</h3>
         <div className="space-y-3">
           {leaderboard.map(u => (
             <div
@@ -365,7 +365,7 @@ export default function Achievements() {
                 {u.avatar}
               </div>
               <div className="flex-1">
-                <div className={`text-sm font-medium ${u.estMoi ? 'text-[#E2B84A]' : 'text-[var(--text)]'}`}>
+                <div className={`text-sm font-medium ${u.estMoi ? 'text-[#E2B84A]' : 'text-[var(--text-on-card)]'}`}>
                   {u.nom} {u.estMoi && '← toi'}
                 </div>
                 <div className="text-[var(--text-muted)] text-xs">{u.niveau}</div>
@@ -379,14 +379,14 @@ export default function Achievements() {
       {/* Modal badge */}
       {badgeActif && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setBadgeActif(null)}>
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-6 w-full max-w-sm text-center" onClick={e => e.stopPropagation()}>
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-6 w-full max-w-sm text-center text-[var(--text-on-card)]" onClick={e => e.stopPropagation()}>
             <button onClick={() => setBadgeActif(null)} className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text)]">✕</button>
             <div className={`text-[var(--text-muted)]xl mb-4 ${!badgeActif.obtenu ? 'grayscale opacity-50' : ''}`}>{badgeActif.icone}</div>
             <h3 className={`text-xl font-bold mb-2 ${badgeActif.obtenu ? 'text-[#E2B84A]' : 'text-[var(--text-muted)]'}`}>{badgeActif.nom}</h3>
-            <p className="text-[var(--text-secondary)] text-sm mb-3">{badgeActif.description}</p>
+            <p className="text-[var(--text-secondary-on-card)] text-sm mb-3">{badgeActif.description}</p>
             <div className="bg-[var(--bg)] rounded-lg p-3 mb-4">
               <div className="text-[var(--text-muted)] text-xs mb-1">Condition</div>
-              <div className="text-[var(--text-secondary)] text-sm">{badgeActif.condition}</div>
+              <div className="text-[var(--text-secondary-on-card)] text-sm">{badgeActif.condition}</div>
             </div>
             {badgeActif.obtenu ? (
               <div className="text-[#E2B84A] text-sm">✅ Obtenu le {badgeActif.date} · +{badgeActif.xp} XP</div>

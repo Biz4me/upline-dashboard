@@ -83,7 +83,7 @@ export default function Business() {
           { label: 'En suivi', value: prospects.filter(p => p.statut === 'suivi').length, color: '#f97316' },
           { label: 'Convertis', value: prospects.filter(p => p.statut === 'oui').length, color: 'var(--gold)' },
         ].map((s, i) => (
-          <div key={i} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3 text-center">
+          <div key={i} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3 text-center text-[var(--text-on-card)]">
             <div className="font-bold text-xl" style={{ color: s.color }}>{s.value}</div>
             <div className="text-[var(--text-muted)] text-xs mt-1">{s.label}</div>
           </div>
@@ -119,7 +119,7 @@ export default function Business() {
       {vue === 'pipeline' && (
         <div className="hidden md:grid grid-cols-5 gap-3">
           {colonnes.map(statut => (
-            <div key={statut} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3">
+            <div key={statut} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3 text-[var(--text-on-card)]">
               <div className="text-xs font-medium mb-3 flex items-center justify-between">
                 <span style={{ color: statutConfig[statut].color }}>{statutConfig[statut].label}</span>
                 <span className="bg-[var(--gold-muted)] text-[var(--text-muted)] text-xs px-2 py-0.5 rounded-full">
@@ -137,7 +137,7 @@ export default function Business() {
                       <div className="w-6 h-6 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] text-xs font-bold flex-shrink-0">
                         {p.prenom[0]}
                       </div>
-                      <span className="text-[var(--text)] text-xs font-medium truncate">{p.prenom}</span>
+                      <span className="text-[var(--text-on-card)] text-xs font-medium truncate">{p.prenom}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ color: marcheConfig[p.marche].color, background: marcheConfig[p.marche].bg }}>
@@ -163,7 +163,7 @@ export default function Business() {
 
       {/* Vue Liste */}
       {vue === 'liste' && (
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl overflow-hidden w-full">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl overflow-hidden w-full text-[var(--text-on-card)]">
           <div className="space-y-0">
             {prospectsFiltres.map((p, i) => (
               <div
@@ -175,7 +175,7 @@ export default function Business() {
                   {p.prenom[0]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[var(--text)] text-sm font-medium">{p.prenom} {p.nom}</div>
+                  <div className="text-[var(--text-on-card)] text-sm font-medium">{p.prenom} {p.nom}</div>
                   <div className="text-[var(--text-muted)] text-xs truncate">{p.prochaineAction}</div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
@@ -212,14 +212,14 @@ export default function Business() {
       {/* Modal prospect */}
       {prospectActif && (
         <div className="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 p-0 md:p-4" onClick={() => setProspectActif(null)}>
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-t-2xl md:rounded-2xl p-6 w-full md:max-w-md" onClick={e => e.stopPropagation()}>
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-t-2xl md:rounded-2xl p-6 w-full md:max-w-md text-[var(--text-on-card)]" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-[#E2B84A] flex items-center justify-center text-black font-bold">
                   {prospectActif.prenom[0]}
                 </div>
                 <div>
-                  <div className="text-[var(--text)] font-semibold">{prospectActif.prenom} {prospectActif.nom}</div>
+                  <div className="text-[var(--text-on-card)] font-semibold">{prospectActif.prenom} {prospectActif.nom}</div>
                   <div className="text-[var(--text-muted)] text-sm">{prospectActif.telephone}</div>
                 </div>
               </div>
@@ -235,7 +235,7 @@ export default function Business() {
               </div>
               <div className="bg-[var(--bg)] rounded-lg p-3">
                 <div className="text-[var(--text-muted)] text-xs mb-1">Personnalité</div>
-                <span className="text-sm text-[var(--text-secondary)]">{personnaliteConfig[prospectActif.personnalite].label} {personnaliteConfig[prospectActif.personnalite].desc}</span>
+                <span className="text-sm text-[var(--text-secondary-on-card)]">{personnaliteConfig[prospectActif.personnalite].label} {personnaliteConfig[prospectActif.personnalite].desc}</span>
               </div>
               <div className="bg-[var(--bg)] rounded-lg p-3">
                 <div className="text-[var(--text-muted)] text-xs mb-1">Statut</div>
@@ -245,14 +245,14 @@ export default function Business() {
               </div>
               <div className="bg-[var(--bg)] rounded-lg p-3">
                 <div className="text-[var(--text-muted)] text-xs mb-1">Prochaine action</div>
-                <div className="text-[var(--text-secondary)] text-sm">{prospectActif.prochaineAction}</div>
+                <div className="text-[var(--text-secondary-on-card)] text-sm">{prospectActif.prochaineAction}</div>
               </div>
             </div>
 
             {prospectActif.notes && (
               <div className="bg-[var(--bg)] rounded-lg p-3 mb-4">
                 <div className="text-[var(--text-muted)] text-xs mb-1">Notes</div>
-                <div className="text-[var(--text-secondary)] text-sm">{prospectActif.notes}</div>
+                <div className="text-[var(--text-secondary-on-card)] text-sm">{prospectActif.notes}</div>
               </div>
             )}
 
@@ -262,7 +262,7 @@ export default function Business() {
                 <div className="w-5 h-5 bg-[#E2B84A] rounded flex items-center justify-center text-black text-xs font-bold">A</div>
                 <span className="text-[#E2B84A] text-xs font-medium">Conseil Atlas</span>
               </div>
-              <p className="text-[var(--text-secondary)] text-xs">
+              <p className="text-[var(--text-secondary-on-card)] text-xs">
                 {prospectActif.personnalite === 'jaune' && "Marie est empathique — parlez-lui de l'impact sur sa famille et des gens qu'elle pourra aider."}
                 {prospectActif.personnalite === 'rouge' && "Jean est ambitieux — montrez-lui les chiffres et le potentiel de revenus rapidement."}
                 {prospectActif.personnalite === 'bleu' && "Sophie aime le fun — parlez-lui des voyages, événements et de l'ambiance de l'équipe."}

@@ -26,7 +26,7 @@ export default function Accueil() {
       <div className="rounded-xl p-6"
         style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-medium" style={{ color: 'var(--text)' }}>Formation en cours</h2>
+          <h2 className="font-medium" style={{ color: 'var(--text-on-card)' }}>Formation en cours</h2>
           <span className="text-sm font-medium" style={{ color: 'var(--gold)' }}>Module 3/8</span>
         </div>
         <div className="w-full rounded-full h-2 mb-2" style={{ background: 'var(--border)' }}>
@@ -43,7 +43,7 @@ export default function Accueil() {
           <div className="w-8 h-8 rounded-lg flex items-center justify-center text-black font-bold text-sm"
             style={{ background: 'var(--gold)' }}>A</div>
           <div>
-            <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>Atlas</div>
+            <div className="text-sm font-medium" style={{ color: 'var(--text-on-card)' }}>Atlas</div>
             <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Coach IA · En ligne</div>
           </div>
         </div>
@@ -60,7 +60,7 @@ export default function Accueil() {
             style={{
               background: 'var(--bg)',
               border: '1px solid var(--border)',
-              color: 'var(--text-secondary)',
+              color: 'var(--text-secondary-on-card)',
             }}
           />
           <button className="font-bold px-4 py-2 rounded-lg text-sm transition-colors text-black"
@@ -70,7 +70,7 @@ export default function Accueil() {
 
       <div className="rounded-xl p-6"
         style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-        <h2 className="font-medium mb-4" style={{ color: 'var(--text)' }}>Activité récente</h2>
+        <h2 className="font-medium mb-4" style={{ color: 'var(--text-on-card)' }}>Activité récente</h2>
         <div className="space-y-3">
           {[
             { texte: 'Module 3 — Leçon 2 complétée', temps: "Aujourd'hui", actif: true },
@@ -80,7 +80,7 @@ export default function Accueil() {
             <div key={i} className="flex items-center gap-3">
               <div className="w-2 h-2 rounded-full flex-shrink-0"
                 style={{ background: a.actif ? 'var(--gold)' : 'var(--border)' }}></div>
-              <span className="text-sm" style={{ color: a.actif ? 'var(--text-secondary)' : 'var(--text-muted)' }}>
+                <span className="text-sm" style={{ color: a.actif ? 'var(--text-secondary-on-card)' : 'var(--text-muted)' }}>
                 {a.texte}
               </span>
               <span className="text-xs ml-auto flex-shrink-0" style={{ color: 'var(--text-muted)' }}>
