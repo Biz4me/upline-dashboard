@@ -48,30 +48,35 @@ export default function AdminDashboard() {
       {/* Graphique inscriptions 30 jours */}
       <div style={{ background: '#252018', border: '1px solid #3A3020', borderRadius: '12px', padding: '20px' }}>
         <h2 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#FFFFFF' }}>Inscriptions (30 derniers jours)</h2>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '200px', paddingBottom: '24px', position: 'relative' }}>
-          {stats?.usersByDay?.map((day: any, idx: number) => {
-            const h = (parseInt(day.count) / maxCount) * 160
-            return (
-              <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                <div
-                  style={{
-                    width: '100%',
-                    minWidth: '8px',
-                    background: '#E2B84A',
-                    borderRadius: '4px 4px 0 0',
-                    height: `${h}px`,
-                    transition: 'height 0.3s ease',
-                    opacity: h > 0 ? 1 : 0.3,
-                  }}
-                  title={`${day.date}: ${day.count} utilisateur(s)`}
-                />
-                <span style={{ fontSize: '10px', color: '#C8B48E', transform: 'rotate(-45deg)', transformOrigin: 'top left', whiteSpace: 'nowrap' }}>
-                  {new Date(day.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
-                </span>
-              </div>
-            )
-          })}
-        </div>
+        {(!stats?.usersByDay || stats.usersByDay.length === 0) ? (
+          <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C8B48E', fontSize: '14px' }}>
+            Pas encore de données
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '200px' }}>
+            {stats.usersByDay.map((day: any, idx: number) => {
+              const h = (parseInt(day.count) / maxCount) * 200
+              return (
+                <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', minWidth: 0 }}>
+                  <div
+                    style={{
+                      width: '100%',
+                      height: `${h}px`,
+                      background: '#E2B84A',
+                      borderRadius: '2px 2px 0 0',
+                      transition: 'height 0.3s ease',
+                      minHeight: h > 0 ? '2px' : '0px',
+                    }}
+                    title={`${day.date}: ${day.count} utilisateur(s)`}
+                  />
+                  <span style={{ fontSize: '10px', color: '#C8B48E', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                    {new Date(day.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </div>
     </div>
   )

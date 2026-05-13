@@ -7,11 +7,23 @@ export async function GET() {
     const session = await auth()
     if (session?.user?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-    const [totalUsers, newToday, sessions, memory] = await Promise.all([
+    const [totalUsers, newToday, sessions, memory, messagesSent, latestConversations] = await Promise.all([
       pool.query('SELECT COUNT(*) as count, COUNT(CASE WHEN role = $1 THEN 1 END) as admins FROM users', ['admin']),
       pool.query("SELECT COUNT(*) as count FROM users WHERE created_at > NOW() - INTERVAL '24 hours'"),
       pool.query('SELECT COUNT(*) as count FROM sessions_coaching'),
       pool.query('SELECT COUNT(*) as count FROM user_memory'),
+      pool.query(`
+        SELECT COALESCE(SUM(
+          COALESCE((valeur->>'nombre_messages')::int, 0)
+        ), 0) as count FROM user_memory WHERE cle = 'historique'
+      `),
+      pool.query(`
+        SELECT um.user_id, um.cle, um.categorie, um.updated_at, u.email, u.prenom, u.nom
+        FROM user_memory um
+        LEFT JOIN users u ON um.user_id = u.id
+        ORDER BY um.updated_at DESC
+        LIMIT 10
+      `),
     ])
 
     const usersByDay = await pool.query(`
@@ -27,6 +39,8 @@ export async function GET() {
       newToday: parseInt(newToday.rows[0].count),
       totalSessions: parseInt(sessions.rows[0].count),
       memoryEntries: parseInt(memory.rows[0].count),
+      messagesSent: parseInt(messagesSent.rows[0].count),
+      latestConversations: latestConversations.rows,
       usersByDay: usersByDay.rows,
     })
   } catch (error) {
