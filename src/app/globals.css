@@ -47,28 +47,55 @@
   }
 }
 
-/* Markdown styles for Atlas chat bubbles */
+/* Markdown styles for Atlas chat bubbles — Style C minimaliste aéré */
+.atlas-markdown p {
+  margin: 0 0 12px 0;
+  line-height: 1.8;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.atlas-markdown p:last-of-type {
+  margin-bottom: 0 !important;
+}
+
 .atlas-markdown strong {
   font-weight: 600;
   color: var(--text);
 }
 
-.atlas-markdown ol,
 .atlas-markdown ul {
-  padding-left: 1.2rem;
-  margin: 8px 0;
+  margin: 8px 0 12px 0;
+  padding-left: 0;
+  list-style: none;
 }
 
 .atlas-markdown li {
-  margin: 4px 0;
-  line-height: 1.6;
-}
-
-.atlas-markdown p {
-  margin: 0 0 8px 0;
+  margin: 6px 0;
+  padding-left: 16px;
+  position: relative;
+  font-size: 14px;
   line-height: 1.7;
+  color: var(--text);
 }
 
-.atlas-markdown p:last-child {
-  margin-bottom: 0;
+.atlas-markdown li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+
+.atlas-markdown ol {
+  margin: 8px 0 12px 0;
+  padding-left: 20px;
+}
+
+.atlas-markdown blockquote,
+.atlas-markdown blockquote > div {
+  border-left: 3px solid var(--gold);
+  padding-left: 12px;
+  margin: 10px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
 }

@@ -209,8 +209,40 @@ export default function AtlasChat({
               {/* Avatar Atlas */}
               <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
               {/* Bulle */}
-              <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
-                <ReactMarkdown>{msg.content}</ReactMarkdown>
+              <div className="atlas-markdown" style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
+                <ReactMarkdown components={{
+                  p: ({ children }) => (
+                    <p style={{ margin: '0 0 12px 0', lineHeight: '1.8', fontSize: '14px', color: 'var(--text)' }}>
+                      {children}
+                    </p>
+                  ),
+                  strong: ({ children }) => (
+                    <strong style={{ fontWeight: '600', color: 'var(--text)' }}>
+                      {children}
+                    </strong>
+                  ),
+                  ul: ({ children }) => (
+                    <ul style={{ margin: '8px 0 12px 0', paddingLeft: '0', listStyle: 'none' }}>
+                      {children}
+                    </ul>
+                  ),
+                  li: ({ children }) => (
+                    <li style={{ margin: '6px 0', paddingLeft: '16px', position: 'relative', fontSize: '14px', lineHeight: '1.7', color: 'var(--text)' }}>
+                      <span style={{ position: 'absolute', left: '0', color: 'var(--gold)' }}>→</span>
+                      {children}
+                    </li>
+                  ),
+                  ol: ({ children }) => (
+                    <ol style={{ margin: '8px 0 12px 0', paddingLeft: '20px' }}>
+                      {children}
+                    </ol>
+                  ),
+                  blockquote: ({ children }) => (
+                    <div style={{ borderLeft: '3px solid var(--gold)', paddingLeft: '12px', margin: '10px 0', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                      {children}
+                    </div>
+                  ),
+                }}>{msg.content}</ReactMarkdown>
               </div>
             </div>
           ) : (
