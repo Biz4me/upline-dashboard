@@ -16,7 +16,11 @@ export async function middleware(req: NextRequest) {
                      req.nextUrl.pathname.startsWith('/signup') ||
                      req.nextUrl.pathname.startsWith('/onboarding')
 
-  if (!token && !isAuthPage) {
+  const isPublicPage = req.nextUrl.pathname.startsWith('/landing') ||
+                       req.nextUrl.pathname.startsWith('/pricing') ||
+                       req.nextUrl.pathname.startsWith('/blog')
+
+  if (!token && !isAuthPage && !isPublicPage) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
