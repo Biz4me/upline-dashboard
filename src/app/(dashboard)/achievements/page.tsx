@@ -178,19 +178,19 @@ export default function Achievements() {
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-white">Succès & Badges</h1>
+        <h1 className="text-[var(--text-muted)]xl font-semibold text-[var(--text)]">Succès & Badges</h1>
         <p className="text-[#A89878] mt-1">Tes accomplissements terrain et formation</p>
       </div>
 
       {/* Niveau & XP */}
       <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-16 h-16 rounded-2xl bg-[#E2B84A]/20 border-2 border-[#E2B84A]/40 flex items-center justify-center text-3xl">
+          <div className="w-16 h-16 rounded-2xl bg-[#E2B84A]/20 border-[var(--border)] border-[#E2B84A]/40 flex items-center justify-center text-[var(--text-muted)]xl">
             🏔️
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between mb-1">
-              <div className="text-white font-bold text-lg">{niveauActuel}</div>
+              <div className="text-[var(--text)] font-bold text-lg">{niveauActuel}</div>
               <div className="text-[#E2B84A] text-sm font-medium">{xpTotal} / {xpProchain} XP</div>
             </div>
             <div className="w-full bg-[#2A2318] rounded-full h-3 mb-1">
@@ -225,7 +225,7 @@ export default function Achievements() {
         <div className="flex items-center gap-3 mb-4">
           <div className="w-7 h-7 bg-[#E2B84A] rounded-lg flex items-center justify-center text-black font-bold text-xs">A</div>
           <div>
-            <div className="text-white font-medium text-sm">Atlas — Défis de la semaine</div>
+            <div className="text-[var(--text)] font-medium text-sm">Atlas — Défis de la semaine</div>
             <div className="text-[#6A5A3A] text-xs">Les défis TERRAIN sont à réaliser dans ton business Herbalife — pas dans la formation !</div>
           </div>
         </div>
@@ -244,7 +244,7 @@ export default function Achievements() {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-white text-sm">{d.texte}</div>
+                <div className="text-[var(--text)] text-sm">{d.texte}</div>
                 <div className="text-[#6A5A3A] text-xs">{d.detail}</div>
               </div>
               <span className="text-xs text-[#E2B84A] flex-shrink-0">+{d.xp} XP</span>
@@ -255,7 +255,7 @@ export default function Achievements() {
 
       {/* Badges obtenus */}
       <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
-        <h3 className="text-white font-medium mb-4">🏆 Badges obtenus ({badgesObtenus.length})</h3>
+        <h3 className="text-[var(--text)] font-medium mb-4">🏆 Badges obtenus ({badgesObtenus.length})</h3>
         <div className="grid grid-cols-3 gap-3">
           {badgesObtenus.map(b => (
             <div
@@ -263,7 +263,7 @@ export default function Achievements() {
               onClick={() => setBadgeActif(b)}
               className="bg-[#161410] border border-[#E2B84A]/20 rounded-xl p-4 text-center cursor-pointer hover:border-[#E2B84A]/50 transition-all"
             >
-              <div className="text-3xl mb-2">{b.icone}</div>
+              <div className="text-[var(--text-muted)]xl mb-2">{b.icone}</div>
               <div className="text-[#E2B84A] text-sm font-medium">{b.nom}</div>
               <div className="text-[#6A5A3A] text-xs mt-1">+{b.xp} XP</div>
               <div className="text-[#3d3420] text-xs mt-1">{b.date}</div>
@@ -274,7 +274,7 @@ export default function Achievements() {
 
       {/* Badges à débloquer */}
       <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
-        <h3 className="text-white font-medium mb-4">🔒 À débloquer ({badgesVerrouilles.length})</h3>
+        <h3 className="text-[var(--text)] font-medium mb-4">🔒 À débloquer ({badgesVerrouilles.length})</h3>
         <div className="space-y-3">
           {badgesVerrouilles.map(b => (
             <div
@@ -282,7 +282,7 @@ export default function Achievements() {
               onClick={() => setBadgeActif(b)}
               className="flex items-center gap-3 p-3 bg-[#161410] rounded-lg cursor-pointer hover:bg-[#2A2318]/50 transition-all opacity-70"
             >
-              <div className="text-2xl grayscale opacity-50">{b.icone}</div>
+              <div className="text-[var(--text-muted)]xl grayscale opacity-50">{b.icone}</div>
               <div className="flex-1">
                 <div className="text-[#6A5A3A] text-sm font-medium">{b.nom}</div>
                 <div className="text-[#3d3420] text-xs">{b.condition}</div>
@@ -309,7 +309,7 @@ export default function Achievements() {
       {/* Streak calendrier */}
       <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-medium">🔥 Mon Streak</h3>
+          <h3 className="text-[var(--text)] font-medium">🔥 Mon Streak</h3>
           <div className="text-[#E2B84A] font-bold">7 jours</div>
         </div>
         <div className="mb-4">
@@ -343,7 +343,7 @@ export default function Achievements() {
 
       {/* Leaderboard */}
       <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
-        <h3 className="text-white font-medium mb-4">🏅 Leaderboard équipe</h3>
+        <h3 className="text-[var(--text)] font-medium mb-4">🏅 Leaderboard équipe</h3>
         <div className="space-y-3">
           {leaderboard.map(u => (
             <div
@@ -365,7 +365,7 @@ export default function Achievements() {
                 {u.avatar}
               </div>
               <div className="flex-1">
-                <div className={`text-sm font-medium ${u.estMoi ? 'text-[#E2B84A]' : 'text-white'}`}>
+                <div className={`text-sm font-medium ${u.estMoi ? 'text-[#E2B84A]' : 'text-[var(--text)]'}`}>
                   {u.nom} {u.estMoi && '← toi'}
                 </div>
                 <div className="text-[#6A5A3A] text-xs">{u.niveau}</div>
@@ -380,8 +380,8 @@ export default function Achievements() {
       {badgeActif && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setBadgeActif(null)}>
           <div className="bg-[#1E1B14] border border-[#2A2318] rounded-2xl p-6 w-full max-w-sm text-center" onClick={e => e.stopPropagation()}>
-            <button onClick={() => setBadgeActif(null)} className="absolute top-4 right-4 text-[#6A5A3A] hover:text-white">✕</button>
-            <div className={`text-6xl mb-4 ${!badgeActif.obtenu ? 'grayscale opacity-50' : ''}`}>{badgeActif.icone}</div>
+            <button onClick={() => setBadgeActif(null)} className="absolute top-4 right-4 text-[#6A5A3A] hover:text-[var(--text)]">✕</button>
+            <div className={`text-[var(--text-muted)]xl mb-4 ${!badgeActif.obtenu ? 'grayscale opacity-50' : ''}`}>{badgeActif.icone}</div>
             <h3 className={`text-xl font-bold mb-2 ${badgeActif.obtenu ? 'text-[#E2B84A]' : 'text-[#6A5A3A]'}`}>{badgeActif.nom}</h3>
             <p className="text-[#A89878] text-sm mb-3">{badgeActif.description}</p>
             <div className="bg-[#161410] rounded-lg p-3 mb-4">

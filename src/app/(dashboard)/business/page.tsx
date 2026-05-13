@@ -40,12 +40,12 @@ const personnaliteConfig = {
 }
 
 const statutConfig = {
-  liste: { label: '📋 Liste', color: '#6A5A3A', bg: '#6A5A3A15', ordre: 0 },
+  liste: { label: '📋 Liste', color: 'var(--text-muted)', bg: 'color-mix(in srgb, var(--text-muted) 15%, transparent)', ordre: 0 },
   invite: { label: '📞 Invité', color: '#60a5fa', bg: '#60a5fa15', ordre: 1 },
   presente: { label: '👁 Présenté', color: '#a78bfa', bg: '#a78bfa15', ordre: 2 },
   suivi: { label: '🔄 Suivi', color: '#f97316', bg: '#f9731615', ordre: 3 },
-  oui: { label: '✅ Oui !', color: '#E2B84A', bg: '#E2B84A15', ordre: 4 },
-  non: { label: '❌ Non', color: '#6A5A3A', bg: '#6A5A3A15', ordre: 4 },
+  oui: { label: '✅ Oui !', color: 'var(--gold)', bg: 'color-mix(in srgb, var(--gold) 15%, transparent)', ordre: 4 },
+  non: { label: '❌ Non', color: 'var(--text-muted)', bg: 'color-mix(in srgb, var(--text-muted) 15%, transparent)', ordre: 4 },
 }
 
 export default function Business() {
@@ -67,7 +67,7 @@ export default function Business() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Mon Business</h1>
+          <h1 className="text-[var(--text-muted)]xl font-semibold text-[var(--text)]">Mon Business</h1>
           <p className="text-[#A89878] mt-1">Pipeline Herbalife · 5 prospects actifs</p>
         </div>
         <button className="bg-[#E2B84A] hover:bg-[#ECC85E] text-black font-semibold px-3 py-2 rounded-xl text-sm transition-colors whitespace-nowrap flex-shrink-0">
@@ -78,10 +78,10 @@ export default function Business() {
       {/* Stats rapides */}
       <div className="grid grid-cols-4 gap-3">
         {[
-          { label: 'En liste', value: prospects.filter(p => p.statut === 'liste').length, color: '#6A5A3A' },
+          { label: 'En liste', value: prospects.filter(p => p.statut === 'liste').length, color: 'var(--text-muted)' },
           { label: 'Invités', value: prospects.filter(p => p.statut === 'invite').length, color: '#60a5fa' },
           { label: 'En suivi', value: prospects.filter(p => p.statut === 'suivi').length, color: '#f97316' },
-          { label: 'Convertis', value: prospects.filter(p => p.statut === 'oui').length, color: '#E2B84A' },
+          { label: 'Convertis', value: prospects.filter(p => p.statut === 'oui').length, color: 'var(--gold)' },
         ].map((s, i) => (
           <div key={i} className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-3 text-center">
             <div className="font-bold text-xl" style={{ color: s.color }}>{s.value}</div>
@@ -95,13 +95,13 @@ export default function Business() {
         <div className="flex bg-[#1E1B14] border border-[#2A2318] rounded-xl p-1 gap-1">
           <button
             onClick={() => setVue('pipeline')}
-            className={`hidden md:block px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vue === 'pipeline' ? 'bg-[#E2B84A] text-black' : 'text-[#6A5A3A] hover:text-white'}`}
+            className={`hidden md:block px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vue === 'pipeline' ? 'bg-[#E2B84A] text-black' : 'text-[#6A5A3A] hover:text-[var(--text)]'}`}
           >
             Pipeline
           </button>
           <button
             onClick={() => setVue('liste')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vue === 'liste' ? 'bg-[#E2B84A] text-black' : 'text-[#6A5A3A] hover:text-white'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vue === 'liste' ? 'bg-[#E2B84A] text-black' : 'text-[#6A5A3A] hover:text-[var(--text)]'}`}
           >
             Liste
           </button>
@@ -137,7 +137,7 @@ export default function Business() {
                       <div className="w-6 h-6 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] text-xs font-bold flex-shrink-0">
                         {p.prenom[0]}
                       </div>
-                      <span className="text-white text-xs font-medium truncate">{p.prenom}</span>
+                      <span className="text-[var(--text)] text-xs font-medium truncate">{p.prenom}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ color: marcheConfig[p.marche].color, background: marcheConfig[p.marche].bg }}>
@@ -175,7 +175,7 @@ export default function Business() {
                   {p.prenom[0]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-white text-sm font-medium">{p.prenom} {p.nom}</div>
+                  <div className="text-[var(--text)] text-sm font-medium">{p.prenom} {p.nom}</div>
                   <div className="text-[#6A5A3A] text-xs truncate">{p.prochaineAction}</div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
@@ -189,7 +189,7 @@ export default function Business() {
                   <a
                     href={`tel:${p.telephone}`}
                     onClick={e => e.stopPropagation()}
-                    className="w-8 h-8 bg-[#2A2318] hover:bg-[#E2B84A] hover:text-black text-[#6A5A3A] rounded-lg flex items-center justify-center transition-all text-sm"
+                    className="w-8 h-8 bg-[#2A2318] hover:bg-[#E2B84A] hover:text-[var(--bg)] text-[#6A5A3A] rounded-lg flex items-center justify-center transition-all text-sm"
                     title="Appeler"
                   >
                     📞
@@ -219,11 +219,11 @@ export default function Business() {
                   {prospectActif.prenom[0]}
                 </div>
                 <div>
-                  <div className="text-white font-semibold">{prospectActif.prenom} {prospectActif.nom}</div>
+                  <div className="text-[var(--text)] font-semibold">{prospectActif.prenom} {prospectActif.nom}</div>
                   <div className="text-[#6A5A3A] text-sm">{prospectActif.telephone}</div>
                 </div>
               </div>
-              <button onClick={() => setProspectActif(null)} className="text-[#6A5A3A] hover:text-white text-xl">✕</button>
+              <button onClick={() => setProspectActif(null)} className="text-[#6A5A3A] hover:text-[var(--text)] text-xl">✕</button>
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-4">

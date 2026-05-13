@@ -118,7 +118,7 @@ export default function Formation() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Formation</h1>
+          <h1 className="text-[var(--text-muted)]xl font-semibold text-[var(--text)]">Formation</h1>
           <p className="text-[#A89878] mt-1">Programme 12 semaines — Du débutant au professionnel</p>
         </div>
         <div className="sm:text-right">
@@ -130,7 +130,7 @@ export default function Formation() {
       {/* Barre progression globale */}
       <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-white text-sm font-medium">Progression globale</span>
+          <span className="text-[var(--text)] text-sm font-medium">Progression globale</span>
           <span className="text-[#E2B84A] text-sm">~14%</span>
         </div>
         <div className="w-full bg-[#2A2318] rounded-full h-2">
@@ -165,7 +165,7 @@ export default function Formation() {
                     }`}>
                       {module.statut === 'termine' ? '✓' : module.id}
                     </div>
-                    <span className="text-white text-sm font-medium truncate">{module.titre}</span>
+                    <span className="text-[var(--text)] text-sm font-medium truncate">{module.titre}</span>
                   </div>
                   <span className="text-[#6A5A3A] text-xs flex-shrink-0 ml-2">{module.duree}</span>
                 </div>
@@ -191,7 +191,7 @@ export default function Formation() {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <div className="text-[#6A5A3A] text-xs mb-1">MODULE {moduleSelectionne.id}</div>
-                    <h2 className="text-white text-xl font-semibold">{moduleSelectionne.titre}</h2>
+                    <h2 className="text-[var(--text)] text-xl font-semibold">{moduleSelectionne.titre}</h2>
                   </div>
                   <span className="text-[#E2B84A] text-sm bg-[#E2B84A]/10 px-3 py-1 rounded-full border border-[#E2B84A]/20">
                     {statutConfig[moduleSelectionne.statut].label}
@@ -233,7 +233,7 @@ export default function Formation() {
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-7 h-7 bg-[#E2B84A] rounded-lg flex items-center justify-center text-black font-bold text-xs">A</div>
                   <div>
-                    <div className="text-white text-sm font-medium">Atlas — Coach du module</div>
+                    <div className="text-[var(--text)] text-sm font-medium">Atlas — Coach du module</div>
                     <div className="text-[#6A5A3A] text-xs">Questions, quiz oral, travaux pratiques</div>
                   </div>
                 </div>
@@ -266,16 +266,16 @@ export default function Formation() {
 
               {/* Livres recommandés */}
               <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-5">
-                <h3 className="text-white font-medium mb-3">📚 Lectures recommandées</h3>
+                <h3 className="text-[var(--text)] font-medium mb-3">📚 Lectures recommandées</h3>
                 <div className="space-y-2">
                   {moduleSelectionne.livres.map((livre, i) => (
                     <div key={i} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 bg-[#161410] rounded-lg">
                       <span className="text-[#A89878] text-sm">{livre}</span>
                       <div className="flex gap-2 flex-shrink-0">
-                        <a href="#" className="text-xs bg-[#2A2318] hover:bg-[#E2B84A] hover:text-black text-[#A89878] px-2 py-1 rounded transition-colors">
+                        <a href="#" className="text-xs bg-[#2A2318] hover:bg-[#E2B84A] hover:text-[var(--bg)] text-[#A89878] px-2 py-1 rounded transition-colors">
                           Audible
                         </a>
-                        <a href="#" className="text-xs bg-[#2A2318] hover:bg-[#E2B84A] hover:text-black text-[#A89878] px-2 py-1 rounded transition-colors">
+                        <a href="#" className="text-xs bg-[#2A2318] hover:bg-[#E2B84A] hover:text-[var(--bg)] text-[#A89878] px-2 py-1 rounded transition-colors">
                           Amazon
                         </a>
                       </div>
@@ -286,7 +286,7 @@ export default function Formation() {
             </>
           ) : (
             <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-8 text-center">
-              <div className="text-4xl mb-3">📚</div>
+              <div className="text-[var(--text-muted)]xl mb-3">📚</div>
               <p className="text-[#A89878]">Sélectionne un module pour voir son contenu</p>
             </div>
           )}

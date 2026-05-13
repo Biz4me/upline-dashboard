@@ -112,7 +112,7 @@ export default function Communaute() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Communauté</h1>
+          <h1 className="text-[var(--text-muted)]xl font-semibold text-[var(--text)]">Communauté</h1>
           <p className="text-[#A89878] mt-1">Partagez vos victoires et progressez ensemble</p>
         </div>
         <button
@@ -167,7 +167,7 @@ export default function Communaute() {
                 className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   onglet === o.id
                     ? 'bg-[#E2B84A] text-black'
-                    : 'text-[#6A5A3A] hover:text-white'
+                    : 'text-[#6A5A3A] hover:text-[var(--text)]'
                 }`}
               >
                 {o.label}
@@ -179,7 +179,7 @@ export default function Communaute() {
           <div className="space-y-4">
             {postsFiltres.length === 0 ? (
               <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-8 text-center">
-                <div className="text-3xl mb-2">💬</div>
+                <div className="text-[var(--text-muted)]xl mb-2">💬</div>
                 <p className="text-[#6A5A3A]">Aucun post dans cet espace pour l'instant</p>
                 <button
                   onClick={() => setShowPost(true)}
@@ -198,7 +198,7 @@ export default function Communaute() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-white text-sm font-medium">{post.auteur}</span>
+                        <span className="text-[var(--text)] text-sm font-medium">{post.auteur}</span>
                         <span className="text-xs bg-[#2A2318] text-[#6A5A3A] px-2 py-0.5 rounded-full">{post.societe}</span>
                       </div>
                       <div className="text-[#3d3420] text-xs">{post.temps}</div>
@@ -237,7 +237,7 @@ export default function Communaute() {
 
           {/* Espaces société */}
           <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-5">
-            <h3 className="text-white font-medium mb-3">🏢 Espaces société</h3>
+            <h3 className="text-[var(--text)] font-medium mb-3">🏢 Espaces société</h3>
             <div className="space-y-2">
               {societes.map((s, i) => (
                 <div
@@ -266,7 +266,7 @@ export default function Communaute() {
 
           {/* Top contributeurs */}
           <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-5">
-            <h3 className="text-white font-medium mb-3">🏅 Top contributeurs</h3>
+            <h3 className="text-[var(--text)] font-medium mb-3">🏅 Top contributeurs</h3>
             <div className="space-y-2">
               {topContributeurs.map((c, i) => (
                 <div
@@ -294,7 +294,7 @@ export default function Communaute() {
 
           {/* Règles communauté */}
           <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-5">
-            <h3 className="text-white font-medium mb-3">📋 Règles</h3>
+            <h3 className="text-[var(--text)] font-medium mb-3">📋 Règles</h3>
             <div className="space-y-2 text-xs text-[#6A5A3A]">
               <div className="flex gap-2"><span>✅</span><span>Partagez vos victoires et apprentissages</span></div>
               <div className="flex gap-2"><span>✅</span><span>Posez des questions constructives</span></div>

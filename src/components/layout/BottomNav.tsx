@@ -46,7 +46,7 @@ export default function BottomNav() {
       <div className={`md:hidden fixed bottom-16 left-0 right-0 z-50 transition-transform duration-300 ${open ? 'translate-y-0' : 'translate-y-full'}`}>
         <div className="bg-[#1E1B14] border border-[#2A2318] rounded-t-2xl mx-2 p-4">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-white font-medium text-sm">Plus</span>
+            <span className="text-[var(--text)] font-medium text-sm">Plus</span>
             <button onClick={() => setOpen(false)}>
               <X size={18} className="text-[#6A5A3A]" />
             </button>

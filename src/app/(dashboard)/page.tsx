@@ -2,7 +2,7 @@ export default function Accueil() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold mb-2" style={{ color: 'var(--text)' }}>
+        <h1 className="text-[var(--text-muted)]xl font-semibold mb-2" style={{ color: 'var(--text)' }}>
           Bonjour, Patrice 👋
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>Streak 7 jours · Niveau Explorateur</p>
@@ -17,7 +17,7 @@ export default function Accueil() {
         ].map((s, i) => (
           <div key={i} className="rounded-xl p-4"
             style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-            <div className="text-2xl font-bold" style={{ color: 'var(--gold)' }}>{s.val}</div>
+            <div className="text-[var(--text-muted)]xl font-bold" style={{ color: 'var(--gold)' }}>{s.val}</div>
             <div className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>{s.label}</div>
           </div>
         ))}
