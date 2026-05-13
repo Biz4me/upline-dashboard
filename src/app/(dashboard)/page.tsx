@@ -4,8 +4,8 @@ import { useSession } from 'next-auth/react'
 import AtlasChat from '@/components/atlas/AtlasChat'
 
 export default function Accueil() {
-  const { data: session } = useSession()
-  const userId = session?.user?.id || 'anonymous'
+  const { data: session, status } = useSession()
+  const userId = status === 'authenticated' ? session?.user?.id || 'anonymous' : 'anonymous'
   return (
     <div className="space-y-8">
       <div>
