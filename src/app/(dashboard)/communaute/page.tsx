@@ -113,7 +113,7 @@ export default function Communaute() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[var(--text-muted)]xl font-semibold text-[var(--text)]">Communauté</h1>
-          <p className="text-[#A89878] mt-1">Partagez vos victoires et progressez ensemble</p>
+          <p className="text-[var(--text-secondary)] mt-1">Partagez vos victoires et progressez ensemble</p>
         </div>
         <button
           onClick={() => setShowPost(!showPost)}
@@ -125,19 +125,19 @@ export default function Communaute() {
 
       {/* Nouveau post */}
       {showPost && (
-        <div className="bg-[#1E1B14] border border-[#E2B84A]/30 rounded-xl p-4">
+        <div className="bg-[var(--bg-card)] border border-[#E2B84A]/30 rounded-xl p-4">
           <textarea
             value={nouveauPost}
             onChange={e => setNouveauPost(e.target.value)}
             placeholder="Partagez une victoire, un tip, une question... (restez anonyme sur les données sensibles)"
-            className="w-full bg-[#161410] border border-[#2A2318] rounded-lg px-4 py-3 text-sm text-[#A89878] placeholder-[#3d3420] outline-none focus:border-[#E2B84A] transition-colors resize-none h-24"
+            className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm text-[var(--text-secondary)] placeholder-[var(--text-muted)] outline-none focus:border-[#E2B84A] transition-colors resize-none h-24"
           />
           <div className="flex items-center justify-between mt-3">
             <span className="text-[#3d3420] text-xs">💡 Anonymisez vos données business sensibles</span>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowPost(false)}
-                className="text-sm bg-[#2A2318] hover:bg-[#3d3420] text-[#A89878] px-4 py-2 rounded-lg transition-colors"
+                className="text-sm bg-[var(--gold-muted)] hover:bg-[var(--gold-muted)] text-[var(--text-secondary)] px-4 py-2 rounded-lg transition-colors"
               >
                 Annuler
               </button>
@@ -155,7 +155,7 @@ export default function Communaute() {
         <div className="lg:col-span-2 space-y-4">
 
           {/* Onglets */}
-          <div className="flex bg-[#1E1B14] border border-[#2A2318] rounded-xl p-1 gap-1">
+          <div className="flex bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-1 gap-1">
             {([
               { id: 'general', label: '🌍 Général' },
               { id: 'societe', label: '🟠 Herbalife' },
@@ -167,7 +167,7 @@ export default function Communaute() {
                 className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   onglet === o.id
                     ? 'bg-[#E2B84A] text-black'
-                    : 'text-[#6A5A3A] hover:text-[var(--text)]'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text)]'
                 }`}
               >
                 {o.label}
@@ -178,9 +178,9 @@ export default function Communaute() {
           {/* Posts */}
           <div className="space-y-4">
             {postsFiltres.length === 0 ? (
-              <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-8 text-center">
+              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 text-center">
                 <div className="text-[var(--text-muted)]xl mb-2">💬</div>
-                <p className="text-[#6A5A3A]">Aucun post dans cet espace pour l'instant</p>
+                <p className="text-[var(--text-muted)]">Aucun post dans cet espace pour l'instant</p>
                 <button
                   onClick={() => setShowPost(true)}
                   className="mt-3 text-sm text-[#E2B84A] hover:underline"
@@ -190,7 +190,7 @@ export default function Communaute() {
               </div>
             ) : (
               postsFiltres.map(post => (
-                <div key={post.id} className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-5">
+                <div key={post.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
                   {/* Header post */}
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-8 h-8 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] font-bold text-sm flex-shrink-0">
@@ -199,7 +199,7 @@ export default function Communaute() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <span className="text-[var(--text)] text-sm font-medium">{post.auteur}</span>
-                        <span className="text-xs bg-[#2A2318] text-[#6A5A3A] px-2 py-0.5 rounded-full">{post.societe}</span>
+                        <span className="text-xs bg-[var(--gold-muted)] text-[var(--text-muted)] px-2 py-0.5 rounded-full">{post.societe}</span>
                       </div>
                       <div className="text-[#3d3420] text-xs">{post.temps}</div>
                     </div>
@@ -209,20 +209,20 @@ export default function Communaute() {
                   <p className="text-[#D4C8A8] text-sm leading-relaxed mb-4">{post.contenu}</p>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-4 pt-3 border-t border-[#2A2318]">
+                  <div className="flex items-center gap-4 pt-3 border-t border-[var(--border)]">
                     <button
                       onClick={() => toggleLike(post.id)}
                       className={`flex items-center gap-1.5 text-sm transition-colors ${
-                        likedPosts.includes(post.id) ? 'text-[#E2B84A]' : 'text-[#6A5A3A] hover:text-[#A89878]'
+                        likedPosts.includes(post.id) ? 'text-[#E2B84A]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
                       }`}
                     >
                       {likedPosts.includes(post.id) ? '❤️' : '🤍'}
                       <span>{likedPosts.includes(post.id) ? post.likes + 1 : post.likes}</span>
                     </button>
-                    <button className="flex items-center gap-1.5 text-sm text-[#6A5A3A] hover:text-[#A89878] transition-colors">
+                    <button className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors">
                       💬 <span>{post.commentaires}</span>
                     </button>
-                    <button className="flex items-center gap-1.5 text-sm text-[#6A5A3A] hover:text-[#A89878] transition-colors ml-auto">
+                    <button className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors ml-auto">
                       ↗️ Partager
                     </button>
                   </div>
@@ -236,7 +236,7 @@ export default function Communaute() {
         <div className="space-y-4">
 
           {/* Espaces société */}
-          <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-5">
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
             <h3 className="text-[var(--text)] font-medium mb-3">🏢 Espaces société</h3>
             <div className="space-y-2">
               {societes.map((s, i) => (
@@ -245,7 +245,7 @@ export default function Communaute() {
                   className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
                     s.actif
                       ? 'bg-[#E2B84A]/10 border border-[#E2B84A]/20'
-                      : 'bg-[#161410] hover:bg-[#2A2318]'
+                      : 'bg-[var(--bg)] hover:bg-[var(--gold-muted)]'
                   }`}
                 >
                   <div
@@ -253,7 +253,7 @@ export default function Communaute() {
                     style={{ background: s.couleur }}
                   ></div>
                   <div className="flex-1">
-                    <div className={`text-sm font-medium ${s.actif ? 'text-[#E2B84A]' : 'text-[#A89878]'}`}>
+                    <div className={`text-sm font-medium ${s.actif ? 'text-[#E2B84A]' : 'text-[var(--text-secondary)]'}`}>
                       {s.nom}
                     </div>
                     <div className="text-[#3d3420] text-xs">{s.membres} membres</div>
@@ -265,7 +265,7 @@ export default function Communaute() {
           </div>
 
           {/* Top contributeurs */}
-          <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-5">
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
             <h3 className="text-[var(--text)] font-medium mb-3">🏅 Top contributeurs</h3>
             <div className="space-y-2">
               {topContributeurs.map((c, i) => (
@@ -282,20 +282,20 @@ export default function Communaute() {
                     {c.avatar}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className={`text-sm truncate ${c.estMoi ? 'text-[#E2B84A]' : 'text-[#A89878]'}`}>
+                    <div className={`text-sm truncate ${c.estMoi ? 'text-[#E2B84A]' : 'text-[var(--text-secondary)]'}`}>
                       {c.nom} {c.estMoi && '← toi'}
                     </div>
                   </div>
-                  <span className="text-[#6A5A3A] text-xs flex-shrink-0">{c.posts} posts</span>
+                  <span className="text-[var(--text-muted)] text-xs flex-shrink-0">{c.posts} posts</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Règles communauté */}
-          <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-5">
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5">
             <h3 className="text-[var(--text)] font-medium mb-3">📋 Règles</h3>
-            <div className="space-y-2 text-xs text-[#6A5A3A]">
+            <div className="space-y-2 text-xs text-[var(--text-muted)]">
               <div className="flex gap-2"><span>✅</span><span>Partagez vos victoires et apprentissages</span></div>
               <div className="flex gap-2"><span>✅</span><span>Posez des questions constructives</span></div>
               <div className="flex gap-2"><span>❌</span><span>Pas de données prospects sensibles</span></div>

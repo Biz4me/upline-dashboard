@@ -179,11 +179,11 @@ export default function Achievements() {
       {/* Header */}
       <div>
         <h1 className="text-[var(--text-muted)]xl font-semibold text-[var(--text)]">Succès & Badges</h1>
-        <p className="text-[#A89878] mt-1">Tes accomplissements terrain et formation</p>
+        <p className="text-[var(--text-secondary)] mt-1">Tes accomplissements terrain et formation</p>
       </div>
 
       {/* Niveau & XP */}
-      <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-16 h-16 rounded-2xl bg-[#E2B84A]/20 border-[var(--border)] border-[#E2B84A]/40 flex items-center justify-center text-[var(--text-muted)]xl">
             🏔️
@@ -193,45 +193,45 @@ export default function Achievements() {
               <div className="text-[var(--text)] font-bold text-lg">{niveauActuel}</div>
               <div className="text-[#E2B84A] text-sm font-medium">{xpTotal} / {xpProchain} XP</div>
             </div>
-            <div className="w-full bg-[#2A2318] rounded-full h-3 mb-1">
+            <div className="w-full bg-[var(--gold-muted)] rounded-full h-3 mb-1">
               <div
                 className="bg-gradient-to-r from-[#E2B84A] to-[#ECC85E] h-3 rounded-full transition-all"
                 style={{width: `${(xpTotal/xpProchain)*100}%`}}
               ></div>
             </div>
-            <div className="text-[#6A5A3A] text-xs">
-              Prochain niveau : <span className="text-[#A89878]">{niveauSuivant}</span> — encore {xpProchain - xpTotal} XP
+            <div className="text-[var(--text-muted)] text-xs">
+              Prochain niveau : <span className="text-[var(--text-secondary)]">{niveauSuivant}</span> — encore {xpProchain - xpTotal} XP
             </div>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3">
-          <div className="bg-[#161410] rounded-lg p-3 text-center">
+          <div className="bg-[var(--bg)] rounded-lg p-3 text-center">
             <div className="text-[#E2B84A] font-bold text-lg">{badgesObtenus.length}</div>
-            <div className="text-[#6A5A3A] text-xs">Badges obtenus</div>
+            <div className="text-[var(--text-muted)] text-xs">Badges obtenus</div>
           </div>
-          <div className="bg-[#161410] rounded-lg p-3 text-center">
+          <div className="bg-[var(--bg)] rounded-lg p-3 text-center">
             <div className="text-[#E2B84A] font-bold text-lg">7</div>
-            <div className="text-[#6A5A3A] text-xs">Streak actuel 🔥</div>
+            <div className="text-[var(--text-muted)] text-xs">Streak actuel 🔥</div>
           </div>
-          <div className="bg-[#161410] rounded-lg p-3 text-center">
+          <div className="bg-[var(--bg)] rounded-lg p-3 text-center">
             <div className="text-[#E2B84A] font-bold text-lg">{xpTotal}</div>
-            <div className="text-[#6A5A3A] text-xs">XP total</div>
+            <div className="text-[var(--text-muted)] text-xs">XP total</div>
           </div>
         </div>
       </div>
 
       {/* Défis de la semaine */}
-      <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-7 h-7 bg-[#E2B84A] rounded-lg flex items-center justify-center text-black font-bold text-xs">A</div>
           <div>
             <div className="text-[var(--text)] font-medium text-sm">Atlas — Défis de la semaine</div>
-            <div className="text-[#6A5A3A] text-xs">Les défis TERRAIN sont à réaliser dans ton business Herbalife — pas dans la formation !</div>
+            <div className="text-[var(--text-muted)] text-xs">Les défis TERRAIN sont à réaliser dans ton business Herbalife — pas dans la formation !</div>
           </div>
         </div>
         <div className="space-y-3">
           {defis.map(d => (
-            <div key={d.id} className="flex flex-col md:flex-row md:items-center gap-2 p-3 bg-[#161410] rounded-lg">
+            <div key={d.id} className="flex flex-col md:flex-row md:items-center gap-2 p-3 bg-[var(--bg)] rounded-lg">
               <div className="flex items-center gap-2">
                 <span
                   className="text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0"
@@ -245,7 +245,7 @@ export default function Achievements() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-[var(--text)] text-sm">{d.texte}</div>
-                <div className="text-[#6A5A3A] text-xs">{d.detail}</div>
+                <div className="text-[var(--text-muted)] text-xs">{d.detail}</div>
               </div>
               <span className="text-xs text-[#E2B84A] flex-shrink-0">+{d.xp} XP</span>
             </div>
@@ -254,18 +254,18 @@ export default function Achievements() {
       </div>
 
       {/* Badges obtenus */}
-      <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
         <h3 className="text-[var(--text)] font-medium mb-4">🏆 Badges obtenus ({badgesObtenus.length})</h3>
         <div className="grid grid-cols-3 gap-3">
           {badgesObtenus.map(b => (
             <div
               key={b.id}
               onClick={() => setBadgeActif(b)}
-              className="bg-[#161410] border border-[#E2B84A]/20 rounded-xl p-4 text-center cursor-pointer hover:border-[#E2B84A]/50 transition-all"
+              className="bg-[var(--bg)] border border-[#E2B84A]/20 rounded-xl p-4 text-center cursor-pointer hover:border-[#E2B84A]/50 transition-all"
             >
               <div className="text-[var(--text-muted)]xl mb-2">{b.icone}</div>
               <div className="text-[#E2B84A] text-sm font-medium">{b.nom}</div>
-              <div className="text-[#6A5A3A] text-xs mt-1">+{b.xp} XP</div>
+              <div className="text-[var(--text-muted)] text-xs mt-1">+{b.xp} XP</div>
               <div className="text-[#3d3420] text-xs mt-1">{b.date}</div>
             </div>
           ))}
@@ -273,23 +273,23 @@ export default function Achievements() {
       </div>
 
       {/* Badges à débloquer */}
-      <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
         <h3 className="text-[var(--text)] font-medium mb-4">🔒 À débloquer ({badgesVerrouilles.length})</h3>
         <div className="space-y-3">
           {badgesVerrouilles.map(b => (
             <div
               key={b.id}
               onClick={() => setBadgeActif(b)}
-              className="flex items-center gap-3 p-3 bg-[#161410] rounded-lg cursor-pointer hover:bg-[#2A2318]/50 transition-all opacity-70"
+              className="flex items-center gap-3 p-3 bg-[var(--bg)] rounded-lg cursor-pointer hover:bg-[var(--gold-muted)]/50 transition-all opacity-70"
             >
               <div className="text-[var(--text-muted)]xl grayscale opacity-50">{b.icone}</div>
               <div className="flex-1">
-                <div className="text-[#6A5A3A] text-sm font-medium">{b.nom}</div>
+                <div className="text-[var(--text-muted)] text-sm font-medium">{b.nom}</div>
                 <div className="text-[#3d3420] text-xs">{b.condition}</div>
                 {b.progression !== undefined && b.total !== undefined && (
                   <div className="mt-1">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-[#2A2318] rounded-full h-1.5">
+                      <div className="flex-1 bg-[var(--gold-muted)] rounded-full h-1.5">
                         <div
                           className="bg-[#E2B84A]/40 h-1.5 rounded-full"
                           style={{width: `${(b.progression/b.total)*100}%`}}
@@ -307,7 +307,7 @@ export default function Achievements() {
       </div>
 
       {/* Streak calendrier */}
-      <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[var(--text)] font-medium">🔥 Mon Streak</h3>
           <div className="text-[#E2B84A] font-bold">7 jours</div>
@@ -315,7 +315,7 @@ export default function Achievements() {
         <div className="mb-4">
           <div className="grid grid-cols-7 gap-1 mb-1">
             {jours.map((j, i) => (
-              <div key={i} className="text-center text-[#6A5A3A] text-xs">{j}</div>
+              <div key={i} className="text-center text-[var(--text-muted)] text-xs">{j}</div>
             ))}
           </div>
           {semaines.map((semaine, si) => (
@@ -326,7 +326,7 @@ export default function Achievements() {
                   className={`h-7 rounded-lg flex items-center justify-center text-xs transition-all ${
                     actif
                       ? 'bg-[#E2B84A] text-black font-bold'
-                      : 'bg-[#2A2318] text-[#3d3420]'
+                      : 'bg-[var(--gold-muted)] text-[#3d3420]'
                   }`}
                 >
                   {actif ? '✓' : ''}
@@ -336,13 +336,13 @@ export default function Achievements() {
           ))}
         </div>
         <div className="flex items-center justify-between text-sm">
-          <span className="text-[#6A5A3A]">Record personnel</span>
+          <span className="text-[var(--text-muted)]">Record personnel</span>
           <span className="text-[#E2B84A] font-medium">12 jours 🏆</span>
         </div>
       </div>
 
       {/* Leaderboard */}
-      <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
         <h3 className="text-[var(--text)] font-medium mb-4">🏅 Leaderboard équipe</h3>
         <div className="space-y-3">
           {leaderboard.map(u => (
@@ -351,13 +351,13 @@ export default function Achievements() {
               className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
                 u.estMoi
                   ? 'bg-[#E2B84A]/10 border border-[#E2B84A]/20'
-                  : 'bg-[#161410]'
+                  : 'bg-[var(--bg)]'
               }`}
             >
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${
                 u.rang === 1 ? 'bg-[#E2B84A] text-black' :
                 u.rang === 2 ? 'bg-[#A89878] text-black' :
-                'bg-[#2A2318] text-[#6A5A3A]'
+                'bg-[var(--gold-muted)] text-[var(--text-muted)]'
               }`}>
                 {u.rang === 1 ? '🥇' : u.rang === 2 ? '🥈' : '🥉'}
               </div>
@@ -368,7 +368,7 @@ export default function Achievements() {
                 <div className={`text-sm font-medium ${u.estMoi ? 'text-[#E2B84A]' : 'text-[var(--text)]'}`}>
                   {u.nom} {u.estMoi && '← toi'}
                 </div>
-                <div className="text-[#6A5A3A] text-xs">{u.niveau}</div>
+                <div className="text-[var(--text-muted)] text-xs">{u.niveau}</div>
               </div>
               <div className="text-[#E2B84A] font-bold text-sm">{u.xp} XP</div>
             </div>
@@ -379,14 +379,14 @@ export default function Achievements() {
       {/* Modal badge */}
       {badgeActif && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setBadgeActif(null)}>
-          <div className="bg-[#1E1B14] border border-[#2A2318] rounded-2xl p-6 w-full max-w-sm text-center" onClick={e => e.stopPropagation()}>
-            <button onClick={() => setBadgeActif(null)} className="absolute top-4 right-4 text-[#6A5A3A] hover:text-[var(--text)]">✕</button>
+          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-6 w-full max-w-sm text-center" onClick={e => e.stopPropagation()}>
+            <button onClick={() => setBadgeActif(null)} className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text)]">✕</button>
             <div className={`text-[var(--text-muted)]xl mb-4 ${!badgeActif.obtenu ? 'grayscale opacity-50' : ''}`}>{badgeActif.icone}</div>
-            <h3 className={`text-xl font-bold mb-2 ${badgeActif.obtenu ? 'text-[#E2B84A]' : 'text-[#6A5A3A]'}`}>{badgeActif.nom}</h3>
-            <p className="text-[#A89878] text-sm mb-3">{badgeActif.description}</p>
-            <div className="bg-[#161410] rounded-lg p-3 mb-4">
-              <div className="text-[#6A5A3A] text-xs mb-1">Condition</div>
-              <div className="text-[#A89878] text-sm">{badgeActif.condition}</div>
+            <h3 className={`text-xl font-bold mb-2 ${badgeActif.obtenu ? 'text-[#E2B84A]' : 'text-[var(--text-muted)]'}`}>{badgeActif.nom}</h3>
+            <p className="text-[var(--text-secondary)] text-sm mb-3">{badgeActif.description}</p>
+            <div className="bg-[var(--bg)] rounded-lg p-3 mb-4">
+              <div className="text-[var(--text-muted)] text-xs mb-1">Condition</div>
+              <div className="text-[var(--text-secondary)] text-sm">{badgeActif.condition}</div>
             </div>
             {badgeActif.obtenu ? (
               <div className="text-[#E2B84A] text-sm">✅ Obtenu le {badgeActif.date} · +{badgeActif.xp} XP</div>
@@ -395,15 +395,15 @@ export default function Achievements() {
                 {badgeActif.progression !== undefined && badgeActif.total !== undefined && (
                   <div className="mb-3">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-[#6A5A3A]">Progression</span>
+                      <span className="text-[var(--text-muted)]">Progression</span>
                       <span className="text-[#E2B84A]">{badgeActif.progression}/{badgeActif.total}</span>
                     </div>
-                    <div className="w-full bg-[#2A2318] rounded-full h-2">
+                    <div className="w-full bg-[var(--gold-muted)] rounded-full h-2">
                       <div className="bg-[#E2B84A]/40 h-2 rounded-full" style={{width: `${(badgeActif.progression/badgeActif.total)*100}%`}}></div>
                     </div>
                   </div>
                 )}
-                <div className="text-[#6A5A3A] text-sm">🔒 +{badgeActif.xp} XP à débloquer</div>
+                <div className="text-[var(--text-muted)] text-sm">🔒 +{badgeActif.xp} XP à débloquer</div>
               </div>
             )}
           </div>
