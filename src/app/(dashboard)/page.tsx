@@ -1,6 +1,11 @@
+'use client'
+
+import { useSession } from 'next-auth/react'
 import AtlasChat from '@/components/atlas/AtlasChat'
 
 export default function Accueil() {
+  const { data: session } = useSession()
+  const userId = session?.user?.id || 'anonymous'
   return (
     <div className="space-y-8">
       <div>
@@ -40,6 +45,7 @@ export default function Accueil() {
       </div>
 
       <AtlasChat
+        sessionId={userId}
         suggestions={[
           '💡 Conseil du jour',
           '📊 Analyser mon réseau',

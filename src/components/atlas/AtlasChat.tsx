@@ -9,12 +9,14 @@ interface Message {
 }
 
 interface AtlasChatProps {
+  sessionId?: string
   context?: string
   placeholder?: string
   suggestions?: string[]
 }
 
 export default function AtlasChat({
+  sessionId: propsSessionId,
   context,
   placeholder = 'Écrire à Atlas...',
   suggestions = [],
@@ -23,7 +25,7 @@ export default function AtlasChat({
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
-  const [sessionId, setSessionId] = useState<string>(() => `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
+  const [sessionId] = useState<string>(() => propsSessionId || `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
