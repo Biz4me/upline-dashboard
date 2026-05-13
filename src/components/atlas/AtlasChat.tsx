@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -117,7 +118,7 @@ export default function AtlasChat({
                   : 'bg-[var(--bg)] text-[var(--text-secondary)]'
               }`}
             >
-              {msg.content}
+              {msg.role === 'user' ? msg.content : <div className="atlas-markdown"><ReactMarkdown>{msg.content}</ReactMarkdown></div>}
             </div>
           </div>
         ))}

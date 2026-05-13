@@ -46,3 +46,29 @@
     transition: background-color 0.3s, color 0.3s;
   }
 }
+
+/* Markdown styles for Atlas chat bubbles */
+.atlas-markdown strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.atlas-markdown ol,
+.atlas-markdown ul {
+  padding-left: 1.2rem;
+  margin: 8px 0;
+}
+
+.atlas-markdown li {
+  margin: 4px 0;
+  line-height: 1.6;
+}
+
+.atlas-markdown p {
+  margin: 0 0 8px 0;
+  line-height: 1.7;
+}
+
+.atlas-markdown p:last-child {
+  margin-bottom: 0;
+}
