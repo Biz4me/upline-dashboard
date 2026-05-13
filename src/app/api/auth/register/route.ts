@@ -13,8 +13,8 @@ const pool = new Pool({
 
 export async function POST(req: Request) {
   try {
-    const { email, password, full_name } = await req.json()
-    if (!email || !password || !full_name) {
+    const { email, password, prenom, nom } = await req.json()
+    if (!email || !password || !prenom || !nom) {
       return NextResponse.json({ error: 'Champs manquants' }, { status: 400 })
     }
     const exists = await pool.query('SELECT id FROM users WHERE email = $1', [email])
@@ -23,8 +23,8 @@ export async function POST(req: Request) {
     }
     const hash = await bcrypt.hash(password, 12)
     const result = await pool.query(
-      'INSERT INTO users (email, password_hash, full_name, created_at) VALUES ($1, $2, $3, NOW()) RETURNING id, email, full_name',
-      [email, hash, full_name]
+      'INSERT INTO users (email, password_hash, prenom, nom, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING id, email, prenom, nom',
+      [email, hash, prenom, nom]
     )
     return NextResponse.json({ user: result.rows[0] }, { status: 201 })
   } catch (error) {
