@@ -81,28 +81,57 @@ export default function AtlasChat({
       }
 
       let fullText = ''
+      let buffer = ''
 
       while (true) {
         const { done, value } = await reader.read()
         if (done) break
 
-        const chunk = decoder.decode(value, { stream: true })
-        fullText += chunk
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
 
-        setMessages(prev => {
-          const newMessages = [...prev]
-          newMessages[newMessages.length - 1] = {
-            role: 'assistant',
-            content: fullText,
+        for (const line of lines) {
+          if (line.startsWith('data: ') || line.startsWith('data:')) {
+            const data = line.replace(/^data:\s*/, '').trim()
+            if (!data || data === '[DONE]') continue
+            try {
+              const parsed = JSON.parse(data)
+              if (parsed.token) {
+                fullText += parsed.token
+                setMessages(prev => {
+                  const newMessages = [...prev]
+                  newMessages[newMessages.length - 1] = {
+                    role: 'assistant',
+                    content: fullText,
+                  }
+                  return newMessages
+                })
+              }
+            } catch {
+              // Ignorer les lignes non-JSON
+            }
           }
-          return newMessages
-        })
+        }
       }
 
-      // Dernier décodage pour s'assurer qu'il n'y a pas de bytes restants
-      const finalChunk = decoder.decode()
-      if (finalChunk) {
-        fullText += finalChunk
+      // Traiter le buffer restant à la fin
+      if (buffer) {
+        const lines = buffer.split('\n')
+        for (const line of lines) {
+          if (line.startsWith('data: ') || line.startsWith('data:')) {
+            const data = line.replace(/^data:\s*/, '').trim()
+            if (!data || data === '[DONE]') continue
+            try {
+              const parsed = JSON.parse(data)
+              if (parsed.token) {
+                fullText += parsed.token
+              }
+            } catch {
+              // Ignorer
+            }
+          }
+        }
         setMessages(prev => {
           const newMessages = [...prev]
           newMessages[newMessages.length - 1] = {
