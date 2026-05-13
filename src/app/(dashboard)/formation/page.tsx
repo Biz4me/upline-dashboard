@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import AtlasChat from '@/components/atlas/AtlasChat'
 
 const modules = [
   {
@@ -229,40 +230,15 @@ export default function Formation() {
               </div>
 
               {/* Chat Atlas pour ce module */}
-              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-7 h-7 bg-[#E2B84A] rounded-lg flex items-center justify-center text-black font-bold text-xs">A</div>
-                  <div>
-                    <div className="text-[var(--text-on-card)] text-sm font-medium">Atlas — Coach du module</div>
-                    <div className="text-[var(--text-muted)] text-xs">Questions, quiz oral, travaux pratiques</div>
-                  </div>
-                </div>
-                <div className="bg-[var(--bg)] rounded-lg p-3 mb-3">
-                  <p className="text-[#D4C8A8] text-sm">
-                    Tu travailles sur le module {moduleSelectionne.id} : {moduleSelectionne.titre}. 
-                    Je peux te poser des questions pour tester tes connaissances, t'aider avec les exercices pratiques ou répondre à tes questions sur ce module.
-                  </p>
-                </div>
-                <div className="flex gap-2 mb-3">
-                  <button className="text-xs bg-[var(--gold-muted)] hover:bg-[var(--gold-muted)] text-[var(--text-secondary)] px-3 py-2 rounded-lg transition-colors">
-                    🎯 Quiz rapide
-                  </button>
-                  <button className="text-xs bg-[var(--gold-muted)] hover:bg-[var(--gold-muted)] text-[var(--text-secondary)] px-3 py-2 rounded-lg transition-colors">
-                    💬 Jeu de rôle
-                  </button>
-                  <button className="text-xs bg-[var(--gold-muted)] hover:bg-[var(--gold-muted)] text-[var(--text-secondary)] px-3 py-2 rounded-lg transition-colors">
-                    📝 Exercice pratique
-                  </button>
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Pose une question à Atlas sur ce module..."
-                    className="flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] placeholder-[var(--text-muted)] outline-none focus:border-[#E2B84A] transition-colors"
-                  />
-                  <button className="bg-[#E2B84A] hover:bg-[#ECC85E] text-black font-bold px-4 py-2 rounded-lg text-sm transition-colors">→</button>
-                </div>
-              </div>
+              <AtlasChat
+                context={`Module ${moduleSelectionne.id} : ${moduleSelectionne.titre}`}
+                placeholder="Pose une question à Atlas sur ce module..."
+                suggestions={[
+                  '🎯 Quiz rapide',
+                  '💬 Jeu de rôle',
+                  '📝 Exercice pratique',
+                ]}
+              />
 
               {/* Livres recommandés */}
               <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">

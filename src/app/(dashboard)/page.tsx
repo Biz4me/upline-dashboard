@@ -1,3 +1,5 @@
+import AtlasChat from '@/components/atlas/AtlasChat'
+
 export default function Accueil() {
   return (
     <div className="space-y-8">
@@ -37,36 +39,12 @@ export default function Accueil() {
         </p>
       </div>
 
-      <div className="rounded-xl p-6"
-        style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-black font-bold text-sm"
-            style={{ background: 'var(--gold)' }}>A</div>
-          <div>
-            <div className="text-sm font-medium" style={{ color: 'var(--text-on-card)' }}>Atlas</div>
-            <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Coach IA · En ligne</div>
-          </div>
-        </div>
-        <div className="rounded-lg p-3 mb-4" style={{ background: 'var(--bg)' }}>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Bonjour Patrice ! Tu es à 37% de ta formation. Continue sur ta lancée — le module 4 sur la vente consultative t'attend. Des questions ?
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Écrire à Atlas..."
-            className="flex-1 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
-            style={{
-              background: 'var(--bg)',
-              border: '1px solid var(--border)',
-              color: 'var(--text-secondary-on-card)',
-            }}
-          />
-          <button className="font-bold px-4 py-2 rounded-lg text-sm transition-colors text-black"
-            style={{ background: 'var(--gold)' }}>→</button>
-        </div>
-      </div>
+      <AtlasChat
+        suggestions={[
+          '💡 Conseil du jour',
+          '📊 Analyser mon réseau',
+        ]}
+      />
 
       <div className="rounded-xl p-6"
         style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
