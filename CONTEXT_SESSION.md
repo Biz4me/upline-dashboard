@@ -1,24 +1,30 @@
 # 🏔️ Upline.ai — Fichier de Contexte Session
 
 > À partager au début de chaque nouvelle session Claude
-> Dernière mise à jour : 12 Mai 2026
+> Dernière mise à jour : 13 Mai 2026
 
 ---
 
 ## 📍 Où on en est
 
-**Étape actuelle : Étape 5 — Dashboard Next.js PWA**
+**Étape actuelle : Étape 5 — Dashboard Next.js PWA (TERMINÉE)**
 
 On vient de terminer :
 - ✅ Toute l'infrastructure Docker (12 conteneurs)
 - ✅ 17 tables PostgreSQL
 - ✅ RAG Chroma opérationnel (166 chunks)
 - ✅ Flow Atlas Coach opérationnel dans Flowise
-- ✅ Atlas répond en français avec le RAG ✅
+- ✅ Atlas répond en français avec le RAG
+- ✅ Dashboard Next.js PWA complet (7 pages)
+- ✅ Déployé sur Vercel → https://upline-dashboard.vercel.app
+- ✅ GitHub + Gitea synchronisés
+- ✅ Responsive mobile complet
 
 On commence maintenant :
-- 🔄 Dashboard Next.js PWA (7 pages)
-- 🔲 Flows Prospecteur + Vendeur (à faire après ou en parallèle)
+- 🔄 Étape 6 — Connexion Atlas réel (Flowise API)
+- 🔄 Auth JWT + connexion/inscription
+- 🔄 Données réelles PostgreSQL
+- 🔲 PWA manifest + icônes installables
 
 ---
 
@@ -33,6 +39,7 @@ On commence maintenant :
 | Gitea | https://gitea-sapw.srv1651221.hstgr.cloud |
 | Uptime Kuma | https://uptime-kuma-wmt1.srv1651221.hstgr.cloud |
 | n8n | https://n8n-ljj5.srv1651221.hstgr.cloud |
+| Dashboard Vercel | https://upline-dashboard.vercel.app |
 
 ---
 
@@ -87,51 +94,136 @@ ollama-evar-ollama-1
 ```
 Plateforme : Upline.ai
 Coach IA   : Atlas
-Palette    : noir #0A0A0A + or #C9A84C + blanc #FFFFFF
-Navigation : sidebar desktop + bottom nav mobile
-Frontend   : Next.js 14 + TypeScript + Tailwind + Shadcn
+Palette    : fond #161410 (noir chaud) + or #E2B84A + blanc #FFFFFF
+Fond secondaire : #1E1B14
+Bordures   : #2A2318
+Texte secondaire : #A89878
+Or hover   : #ECC85E
+Navigation : sidebar desktop + bottom nav mobile (drawer "Plus")
+Frontend   : Next.js 14 + TypeScript + Tailwind + Shadcn + Lucide React
 Hébergement: Vercel
 ```
 
 ---
 
-## 📁 Repo Gitea
+## 📁 Repos Git
 
-- URL : https://gitea-sapw.srv1651221.hstgr.cloud/patrice/upline-ai
-- Branch : main
-- Fichiers : init_database.sql, index.html
+| Repo | URL |
+|---|---|
+| GitHub | https://github.com/Biz4me/upline-dashboard |
+| Gitea | https://gitea-sapw.srv1651221.hstgr.cloud/patrice/upline-ai |
+| Branch | main |
+
+---
+
+## 🖥️ Dashboard — Pages terminées
+
+| Page | URL | Statut |
+|---|---|---|
+| Accueil | / | ✅ Cards stats + widget Atlas + activité |
+| Formation | /formation | ✅ 8 modules + Atlas coach + livres Amazon/Audible |
+| Business | /business | ✅ CRM Pipeline/Liste + appel mobile + invitation Upline |
+| Communauté | /communaute | ✅ Fil général + espaces société + Mon équipe |
+| Succès | /achievements | ✅ Badges + défis TERRAIN/FORMATION/ATLAS + streak + leaderboard |
+| Parrainage | /parrainage | ✅ Lien unique + filleuls + carte de visite + QR Code |
+| Profil | /profil | ✅ Avatar cliquable + société MLM + abonnement + export |
+
+---
+
+## 🏗️ Architecture Dashboard
+
+```
+src/
+├── app/
+│   ├── (dashboard)/
+│   │   ├── layout.tsx          ← Sidebar + BottomNav + ThemeToggle + Cloche
+│   │   ├── page.tsx            ← Accueil
+│   │   ├── formation/page.tsx
+│   │   ├── business/page.tsx
+│   │   ├── communaute/page.tsx
+│   │   ├── achievements/page.tsx
+│   │   ├── parrainage/page.tsx
+│   │   └── profil/page.tsx
+│   ├── layout.tsx              ← Root layout + Inter font
+│   └── globals.css             ← Variables CSS dark/light
+└── components/
+    └── layout/
+        ├── Sidebar.tsx         ← Nav desktop + avatar profil bas
+        ├── BottomNav.tsx       ← Nav mobile + drawer "Plus"
+        └── ThemeToggle.tsx     ← Toggle dark/light (Sun/Moon Lucide)
+```
+
+---
+
+## 🎨 Icônes Navigation (Lucide React)
+
+| Page | Icône |
+|---|---|
+| Accueil | LayoutDashboard |
+| Formation | GraduationCap |
+| Business | Briefcase |
+| Communauté | Users |
+| Succès | Trophy |
+| Parrainage | GitFork |
+| Profil | User |
+
+---
+
+## 📱 Responsive Mobile
+
+```
+Desktop : sidebar 224px + header (☀️ + 🔔 + P avatar)
+Mobile  : bottom nav (4 items + ··· Plus)
+          drawer "Plus" → Communauté + Parrainage + Profil
+          header épuré (☀️ seulement)
+```
+
+---
+
+## 💰 Modèle économique
+
+```
+Trial 1h → Gratuit limité → Premium $19/mois
+Parrainage Phase 1 : 1 mois gratuit parrain + filleul
+Parrainage Phase 2 : 20% commission cash (Stripe Connect)
+Affiliation Amazon/Audible : livres formation
+```
 
 ---
 
 ## 🔜 Prochaines étapes
 
-1. **Étape 5** — Dashboard Next.js PWA
-   - Créer projet Next.js dans VS Code avec Cline
-   - Stack : Next.js 14 + TypeScript + Tailwind + Shadcn/ui
-   - 7 pages : Accueil, Formation, Business, Communauté, Achievements, Parrainage, Profil
-   - Widget chat Atlas intégré (via API Flowise)
-   - Design noir/or
-
-2. **Étape 4 (suite)** — Flows Flowise restants
-   - upline-prospecteur
-   - upline-vendeur
+1. **Connexion Atlas réel** — brancher widget chat sur API Flowise
+2. **Auth JWT** — page login/signup + middleware protection routes
+3. **Données réelles PostgreSQL** — remplacer données statiques
+4. **CRM Business** — vraie persistance prospects en BDD
+5. **PWA** — manifest.json + icônes + service worker
+6. **Flows Flowise restants** — upline-prospecteur + upline-vendeur
 
 ---
 
 ## 📋 Décisions importantes prises
 
 - Coach IA s'appelle **Atlas** (pas Upline)
-- Modèle LLM : **deepseek-v4-flash** (bon compromis vitesse/qualité)
-- Embeddings : **nomic-embed-text local** (Ollama sur VPS)
-- BDD : **PostgreSQL direct** (pas Appwrite)
-- Vector store : **Chroma** (pas Qdrant)
-- Orchestration : **Flowise** (pas Hermes)
-- Frontend : **Vercel** (pas VPS)
-- Parrainage phase 1 : **mois gratuit** (pas commission cash)
-- Streaming : **à implémenter plus tard**
+- Or brillant : **#E2B84A** (plus lumineux que #C9A84C original)
+- Fond : **#161410** noir chaud (pas noir pur)
+- Or = **accents uniquement** (chiffres, boutons, logo) — texte en blanc
+- Light mode : crème chaud **#FAF8F4** (pas blanc pur)
+- Formation : **8 modules** inspirés de Go Pro (Eric Worre)
+- Business : **mini-CRM MLM** avec pipeline 5 étapes + 4 personnalités Schreiter
+- Défis : badges **[TERRAIN]** / **[FORMATION]** / **[ATLAS]** pour clarifier contexte
+- Bouton appel direct `tel:` sur mobile depuis le CRM
+- Bouton "Inviter sur Upline.ai" quand prospect converti (lien parrainage)
+- Bottom nav mobile : **drawer "Plus"** pour Communauté + Parrainage + Profil
+- Header desktop : **cloche 🔔** pour futures notifications
+- Profil accessible via **avatar cliquable** sidebar + header
+- Si filleul MLM même société → expérience pré-remplie Upline.ai
+- Si filleul MLM société différente → onboarding générique agnostique
+- Bibliothèque **Amazon/Audible affiliée** dans chaque module formation
+- Streaming Atlas : **à implémenter plus tard**
 - Simulations vocales : **phase 2** (Dograh)
 
 ---
 
 *Fichier à partager au début de chaque nouvelle session*
-*Référence document complet : Upline_ai_Architecture_v7.md*
+*Référence document complet : Upline_ai_Architecture_v8.md*

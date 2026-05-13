@@ -1,6 +1,6 @@
 # 🏔️ Upline.ai — Architecture Complète
 
-> Document de référence — Version 7.0 — Mai 2026
+> Document de référence — Version 8.0 — Mai 2026
 > Auteur : Patrice
 > Statut : Document final — En cours de développement
 
@@ -72,24 +72,6 @@ Upline.ai est une plateforme SaaS IA **agnostique** spécialisée dans le market
 | Connexion Flowise | ✅ |
 | Connexion n8n | ✅ |
 
-### Gitea
-
-| Élément | Statut |
-|---|---|
-| Instance opérationnelle | ✅ |
-| Repo `patrice/upline-ai` | ✅ |
-| `init_database.sql` commité | ✅ |
-
-### Services externes
-
-| Service | Statut | Rôle |
-|---|---|---|
-| Ollama Cloud | ✅ Configuré | LLM deepseek-v4-flash |
-| Vercel | 🔲 À configurer | Hébergement frontend |
-| Stripe | 🔲 À configurer | Paiements |
-| Brevo | 🔲 À configurer | Emails |
-| Domaine upline.ai | 🔲 À acheter | Identité web |
-
 ### Développement
 
 | Étape | Statut |
@@ -98,12 +80,13 @@ Upline.ai est une plateforme SaaS IA **agnostique** spécialisée dans le market
 | Étape 2 — Tables PostgreSQL | ✅ Terminée |
 | Étape 3 — Pipeline RAG | ✅ Terminée (1 livre) |
 | Étape 4 — Flows Flowise | 🔄 En cours (Coach fait, Prospecteur + Vendeur à faire) |
-| Étape 5 — Dashboard Next.js PWA | 🔄 En cours |
-| Étape 6 — Site vitrine + Prospecteur | 🔲 À faire |
-| Étape 7 — Panel Admin | 🔲 À faire |
-| Étape 8 — Stripe + Abonnements | 🔲 À faire |
-| Étape 9 — Automatisations n8n | 🔲 À faire |
-| Étape 10 — Domaine + Production | 🔲 À faire |
+| Étape 5 — Dashboard Next.js PWA | ✅ Terminée |
+| Étape 6 — Connexion Atlas + Auth JWT | 🔄 À démarrer |
+| Étape 7 — Site vitrine + Prospecteur | 🔲 À faire |
+| Étape 8 — Panel Admin | 🔲 À faire |
+| Étape 9 — Stripe + Abonnements + Trial | 🔲 À faire |
+| Étape 10 — Automatisations n8n + Brevo | 🔲 À faire |
+| Étape 11 — Domaine + Production | 🔲 À faire |
 
 ---
 
@@ -127,7 +110,7 @@ Upline.ai est une plateforme SaaS IA **agnostique** spécialisée dans le market
 | Monitoring | Uptime Kuma | Surveillance 24h/24 | VPS |
 | Voix IA | Dograh | Simulations vocales | VPS (phase 2) |
 | WhatsApp | Evolution API | Canal optionnel | VPS (phase 3) |
-| Frontend | Next.js PWA | Interface utilisateur | Vercel |
+| Frontend | Next.js 14 PWA | Interface utilisateur | Vercel |
 | Paiements | Stripe | Abonnements + trials | Cloud |
 | Emails | Brevo | Séquences + transactionnel | Cloud |
 | Domaine | upline.ai | Identité web | À acheter |
@@ -141,23 +124,40 @@ Upline.ai est une plateforme SaaS IA **agnostique** spécialisée dans le market
 - **Coach IA** : Atlas
 - **Domaine** : `upline.ai`
 
-### Palette
+### Palette (mise à jour v8)
 ```
-Fond principal    #0A0A0A   noir profond
-Fond secondaire   #111111   noir doux
-Accent principal  #C9A84C   or mat
-Accent hover      #E2C06A   or clair
-Texte principal   #FFFFFF   blanc pur
-Texte secondaire  #888888   gris
-Bordures          #222222   séparateurs
+Fond principal    #161410   noir chaud (remplace #0A0A0A)
+Fond secondaire   #1E1B14   noir doux chaud
+Accent principal  #E2B84A   or brillant (remplace #C9A84C)
+Accent hover      #ECC85E   or clair
+Texte principal   #FFFFFF   blanc pur (dark) / #1C1008 (light)
+Texte secondaire  #A89878   gris chaud (dark) / #7A6A4A (light)
+Bordures          #2A2318   séparateurs chauds
+Light bg          #FAF8F4   crème chaud (light mode)
+Light secondary   #F0EBE0   crème secondaire
 ```
 
-### Logo
-Montagne géométrique stylisée formant un "A" — sobre, premium, mémorable. Or mat sur fond noir.
+### Règle couleur or
+- **Or = accents uniquement** : chiffres clés, boutons CTA, logo, icône active, nom Atlas
+- **Texte = blanc/foncé chaud** : tout le texte de lecture
+- **Jamais de texte courant en or** (illisible)
 
 ### Navigation
-- Desktop : sidebar gauche fixe
-- Mobile : bottom navigation 5 icônes
+- Desktop : sidebar gauche fixe 224px (Lucide React icons)
+- Mobile : bottom nav 4 items + drawer "Plus"
+
+### Icônes (Lucide React)
+```
+Accueil     → LayoutDashboard
+Formation   → GraduationCap
+Business    → Briefcase
+Communauté  → Users
+Succès      → Trophy
+Parrainage  → GitFork
+Profil      → User
+Cloche      → Bell (header desktop)
+Dark/Light  → Sun / Moon
+```
 
 ---
 
@@ -172,42 +172,124 @@ api.upline.ai          → API Flowise + n8n            (VPS)
 
 ---
 
-## 🖥️ Architecture Technique
+## 🖥️ Dashboard PWA — 7 Pages (✅ Terminées)
 
+### Page 1 — Accueil
+- Greeting + streak + niveau
+- 4 cards stats (Sessions, Formation, Badges, Filleuls)
+- Barre progression formation
+- Widget Atlas intégré (chat)
+- Activité récente
+
+### Page 2 — Formation
+- 8 modules progressifs (programme Go Pro — Eric Worre)
+- Statuts : terminé / en cours / disponible / verrouillé
+- Formats par module : texte / vidéo / audio / quiz / pratique
+- Atlas coach intégré par module (questions, jeu de rôle, exercices)
+- Bibliothèque Amazon/Audible affiliée par module (30+ livres, 5 niveaux)
+- Boutons [Quiz rapide] [Jeu de rôle] [Exercice pratique]
+
+### Programme Formation — 8 Modules (12 semaines)
+| # | Module | Durée | Habileté Worre |
+|---|---|---|---|
+| 1 | Fondations & État d'esprit | 1 sem | Mindset |
+| 2 | Trouver des prospects | 1 sem | Habileté 1 |
+| 3 | Inviter les prospects | 2 sem | Habileté 2 |
+| 4 | Présenter l'opportunité | 2 sem | Habileté 3 |
+| 5 | Effectuer le suivi | 1 sem | Habileté 4 |
+| 6 | Conclure & Objections | 2 sem | Habileté 5 |
+| 7 | Démarrer ses filleuls | 1 sem | Habileté 6 |
+| 8 | Événements & Leadership | 2 sem | Habileté 7 |
+
+### Page 3 — Business (Mini-CRM MLM)
+- Vue Pipeline (Kanban 5 colonnes) — desktop
+- Vue Liste — mobile par défaut
+- 5 statuts : Liste → Invité → Présenté → Suivi → Oui/Non
+- Qualification prospect : Marché (chaud/tiède/froid) + Personnalité (4 couleurs Schreiter)
+- Bouton 📞 appel direct `tel:` sur mobile
+- Bouton "Inviter sur Upline.ai" quand statut = Oui
+- Modal prospect avec conseil Atlas selon personnalité
+- Lien double : filleul MLM → filleul Upline.ai
+
+### Logique parrainage croisé
 ```
-┌──────────────────────────────────────────────────────┐
-│                    Utilisateur                        │
-│               (navigateur PC ou mobile)               │
-└──────────────────────┬───────────────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────────────┐
-│             Dashboard Next.js (PWA)                   │
-│             app.upline.ai — Vercel                    │
-└───────────────────────┬──────────────────────────────┘
-                        │ API call
-┌───────────────────────▼──────────────────────────────┐
-│                    Flowise                            │
-│          Orchestration IA + RAG + Mémoire             │
-│  ┌──────────────────┐ ┌──────────┐ ┌─────────────┐  │
-│  │ deepseek-v4-flash│ │  Chroma  │ │  PostgreSQL │  │
-│  │  (Ollama Cloud)  │ │  (RAG)   │ │  (mémoire)  │  │
-│  └──────────────────┘ └──────────┘ └─────────────┘  │
-│              ↑                                        │
-│   nomic-embed-text (Ollama local VPS)                 │
-└──────────────────────────────────────────────────────┘
-        │
-┌───────▼──────────────────────────────────────────────┐
-│                     n8n                               │
-│    Workflows / Emails Brevo / PDF Gotenberg / Backup  │
-└──────────────────────────────────────────────────────┘
+Si filleul MLM même société que parrain
+  → Expérience pré-remplie (société héritée)
+  → "Tu rejoins l'équipe Herbalife de Patrice 🎉"
+Sinon
+  → Onboarding générique agnostique
+  → "Quelle est ta société MLM ?"
 ```
+
+### Page 4 — Communauté
+- 3 onglets : Général / Société (Herbalife) / Mon équipe
+- Posts avec likes interactifs + commentaires
+- Bouton Publier + zone de saisie
+- Espaces société (membres uniquement)
+- Top contributeurs
+- Règles communauté (anonymisation données sensibles)
+
+### Page 5 — Succès & Badges
+- Niveau + XP + barre progression
+- 8 badges (3 obtenus, 5 à débloquer avec progression)
+- Défis hebdomadaires avec 3 types :
+  - **[TERRAIN]** orange : actions réelles business MLM
+  - **[FORMATION]** bleu : leçons et modules
+  - **[ATLAS]** doré : jeux de rôle et exercices IA
+- Atlas introduit les défis (contexte Herbalife explicite)
+- Streak calendrier 4 semaines
+- Leaderboard équipe
+
+### Page 6 — Parrainage
+- Lien unique `upline.ai/u/patrice` + copie 1 clic
+- Boutons partage : WhatsApp / Email / LinkedIn / SMS
+- Phase 1 : mois gratuits (barre progression 2/5)
+- Phase 2 : 20% commission cash (teaser grisé)
+- Stats : filleuls actifs / Premium convertis / mois gagnés
+- Liste filleuls avec statuts
+- Carte de visite digitale + QR Code
+
+### Page 7 — Profil
+- Avatar cliquable (sidebar bas + header droite desktop)
+- Identité : nom, email, lien upline.ai/u/patrice, badge Premium
+- Société MLM (Herbalife) + bouton Ajouter
+- Abonnement Premium $19/mois + avantages
+- Stats personnelles
+- Documents & Export (PDF, carte visite, historique)
+- Paramètres (dark/light, notifications, langue)
+- Zone de danger (suppression compte)
+
+---
+
+## 📱 Responsive Mobile
+
+### Bottom Navigation
+```
+Mobile : [Accueil] [Formation] [Business] [Succès] [··· Plus]
+                                                        ↓ drawer
+                                                   [Communauté]
+                                                   [Parrainage]
+                                                   [Profil]
+```
+
+### Header
+```
+Desktop : [☀️/🌙] [🔔 cloche] [P avatar] 
+Mobile  : [☀️/🌙] seulement
+```
+
+### Pages adaptées mobile
+- Business : Vue Liste par défaut, Pipeline masqué
+- Modal prospect : bottom sheet sur mobile
+- Formation : header flex-col, livres flex-col
+- Succès : défis en flex-col
+- Profil : avatar compact, truncate sur textes longs
 
 ---
 
 ## 💰 Modèle Économique
 
 ### Tunnel d'acquisition
-
 ```
 Utilisateur reçoit un lien de parrainage
               ↓
@@ -234,6 +316,7 @@ J+0 à J+30
 | RAG commun | ✅ | ✅ | ✅ |
 | RAG société | ✅ | ❌ | ✅ |
 | Parcours structurés | Partiel | Partiel | Complet |
+| CRM Prospects | ✅ | Limité | Illimité |
 | Export PDF sessions | ❌ | ❌ | ✅ |
 | Rapport mensuel PDF | ❌ | ❌ | ✅ |
 | Simulations vocales | ❌ | ❌ | ✅ |
@@ -242,6 +325,10 @@ J+0 à J+30
 ### Parrainage
 - **Phase 1** : 1 mois premium offert au parrain + filleul
 - **Phase 2** : Commission cash 20% (Stripe Connect)
+
+### Affiliation
+- Liens Amazon + Audible dans bibliothèque formation
+- 30+ livres MLM classés en 5 niveaux de priorité
 
 ---
 
@@ -266,6 +353,8 @@ Règles :
 - Réponds toujours en français
 - Fixe des objectifs concrets et mesurables
 - Célèbre chaque victoire
+- Adapte ton conseil à la personnalité du prospect (4 couleurs Schreiter)
+- Pour les défis TERRAIN, rappelle que c'est du vrai terrain business
 ```
 
 ### Agent 2 — Atlas Prospecteur
@@ -290,23 +379,9 @@ Règles :
 
 ### Chroma
 - **URL interne** : `http://chroma-rz5o-chromadb-1:8000`
-- **URL externe** : `http://localhost:32773`
 - **Collection active** : `upline_knowledge`
 - **Chunks** : 166 (The Happy Network Marketer)
 - **Top K** : 2
-
-### Pipeline ajout PDFs
-```
-Upload PDF dans Flowise Document Store
-        ↓
-Loader : Pdf File
-Splitter : Recursive Character Text Splitter
-Chunk Size : 1000 / Overlap : 200
-        ↓
-Upsert → Chroma (nomic-embed-text)
-        ↓
-Disponible pour Atlas immédiatement
-```
 
 ---
 
@@ -323,41 +398,6 @@ users, abonnements, societes, user_societes, user_memory,
 apprentissage, sessions_coaching, parcours, user_parcours,
 badges, user_badges, defis, user_defis, forum_posts,
 referrals, rag_contributions, usage_stats
-
----
-
-## 🖥️ Dashboard PWA — 7 Pages
-
-1. **Accueil** — streak, progression, widget chat Atlas
-2. **Formation** — parcours + exploration libre
-3. **Mon Business** — revenus déclarés + stats
-4. **Communauté** — forum général + espaces société
-5. **Achievements** — badges + leaderboard groupe
-6. **Parrainage** — lien unique + carte de visite digitale
-7. **Profil** — sociétés + abonnement + export PDF
-
----
-
-## 👤 Expérience Prospect
-
-```
-1. Reçoit lien upline.ai/u/patrice
-2. Widget Atlas Prospecteur → avant-goût
-3. Donne son email → TRIAL 1h
-4. Heure écoulée → Message Atlas + Stripe
-5. Si pas de paiement → Séquence J+0 à J+30
-```
-
-## 👤 Expérience Utilisateur Premium
-
-```
-1. Connexion app.upline.ai
-2. Sélectionne sa société
-3. Chat avec Atlas (RAG + mémoire longue terme)
-4. Formation parcours structurés
-5. Rapport PDF mensuel automatique
-6. Carte de visite digitale upline.ai/u/[username]
-```
 
 ---
 
@@ -400,20 +440,6 @@ referrals, rag_contributions, usage_stats
 
 ---
 
-## 🔗 Réseaux Docker Connectés
-
-```bash
-# Tous les réseaux connectés
-flowise ↔ postgresql ↔ chroma ↔ ollama
-n8n ↔ postgresql ↔ chroma ↔ flowise
-pgweb ↔ postgresql
-gotenberg ↔ postgresql
-gitea ↔ postgresql
-ollama ↔ flowise
-```
-
----
-
 ## 💰 Budget Phase 1
 
 | Poste | Coût mensuel |
@@ -436,7 +462,7 @@ ollama ↔ flowise
 - Chroma accessible uniquement en interne
 - PostgreSQL derrière Traefik (HTTPS)
 - Auth JWT pour dashboard + admin
-- Rate limiting : 10 msg/jour (gratuit), illimité (premium)
+- Rate limiting : 10 msg/jour (gratuit), illimité (premium/trial)
 - Webhooks n8n protégés par token
 - Backup PostgreSQL automatique chaque nuit
 - Uptime Kuma surveille tous les services
@@ -453,23 +479,35 @@ ollama ↔ flowise
 - 🔲 upline-prospecteur
 - 🔲 upline-vendeur
 
-### 🔄 ÉTAPE 5 — Dashboard Next.js PWA (EN COURS)
-- Setup Next.js 14 + TypeScript + Tailwind + Shadcn
-- Auth JWT + PostgreSQL
-- Onboarding 5 questions
-- 7 pages utilisateur
-- Widget chat Atlas intégré
-- Notifications push PWA
+### ✅ ÉTAPE 5 — Dashboard Next.js PWA (TERMINÉE)
+- ✅ Next.js 14 + TypeScript + Tailwind + Shadcn + Lucide React
+- ✅ Palette noir chaud + or brillant #E2B84A
+- ✅ Dark/Light mode
+- ✅ 7 pages complètes et responsives
+- ✅ CRM Prospects avec pipeline MLM
+- ✅ Programme formation 8 modules
+- ✅ Système badges + défis TERRAIN/FORMATION/ATLAS
+- ✅ Parrainage + carte de visite digitale
+- ✅ Bibliothèque Amazon/Audible affiliée
+- ✅ Bottom nav mobile + drawer "Plus"
+- ✅ Déployé sur Vercel + GitHub + Gitea
 
-### 🔲 ÉTAPE 6 — Site vitrine + Prospecteur
-### 🔲 ÉTAPE 7 — Panel Admin complet
-### 🔲 ÉTAPE 8 — Stripe + Abonnements + Trial
-### 🔲 ÉTAPE 9 — Automatisations n8n + Brevo
-### 🔲 ÉTAPE 10 — Domaine + Production
+### 🔲 ÉTAPE 6 — Connexion Atlas + Auth JWT
+- Brancher widget chat → API Flowise
+- Page login/signup
+- Middleware protection routes
+- Données réelles PostgreSQL
+- CRM prospects persistant
+
+### 🔲 ÉTAPE 7 — Site vitrine + Prospecteur
+### 🔲 ÉTAPE 8 — Panel Admin complet
+### 🔲 ÉTAPE 9 — Stripe + Abonnements + Trial
+### 🔲 ÉTAPE 10 — Automatisations n8n + Brevo
+### 🔲 ÉTAPE 11 — Domaine + Production
 ### 🔲 PHASE 2 — Simulations Vocales (Dograh)
 ### 🔲 PHASE 3 — Scale + Multilingue
 
 ---
 
-*Document mis à jour le 12 Mai 2026 — Version 7.0*
-*Prochaine mise à jour : après Étape 5 (Dashboard terminé)*
+*Document mis à jour le 13 Mai 2026 — Version 8.0*
+*Prochaine mise à jour : après Étape 6 (Atlas connecté + Auth JWT)*
