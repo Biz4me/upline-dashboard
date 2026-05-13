@@ -70,7 +70,7 @@ export default function Business() {
           <h1 className="text-2xl font-semibold text-white">Mon Business</h1>
           <p className="text-[#A89878] mt-1">Pipeline Herbalife · 5 prospects actifs</p>
         </div>
-        <button className="bg-[#E2B84A] hover:bg-[#ECC85E] text-black font-semibold px-4 py-2 rounded-xl text-sm transition-colors">
+        <button className="bg-[#E2B84A] hover:bg-[#ECC85E] text-black font-semibold px-3 py-2 rounded-xl text-sm transition-colors whitespace-nowrap flex-shrink-0">
           + Prospect
         </button>
       </div>

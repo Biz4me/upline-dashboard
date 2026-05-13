@@ -10,27 +10,27 @@ export default function Profil() {
 
       {/* Identité */}
       <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 rounded-full bg-[#E2B84A] flex items-center justify-center text-black font-bold text-2xl cursor-pointer hover:opacity-80 transition-opacity">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 rounded-full bg-[#E2B84A] flex items-center justify-center text-black font-bold text-xl flex-shrink-0">
             P
           </div>
-          <div>
-            <h2 className="text-white text-lg font-semibold">Patrice Haure-Pallesi</h2>
-            <p className="text-[#6A5A3A] text-sm">upline.ai/u/patrice</p>
-            <span className="text-xs bg-[#E2B84A]/15 text-[#E2B84A] border border-[#E2B84A]/20 px-2 py-0.5 rounded-full">⭐ Premium</span>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-white text-base font-semibold truncate">Patrice Haure-Pallesi</h2>
+            <p className="text-[#6A5A3A] text-xs truncate">upline.ai/u/patrice</p>
+            <span className="text-xs bg-[#E2B84A]/15 text-[#E2B84A] border border-[#E2B84A]/20 px-2 py-0.5 rounded-full inline-block mt-1">⭐ Premium</span>
           </div>
-          <button className="ml-auto text-sm bg-[#2A2318] hover:bg-[#3d3420] text-[#A89878] px-4 py-2 rounded-lg transition-colors">
-            ✏️ Modifier
+          <button className="flex-shrink-0 text-xs bg-[#2A2318] hover:bg-[#3d3420] text-[#A89878] px-3 py-2 rounded-lg transition-colors">
+            ✏️
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <div>
             <div className="text-[#6A5A3A] text-xs mb-1">Email</div>
-            <div className="text-[#A89878] text-sm">patricehaure@gmail.com</div>
+            <div className="text-[#A89878] text-xs truncate">patricehaure@gmail.com</div>
           </div>
           <div>
             <div className="text-[#6A5A3A] text-xs mb-1">Membre depuis</div>
-            <div className="text-[#A89878] text-sm">Mai 2026</div>
+            <div className="text-[#A89878] text-xs">Mai 2026</div>
           </div>
         </div>
       </div>
@@ -110,17 +110,17 @@ export default function Profil() {
       <div className="bg-[#1E1B14] border border-[#2A2318] rounded-xl p-6">
         <h3 className="text-white font-medium mb-4">Documents & Export</h3>
         <div className="space-y-3">
-          <button className="w-full flex items-center justify-between p-3 bg-[#161410] hover:bg-[#2A2318] rounded-lg transition-colors">
-            <span className="text-[#A89878] text-sm">📄 Rapport mensuel Mai 2026</span>
-            <span className="text-[#E2B84A] text-xs">Télécharger PDF</span>
+          <button className="w-full flex items-center justify-between gap-2 p-3 bg-[#161410] hover:bg-[#2A2318] rounded-lg transition-colors">
+            <span className="text-[#A89878] text-sm truncate">📄 Rapport mensuel Mai 2026</span>
+            <span className="text-[#E2B84A] text-xs flex-shrink-0">PDF</span>
           </button>
-          <button className="w-full flex items-center justify-between p-3 bg-[#161410] hover:bg-[#2A2318] rounded-lg transition-colors">
-            <span className="text-[#A89878] text-sm">💳 Carte de visite digitale</span>
-            <span className="text-[#E2B84A] text-xs">Voir</span>
+          <button className="w-full flex items-center justify-between gap-2 p-3 bg-[#161410] hover:bg-[#2A2318] rounded-lg transition-colors">
+            <span className="text-[#A89878] text-sm truncate">💳 Carte de visite digitale</span>
+            <span className="text-[#E2B84A] text-xs flex-shrink-0">Voir</span>
           </button>
-          <button className="w-full flex items-center justify-between p-3 bg-[#161410] hover:bg-[#2A2318] rounded-lg transition-colors">
-            <span className="text-[#A89878] text-sm">📊 Historique sessions coaching</span>
-            <span className="text-[#E2B84A] text-xs">Exporter</span>
+          <button className="w-full flex items-center justify-between gap-2 p-3 bg-[#161410] hover:bg-[#2A2318] rounded-lg transition-colors">
+            <span className="text-[#A89878] text-sm truncate">📊 Historique coaching</span>
+            <span className="text-[#E2B84A] text-xs flex-shrink-0">Export</span>
           </button>
         </div>
       </div>
