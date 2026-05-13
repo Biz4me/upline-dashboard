@@ -16,7 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null
         try {
           const result = await pool.query(
-            'SELECT id, email, password_hash, prenom, nom, username FROM users WHERE LOWER(email) = LOWER($1) OR LOWER(username) = LOWER($1)',
+            'SELECT id, email, password_hash, prenom, nom, username, role FROM users WHERE LOWER(email) = LOWER($1) OR LOWER(username) = LOWER($1)',
             [credentials.email]
           )
           const user = result.rows[0]
@@ -26,7 +26,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return {
             id: user.id.toString(),
             email: user.email,
-            name: `${user.prenom} ${user.nom}`,
+            name: `${user.prenom || ''} ${user.nom || ''}`.trim() || user.username,
+            username: user.username,
+            role: user.role,
             image: null,
           }
         } catch (error) {
@@ -43,11 +45,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.id = user.id
+      if (user) { token.id = user.id; token.role = user.role }
       return token
     },
     async session({ session, token }) {
-      if (token) session.user.id = token.id as string
+      if (token) { session.user.id = token.id as string; session.user.role = token.role as string }
       return session
     },
   },
