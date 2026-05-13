@@ -10,6 +10,7 @@ interface Message {
 
 interface AtlasChatProps {
   sessionId?: string
+  userId?: string
   context?: string
   placeholder?: string
   suggestions?: string[]
@@ -17,6 +18,7 @@ interface AtlasChatProps {
 
 export default function AtlasChat({
   sessionId: propsSessionId,
+  userId: propsUserId,
   context,
   placeholder = 'Écrire à Atlas...',
   suggestions = [],
@@ -51,6 +53,7 @@ export default function AtlasChat({
         body: JSON.stringify({
           message: context ? `[Contexte: ${context}]\n${text}` : text,
           sessionId,
+          userId: propsUserId,
         }),
       })
 

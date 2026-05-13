@@ -1,12 +1,19 @@
 import { NextResponse } from 'next/server'
+import { getUserMemory, saveUserMemory } from '@/lib/memory'
 
 const FLOWISE_URL = process.env.FLOWISE_URL || 'https://flowise-nsfn.srv1651221.hstgr.cloud'
 const FLOWISE_FLOW_ID = process.env.FLOWISE_FLOW_ID || '141b2826-8975-4757-b621-4952a05f7be4'
 
 export async function POST(req: Request) {
   try {
-    const { message, sessionId } = await req.json()
+    const { message, sessionId, silent, userId } = await req.json()
     if (!message) return NextResponse.json({ error: 'Message manquant' }, { status: 400 })
+    if (silent) return NextResponse.json({ ok: true })
+
+    const memory = userId ? await getUserMemory(userId) : ''
+    const questionWithContext = memory
+      ? `[Contexte utilisateur : ${memory}]\n\nQuestion : ${message}`
+      : message
 
     const flowiseResponse = await fetch(
       `${FLOWISE_URL}/api/v1/prediction/${FLOWISE_FLOW_ID}`,
@@ -14,7 +21,7 @@ export async function POST(req: Request) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          question: message,
+          question: questionWithContext,
           sessionId: sessionId || 'default',
           streaming: true,
         }),
@@ -34,6 +41,7 @@ export async function POST(req: Request) {
       const reader = flowiseResponse.body.getReader()
       const decoder = new TextDecoder()
       const encoder = new TextEncoder()
+      let fullResponse = ''
 
       const stream = new ReadableStream({
         async start(controller) {
@@ -41,6 +49,9 @@ export async function POST(req: Request) {
           while (true) {
             const { done, value } = await reader.read()
             if (done) {
+              if (userId && fullResponse) {
+                await saveUserMemory(userId, message, fullResponse)
+              }
               controller.close()
               return
             }
@@ -55,16 +66,21 @@ export async function POST(req: Request) {
                 try {
                   const parsed = JSON.parse(data)
                   if (parsed.event === 'token' && parsed.data) {
+                    fullResponse += parsed.data
                     controller.enqueue(
                       encoder.encode(`data: ${JSON.stringify({ token: parsed.data })}\n\n`)
                     )
                   } else if (parsed.event === 'end' || parsed.data === '[DONE]') {
+                    if (userId && fullResponse) {
+                      await saveUserMemory(userId, message, fullResponse)
+                    }
                     controller.enqueue(encoder.encode('data: [DONE]\n\n'))
                     controller.close()
                     return
                   }
                 } catch {
                   if (data && data !== '[DONE]') {
+                    fullResponse += data
                     controller.enqueue(
                       encoder.encode(`data: ${JSON.stringify({ token: data })}\n\n`)
                     )

@@ -46,6 +46,7 @@ export default function Accueil() {
 
       <AtlasChat
         sessionId={userId}
+        userId={userId}
         suggestions={[
           '💡 Conseil du jour',
           '📊 Analyser mon réseau',
