@@ -29,6 +29,9 @@ export default function AtlasChat({
   const [isStreaming, setIsStreaming] = useState(false)
   const [sessionId] = useState<string>(() => propsSessionId || `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const tokenQueueRef = useRef<string[]>([])
+  const displayIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const displayedTextRef = useRef<string>('')
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -37,6 +40,31 @@ export default function AtlasChat({
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  const startDisplayInterval = () => {
+    if (displayIntervalRef.current) return
+    displayIntervalRef.current = setInterval(() => {
+      if (tokenQueueRef.current.length > 0) {
+        const token = tokenQueueRef.current.shift()!
+        displayedTextRef.current += token
+        setMessages(prev => {
+          const newMessages = [...prev]
+          newMessages[newMessages.length - 1] = {
+            role: 'assistant',
+            content: displayedTextRef.current,
+          }
+          return newMessages
+        })
+      }
+    }, 45)
+  }
+
+  const stopDisplayInterval = () => {
+    if (displayIntervalRef.current) {
+      clearInterval(displayIntervalRef.current)
+      displayIntervalRef.current = null
+    }
+  }
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || loading || isStreaming) return
@@ -69,6 +97,10 @@ export default function AtlasChat({
 
       setLoading(false)
       setIsStreaming(true)
+
+      tokenQueueRef.current = []
+      displayedTextRef.current = ''
+      startDisplayInterval()
 
       // Créer un message assistant vide pour le stream
       setMessages(prev => [...prev, { role: 'assistant', content: '' }])
@@ -104,14 +136,7 @@ export default function AtlasChat({
               const parsed = JSON.parse(data)
               if (parsed.token) {
                 fullText += parsed.token
-                setMessages(prev => {
-                  const newMessages = [...prev]
-                  newMessages[newMessages.length - 1] = {
-                    role: 'assistant',
-                    content: fullText,
-                  }
-                  return newMessages
-                })
+                tokenQueueRef.current.push(parsed.token)
               }
             } catch {
               // Ignorer les lignes non-JSON
@@ -131,20 +156,13 @@ export default function AtlasChat({
               const parsed = JSON.parse(data)
               if (parsed.token) {
                 fullText += parsed.token
+                tokenQueueRef.current.push(parsed.token)
               }
             } catch {
               // Ignorer
             }
           }
         }
-        setMessages(prev => {
-          const newMessages = [...prev]
-          newMessages[newMessages.length - 1] = {
-            role: 'assistant',
-            content: fullText,
-          }
-          return newMessages
-        })
       }
 
     } catch {
@@ -155,6 +173,24 @@ export default function AtlasChat({
     } finally {
       setLoading(false)
       setIsStreaming(false)
+      // Attendre que la queue soit vide avant de stopper
+      const waitQueue = setInterval(() => {
+        if (tokenQueueRef.current.length === 0) {
+          clearInterval(waitQueue)
+          stopDisplayInterval()
+          // S'assurer que le texte final est complet
+          setMessages(prev => {
+            const newMessages = [...prev]
+            if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === 'assistant') {
+              newMessages[newMessages.length - 1] = {
+                role: 'assistant',
+                content: displayedTextRef.current,
+              }
+            }
+            return newMessages
+          })
+        }
+      }, 50)
     }
   }
 
