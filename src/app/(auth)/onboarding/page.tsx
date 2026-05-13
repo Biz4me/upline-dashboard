@@ -78,38 +78,12 @@ export default function OnboardingPage() {
   }
 
   const handleSubmit = async () => {
+    if (!canGoNext()) return
     setLoading(true)
-    setError('')
-
-    try {
-      const res = await fetch('/api/user/onboarding', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          societe,
-          autresSociete,
-          niveau,
-          objectifs,
-          experience,
-          telephone,
-          pays,
-          ville,
-        }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setError(data.error || 'Erreur lors de la sauvegarde')
-        setLoading(false)
-        return
-      }
-
-      router.push('/')
-    } catch {
-      setError('Erreur serveur')
-      setLoading(false)
-    }
+    const societeFinale = societe === 'Autres' && autresSociete ? autresSociete : societe
+    localStorage.setItem('upline_societe', societeFinale)
+    localStorage.setItem('upline_niveau', niveau)
+    router.push('/')
   }
 
   // ─── Barre de progression ───
