@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, GraduationCap, Briefcase, Users, Trophy, GitFork, User, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useSidebar } from '@/context/SidebarContext'
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Accueil' },
@@ -17,18 +17,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const [collapsed, setCollapsed] = useState(false)
-
-  useEffect(() => {
-    const stored = localStorage.getItem('sidebar')
-    if (stored === 'collapsed') setCollapsed(true)
-  }, [])
-
-  const toggle = () => {
-    const next = !collapsed
-    setCollapsed(next)
-    localStorage.setItem('sidebar', next ? 'collapsed' : 'open')
-  }
+  const { collapsed, toggle } = useSidebar()
 
   return (
     <aside
