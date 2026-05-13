@@ -2,30 +2,21 @@
 
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { Pool } from 'pg'
+import { pool } from '@/lib/db'
 import bcrypt from 'bcryptjs'
-
-const pool = new Pool({
-  host: process.env.DB_HOST || '172.16.4.2',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'ZhnKpovqAtFoNZtW',
-  user: process.env.DB_USER || 'OeXA5Cqvw7ehK7yY',
-  password: process.env.DB_PASSWORD,
-  ssl: false,
-})
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: 'Email', type: 'email' },
+        email: { label: 'Email ou pseudo', type: 'text' },
         password: { label: 'Mot de passe', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
         try {
           const result = await pool.query(
-            'SELECT id, email, password_hash, prenom, nom FROM users WHERE email = $1',
+            'SELECT id, email, password_hash, prenom, nom, username FROM users WHERE LOWER(email) = LOWER($1) OR LOWER(username) = LOWER($1)',
             [credentials.email]
           )
           const user = result.rows[0]

@@ -55,10 +55,10 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-            Email
+            Email ou pseudo
           </label>
           <input
-            type="email"
+            type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -68,7 +68,7 @@ export default function LoginPage() {
               color: 'var(--text)',
               border: '1px solid var(--border)',
             }}
-            placeholder="votre@email.com"
+            placeholder="votre@email.com ou votre_pseudo"
           />
         </div>
 

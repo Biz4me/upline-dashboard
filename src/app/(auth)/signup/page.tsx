@@ -9,15 +9,24 @@ export default function SignupPage() {
   const router = useRouter()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const usernameValid = username.length >= 3 && username.length <= 20 && /^[a-zA-Z0-9_]+$/.test(username)
+  const usernameTouched = username.length > 0
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    if (!usernameValid) {
+      setError('Pseudo invalide (3-20 caractères, lettres chiffres et _ uniquement)')
+      return
+    }
 
     if (password !== confirmPassword) {
       setError('Les mots de passe ne correspondent pas')
@@ -40,6 +49,7 @@ export default function SignupPage() {
           password,
           prenom: firstName,
           nom: lastName,
+          username,
         }),
       })
 
@@ -132,6 +142,32 @@ export default function SignupPage() {
               placeholder="Dupont"
             />
           </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+            Pseudo
+          </label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
+            style={{
+              background: 'var(--bg-input)',
+              color: 'var(--text)',
+              border: usernameTouched
+                ? usernameValid
+                  ? '1px solid #22c55e'
+                  : '1px solid #ef4444'
+                : '1px solid var(--border)',
+            }}
+            placeholder="ex: patrice_mlm"
+          />
+          <p className="text-xs mt-1" style={{ color: usernameTouched ? (usernameValid ? '#22c55e' : '#ef4444') : 'var(--text-muted)' }}>
+            3-20 caractères, lettres chiffres et _ uniquement
+          </p>
         </div>
 
         <div>
