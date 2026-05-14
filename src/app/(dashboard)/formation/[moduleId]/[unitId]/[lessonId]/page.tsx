@@ -1,5 +1,5 @@
 'use client'
-import { use, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { X, Heart } from 'lucide-react'
 import { getModuleById, getUnitById, getLessonById } from '@/lib/formation-data'
@@ -37,9 +37,9 @@ const sampleQuestions = [
 export default function LessonPage({
   params,
 }: {
-  params: Promise<{ moduleId: string; unitId: string; lessonId: string }>
+  params: { moduleId: string; unitId: string; lessonId: string }
 }) {
-  const { moduleId, unitId, lessonId } = use(params)
+  const { moduleId, unitId, lessonId } = params
   const router = useRouter()
 
   const mod = getModuleById(Number(moduleId))

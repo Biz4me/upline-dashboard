@@ -1,5 +1,4 @@
 'use client'
-import { use } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, BookOpen, Sparkles } from 'lucide-react'
@@ -8,8 +7,8 @@ import type { Unit } from '@/lib/formation-data'
 import LessonNode from '@/components/formation/LessonNode'
 import CurrentLessonPopup from '@/components/formation/CurrentLessonPopup'
 
-export default function ModuleDetail({ params }: { params: Promise<{ moduleId: string }> }) {
-  const { moduleId } = use(params)
+export default function ModuleDetail({ params }: { params: { moduleId: string } }) {
+  const { moduleId } = params
   const router = useRouter()
   const mod = getModuleById(Number(moduleId))
 
