@@ -24,7 +24,7 @@ export default function Parrainage() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-8 max-w-2xl">
 
       {/* Header */}
       <div>
@@ -48,7 +48,7 @@ export default function Parrainage() {
         </div>
 
         {/* Boutons partage */}
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-4">
           <button className="flex flex-col items-center gap-1 p-3 bg-[var(--bg)] hover:bg-[#25D366]/10 border border-[var(--border)] hover:border-[#25D366]/30 rounded-xl transition-all">
             <span className="text-xl">💬</span>
             <span className="text-[var(--text-muted)] text-xs">WhatsApp</span>
@@ -101,8 +101,8 @@ export default function Parrainage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 text-center text-[var(--text-on-card)]">
+      <div className="grid grid-cols-3 gap-6">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-center text-[var(--text-on-card)]">
           <div className="text-[#E2B84A] font-bold text-[var(--text-muted)]xl">2</div>
           <div className="text-[var(--text-muted)] text-xs mt-1">Filleuls actifs</div>
         </div>
@@ -117,9 +117,9 @@ export default function Parrainage() {
       </div>
 
       {/* Mes filleuls */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
         <h3 className="text-[var(--text-on-card)] font-medium mb-4">👥 Mes filleuls</h3>
-        <div className="space-y-3">
+        <div className="space-y-5">
           {filleuls.map((f, i) => (
             <div key={i} className="flex items-center gap-3 p-3 bg-[var(--bg)] rounded-lg">
               <div className="w-8 h-8 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] font-bold text-sm flex-shrink-0">

@@ -31,7 +31,7 @@ export default function Sidebar() {
       className="hidden md:flex flex-col h-screen sticky top-0"
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 overflow-hidden">
+      <div className="flex items-center gap-3 px-4 py-6 overflow-hidden">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0"
           style={{ background: 'var(--gold)', color: 'var(--bg)' }}>
           A
@@ -52,7 +52,7 @@ export default function Sidebar() {
             <div key={href} className="relative group">
               <Link
                 href={href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all"
+                className="flex items-center gap-3 px-3 py-3 rounded-lg transition-all"
                 style={{
                   background: active ? 'var(--gold-bg)' : 'transparent',
                   color: active ? 'var(--gold)' : 'var(--text-secondary)',

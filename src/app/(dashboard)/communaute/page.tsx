@@ -125,7 +125,7 @@ export default function Communaute() {
 
       {/* Nouveau post */}
       {showPost && (
-        <div className="bg-[var(--bg-card)] border border-[#E2B84A]/30 rounded-xl p-4 text-[var(--text-on-card)]">
+        <div className="bg-[var(--bg-card)] border border-[#E2B84A]/30 rounded-xl p-6 text-[var(--text-on-card)]">
           <textarea
             value={nouveauPost}
             onChange={e => setNouveauPost(e.target.value)}
@@ -190,9 +190,9 @@ export default function Communaute() {
               </div>
             ) : (
               postsFiltres.map(post => (
-                <div key={post.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
+                <div key={post.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
                   {/* Header post */}
-                  <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center gap-3.5 mb-3">
                     <div className="w-8 h-8 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] font-bold text-sm flex-shrink-0">
                       {post.avatar}
                     </div>

@@ -7,22 +7,22 @@ export default function Accueil() {
   const { data: session, status } = useSession()
   const userId = status === 'authenticated' ? session?.user?.id || 'anonymous' : 'anonymous'
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
-        <h1 className="text-[var(--text-muted)]xl font-semibold mb-2" style={{ color: 'var(--text)' }}>
+        <h1 className="text-[28px] font-bold mb-3.5" style={{ color: 'var(--text)' }}>
           Bonjour, Patrice 👋
         </h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Streak 7 jours · Niveau Explorateur</p>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Streak 7 jours · Niveau Explorateur</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         {[
           { val: '12', label: 'Sessions' },
           { val: '84%', label: 'Formation' },
           { val: '3', label: 'Badges' },
           { val: '2', label: 'Filleuls' },
         ].map((s, i) => (
-          <div key={i} className="rounded-xl p-4"
+          <div key={i} className="rounded-xl p-6"
             style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <div className="text-[var(--text-muted)]xl font-bold" style={{ color: 'var(--gold)' }}>{s.val}</div>
             <div className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>{s.label}</div>
@@ -56,7 +56,7 @@ export default function Accueil() {
       <div className="rounded-xl p-6"
         style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
         <h2 className="font-medium mb-4" style={{ color: 'var(--text-on-card)' }}>Activité récente</h2>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {[
             { texte: 'Module 3 — Leçon 2 complétée', temps: "Aujourd'hui", actif: true },
             { texte: 'Badge "Prospecteur" débloqué', temps: 'Hier', actif: false },

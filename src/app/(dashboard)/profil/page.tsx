@@ -79,7 +79,7 @@ export default function Profil() {
   const societe = memory?.profil?.societe || memory?.profil_detail?.societe
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-5 max-w-2xl">
 
       {/* Header */}
       <div>
@@ -118,12 +118,12 @@ export default function Profil() {
       </div>
 
       {/* Barre de complétion */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '14px' }}>
           <span style={{ color: 'var(--text)', fontWeight: '600', fontSize: '14px' }}>Complétion du profil</span>
           <span style={{ color: 'var(--gold)', fontWeight: '700', fontSize: '14px' }}>{score}%</span>
         </div>
-        <div style={{ background: 'var(--border)', borderRadius: '4px', height: '8px', marginBottom: '8px' }}>
+        <div style={{ background: 'var(--border)', borderRadius: '4px', height: '8px', marginBottom: '14px' }}>
           <div style={{ background: 'var(--gold)', borderRadius: '4px', height: '8px', width: `${score}%`, transition: 'width 0.5s ease' }} />
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '13px', margin: 0 }}>{scoreMessage}</p>

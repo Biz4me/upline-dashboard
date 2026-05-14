@@ -76,14 +76,14 @@ export default function Business() {
       </div>
 
       {/* Stats rapides */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-5">
         {[
           { label: 'En liste', value: prospects.filter(p => p.statut === 'liste').length, color: 'var(--text-muted)' },
           { label: 'Invités', value: prospects.filter(p => p.statut === 'invite').length, color: '#60a5fa' },
           { label: 'En suivi', value: prospects.filter(p => p.statut === 'suivi').length, color: '#f97316' },
           { label: 'Convertis', value: prospects.filter(p => p.statut === 'oui').length, color: 'var(--gold)' },
         ].map((s, i) => (
-          <div key={i} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3 text-center text-[var(--text-on-card)]">
+          <div key={i} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-center text-[var(--text-on-card)]">
             <div className="font-bold text-xl" style={{ color: s.color }}>{s.value}</div>
             <div className="text-[var(--text-muted)] text-xs mt-1">{s.label}</div>
           </div>
@@ -119,19 +119,19 @@ export default function Business() {
       {vue === 'pipeline' && (
         <div className="hidden md:grid grid-cols-5 gap-3">
           {colonnes.map(statut => (
-            <div key={statut} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3 text-[var(--text-on-card)]">
+            <div key={statut} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
               <div className="text-xs font-medium mb-3 flex items-center justify-between">
                 <span style={{ color: statutConfig[statut].color }}>{statutConfig[statut].label}</span>
                 <span className="bg-[var(--gold-muted)] text-[var(--text-muted)] text-xs px-2 py-0.5 rounded-full">
                   {prospects.filter(p => p.statut === statut).length}
                 </span>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3.5">
                 {prospects.filter(p => p.statut === statut).map(p => (
                   <div
                     key={p.id}
                     onClick={() => ouvrirProspect(p)}
-                    className="bg-[var(--bg)] border border-[var(--border)] rounded-lg p-2 cursor-pointer hover:border-[#E2B84A]/30 transition-all"
+                    className="bg-[var(--bg)] border border-[var(--border)] rounded-lg p-4 cursor-pointer hover:border-[#E2B84A]/30 transition-all"
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <div className="w-6 h-6 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] text-xs font-bold flex-shrink-0">

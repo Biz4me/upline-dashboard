@@ -204,7 +204,7 @@ export default function Achievements() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-5">
           <div className="bg-[var(--bg)] rounded-lg p-3 text-center">
             <div className="text-[#E2B84A] font-bold text-lg">{badgesObtenus.length}</div>
             <div className="text-[var(--text-muted)] text-xs">Badges obtenus</div>
@@ -231,7 +231,7 @@ export default function Achievements() {
         </div>
         <div className="space-y-3">
           {defis.map(d => (
-            <div key={d.id} className="flex flex-col md:flex-row md:items-center gap-2 p-3 bg-[var(--bg)] rounded-lg">
+            <div key={d.id} className="flex flex-col md:flex-row md:items-center gap-2 p-5 bg-[var(--bg)] rounded-lg">
               <div className="flex items-center gap-2">
                 <span
                   className="text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0"

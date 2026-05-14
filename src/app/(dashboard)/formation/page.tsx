@@ -115,7 +115,7 @@ export default function Formation() {
   const moduleSelectionne = modules.find(m => m.id === moduleActif)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
@@ -141,7 +141,7 @@ export default function Formation() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Liste modules */}
-        <div className="lg:col-span-1 space-y-2">
+        <div className="lg:col-span-1 space-y-3.5">
           {modules.map((module) => {
             const statut = statutConfig[module.statut]
             const actif = moduleActif === module.id
@@ -149,7 +149,7 @@ export default function Formation() {
               <button
                 key={module.id}
                 onClick={() => module.statut !== 'verrouille' && setModuleActif(module.id)}
-                className={`w-full text-left p-4 rounded-xl border transition-all ${
+                className={`w-full text-left p-5 rounded-xl border transition-all ${
                   actif
                     ? 'bg-[#E2B84A]/10 border-[#E2B84A]/30'
                     : module.statut === 'verrouille'
@@ -166,14 +166,14 @@ export default function Formation() {
                     }`}>
                       {module.statut === 'termine' ? '✓' : module.id}
                     </div>
-                    <span className="text-[var(--text-on-card)] text-sm font-medium truncate">{module.titre}</span>
+                    <span className="text-[var(--text-on-card)] text-[15px] font-medium truncate">{module.titre}</span>
                   </div>
                   <span className="text-[var(--text-muted)] text-xs flex-shrink-0 ml-2">{module.duree}</span>
                 </div>
                 {module.progression > 0 && (
-                  <div className="w-full bg-[var(--gold-muted)] rounded-full h-1 mt-2">
+                  <div className="w-full bg-[var(--gold-muted)] rounded-full h-1.5 mt-2">
                     <div
-                      className="bg-[#E2B84A] h-1 rounded-full"
+                      className="bg-[#E2B84A] h-1.5 rounded-full"
                       style={{width: `${module.progression}%`}}
                     ></div>
                   </div>
