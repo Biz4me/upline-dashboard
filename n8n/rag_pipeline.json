@@ -1,97 +1,69 @@
 {
   "name": "RAG Pipeline — PDF vers Chroma",
+  "active": false,
+  "versionId": "1",
+  "id": "rag-pipeline-001",
+  "meta": {
+    "instanceId": "upline-rag-pipeline"
+  },
+  "tags": [
+    {
+      "name": "RAG"
+    },
+    {
+      "name": "Upline"
+    }
+  ],
   "nodes": [
     {
+      "id": "sticky-main",
+      "name": "Guide du Workflow",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -180
+      ],
       "parameters": {
-        "content": "# 🏔️ RAG Pipeline Upline.ai\n\n## But\nTransformer un PDF (livre MLM) en chunks Markdown enrichis avec métadonnées, puis les indexer dans Chroma via Flowise pour améliorer les réponses d'Atlas.\n\n## Flux\n1. Lire le PDF depuis le disque\n2. Convertir en HTML via Gotenberg\n3. Transformer HTML → Markdown + découper en chunks ~500 mots\n4. Enrichir chaque chunk avec métadonnées via DeepSeek\n5. Indexer dans Chroma via Flowise Document Store\n\n## Variables d'environnement requises\n- `DEEPSEEK_API_KEY` → clé API DeepSeek\n- `ID Document Store Flowise` → ID du Document Store Flowise\n\n## Comment lancer\n1. Clique sur 'Déclencheur Manuel'\n2. Fournis le chemin du PDF dans filePath\n3. Exécute et surveille les logs\n\n## ⚠️ Prérequis\n- Gotenberg doit être accessible sur le réseau Docker\n- Le fichier PDF doit être dans /data/documents/\n- Le Document Store Flowise doit être créé au préalable",
-        "height": 380,
-        "width": 340,
+        "content": "# RAG Pipeline Upline.ai\n\n## But\nTransformer un PDF MLM en chunks Markdown avec métadonnées → Chroma via Flowise\n\n## Etapes\n1. Lire PDF\n2. Gotenberg → HTML\n3. HTML → Markdown + chunks 500 mots\n4. DeepSeek → métadonnées JSON\n5. Flowise → Chroma\n\n## Credentials requis dans n8n\n- DeepSeek API : Header Auth → Authorization: Bearer sk-...\n- Flowise Store ID : à remplacer dans noeud Flowise\n\n## Fichier PDF\nDoit être dans /data/documents/ sur le VPS",
+        "height": 320,
+        "width": 300,
         "color": 4
-      },
-      "id": "sticky-1",
-      "name": "📋 Guide du Workflow",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [240, -120]
+      }
     },
     {
-      "parameters": {
-        "content": "## Nœud 1 — Déclencheur Manuel\n\n**Entrée attendue :**\n```json\n{\n  \"filePath\": \"/data/documents/big_al.pdf\"\n}\n```\n\n**Comment utiliser :**\nClique sur 'Test workflow' et fournis le chemin du PDF dans les données d'entrée.\n\n**Chemins disponibles sur le VPS :**\n- /data/documents/big_al.pdf\n- /data/documents/go_pro.pdf",
-        "height": 200,
-        "width": 220,
-        "color": 5
-      },
-      "id": "sticky-2",
-      "name": "📌 Note Déclencheur",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [240, 420]
-    },
-    {
-      "parameters": {
-        "content": "## Nœud 3 — Gotenberg\n\n**But :** Convertir PDF en HTML propre\n\n**URL interne Docker :**\nhttp://gotenberg-usc6-gotenberg-1:3000\n\n**Endpoint utilisé :**\n/forms/libreoffice/convert/html\n\n**⚠️ Si erreur 503 :**\nVérifier que le conteneur Gotenberg est actif :\n```\ndocker ps | grep gotenberg\n```\n\n**Sortie :** HTML brut du document",
-        "height": 220,
-        "width": 220,
-        "color": 6
-      },
-      "id": "sticky-3",
-      "name": "📌 Note Gotenberg",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [680, 420]
-    },
-    {
-      "parameters": {
-        "content": "## Nœud 4 — Markdown + Chunks\n\n**But :** Convertir HTML en Markdown lisible et découper en chunks de ~500 mots\n\n**Règles de découpage :**\n- Coupe sur les titres ## H2\n- Coupe si > 500 mots\n- Ignore les chunks < 50 mots\n\n**Sortie par chunk :**\n```json\n{\n  \"titre\": \"Titre de la section\",\n  \"contenu\": \"Texte markdown...\",\n  \"mots\": 342\n}\n```\n\n**Conseil :** Ajuste la limite de 500 mots selon la qualité souhaitée. Moins = plus précis. Plus = plus de contexte.",
-        "height": 260,
-        "width": 220,
-        "color": 6
-      },
-      "id": "sticky-4",
-      "name": "📌 Note Chunks",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [900, 420]
-    },
-    {
-      "parameters": {
-        "content": "## Nœud 5 — DeepSeek Métadonnées\n\n**But :** Générer des métadonnées JSON pour chaque chunk\n\n**Modèle utilisé :** deepseek-chat\n\n**Variable requise :**\n`DEEPSEEK_API_KEY` dans les credentials n8n\n\n**Format de sortie attendu :**\n```json\n{\n  \"module\": \"prospection\",\n  \"sous_theme\": \"liste chaude\",\n  \"difficulte\": \"debutant\",\n  \"type\": \"technique\",\n  \"source\": \"Big Al\",\n  \"tags\": [\"liste\", \"scripts\"],\n  \"resume\": \"Comment constituer sa liste...\"\n}\n```\n\n**⚠️ Si erreur parsing JSON :**\nLe nœud suivant a un fallback automatique avec des métadonnées génériques.",
-        "height": 300,
-        "width": 220,
-        "color": 7
-      },
-      "id": "sticky-5",
-      "name": "📌 Note DeepSeek",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [1120, 420]
-    },
-    {
-      "parameters": {
-        "content": "## Nœud 6 — Flowise Upsert\n\n**But :** Indexer le chunk dans Chroma via Flowise Document Store\n\n**Variable requise :**\n`ID Document Store Flowise` → visible dans Flowise > Document Stores > [ton store] > URL\n\n**Comment trouver le Store ID :**\n1. Ouvre Flowise\n2. Va dans Document Stores\n3. Clique sur ton store\n4. Copie l'ID dans l'URL\n\n**⚠️ Si erreur 404 :**\nVérifier que le Document Store existe et que l'ID est correct\n\n**Sortie attendue :**\n```json\n{ \"ids\": [\"uuid-chunk\"] }\n```",
-        "height": 280,
-        "width": 220,
-        "color": 3
-      },
-      "id": "sticky-6",
-      "name": "📌 Note Flowise",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [1560, 420]
-    },
-    {
-      "parameters": {},
-      "id": "node-1",
-      "name": "🚀 Déclencheur Manuel",
+      "id": "node-trigger",
+      "name": "Declencheur Manuel",
       "type": "n8n-nodes-base.manualTrigger",
-      "position": [240, 300],
-      "notes": "Point de départ du pipeline. Fournis le chemin du PDF en entrée."
+      "typeVersion": 1,
+      "position": [
+        560,
+        300
+      ],
+      "parameters": {}
     },
     {
+      "id": "node-read",
+      "name": "Lire le PDF",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        780,
+        300
+      ],
       "parameters": {
         "filePath": "={{ $json.filePath || '/data/documents/big_al.pdf' }}"
-      },
-      "id": "node-2",
-      "name": "📄 Lire le PDF",
-      "type": "n8n-nodes-base.readBinaryFile",
-      "position": [460, 300],
-      "notes": "Lit le fichier PDF depuis le disque du VPS. Chemin par défaut : /data/documents/big_al.pdf"
+      }
     },
     {
+      "id": "node-gotenberg",
+      "name": "Gotenberg PDF vers HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1000,
+        300
+      ],
       "parameters": {
         "method": "POST",
         "url": "http://gotenberg-usc6-gotenberg-1:3000/forms/libreoffice/convert/html",
@@ -106,130 +78,151 @@
             }
           ]
         },
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "text"
-            }
-          },
-          "timeout": 30000
-        }
-      },
-      "id": "node-3",
-      "name": "🔄 Gotenberg PDF→HTML",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [680, 300],
-      "notes": "Convertit le PDF en HTML via Gotenberg (conteneur Docker interne). Timeout 30s pour les gros fichiers."
+        "options": {}
+      }
     },
     {
-      "parameters": {
-        "jsCode": "/**\n * NŒUD 4 — HTML vers Markdown + Découpage en Chunks\n * \n * But : Convertir le HTML brut de Gotenberg en Markdown propre\n *       puis découper en chunks de ~500 mots max.\n * \n * Règles :\n * - Découpe sur les titres H1/H2 (sections naturelles)\n * - Découpe si > 500 mots (évite les chunks trop longs)\n * - Ignore les chunks < 50 mots (trop courts, peu utiles)\n * \n * Sortie : tableau de { titre, contenu (markdown), mots }\n */\n\n// Récupère le HTML de Gotenberg\nconst html = $input.first().json.data || \n             $input.first().json.body || \n             $input.first().json || '';\n\nconsole.log('📥 HTML reçu, longueur:', html.length, 'caractères');\n\n// ── CONVERSION HTML → MARKDOWN ──────────────────────────\nlet markdown = String(html)\n  // Titres\n  .replace(/<h1[^>]*>(.*?)<\\/h1>/gi, '# $1\\n\\n')\n  .replace(/<h2[^>]*>(.*?)<\\/h2>/gi, '## $1\\n\\n')\n  .replace(/<h3[^>]*>(.*?)<\\/h3>/gi, '### $1\\n\\n')\n  .replace(/<h4[^>]*>(.*?)<\\/h4>/gi, '#### $1\\n\\n')\n  // Formatage\n  .replace(/<strong[^>]*>(.*?)<\\/strong>/gi, '**$1**')\n  .replace(/<b[^>]*>(.*?)<\\/b>/gi, '**$1**')\n  .replace(/<em[^>]*>(.*?)<\\/em>/gi, '*$1*')\n  .replace(/<i[^>]*>(.*?)<\\/i>/gi, '*$1*')\n  // Listes\n  .replace(/<li[^>]*>(.*?)<\\/li>/gi, '- $1\\n')\n  .replace(/<ul[^>]*>/gi, '\\n').replace(/<\\/ul>/gi, '\\n')\n  .replace(/<ol[^>]*>/gi, '\\n').replace(/<\\/ol>/gi, '\\n')\n  // Paragraphes et sauts de ligne\n  .replace(/<p[^>]*>(.*?)<\\/p>/gi, '$1\\n\\n')\n  .replace(/<br\\s*\\/?>/gi, '\\n')\n  .replace(/<hr\\s*\\/?>/gi, '\\n---\\n')\n  // Supprime toutes les autres balises HTML\n  .replace(/<[^>]+>/g, '')\n  // Entités HTML\n  .replace(/&nbsp;/g, ' ')\n  .replace(/&/g, '&')\n  .replace(/</g, '<')\n  .replace(/>/g, '>')\n  .replace(/"/g, '\"')\n  .replace(/&#39;/g, \"'\")\n  // Nettoie les espaces multiples\n  .replace(/\\n{3,}/g, '\\n\\n')\n  .replace(/[ \\t]{2,}/g, ' ')\n  .trim();\n\nconsole.log('✅ Markdown généré, longueur:', markdown.length, 'caractères');\n\n// ── DÉCOUPAGE EN CHUNKS ──────────────────────────────────\nconst MOTS_MAX = 500;    // Taille max d'un chunk en mots\nconst MOTS_MIN = 50;     // Taille min (ignore les chunks trop courts)\n\nconst sections = [];\nconst lines = markdown.split('\\n');\nlet currentChunk = [];\nlet currentTitle = 'Introduction';\nlet wordCount = 0;\nlet chunkIndex = 0;\n\nfor (const line of lines) {\n  const isTitle = line.startsWith('# ') || line.startsWith('## ');\n  \n  if (isTitle && currentChunk.length > 0) {\n    // Sauvegarde le chunk actuel si assez grand\n    const content = currentChunk.join('\\n').trim();\n    const words = content.split(/\\s+/).length;\n    \n    if (words >= MOTS_MIN) {\n      chunkIndex++;\n      sections.push({\n        index: chunkIndex,\n        titre: currentTitle,\n        contenu: content,\n        mots: words\n      });\n      console.log(`📦 Chunk ${chunkIndex}: \"${currentTitle}\" — ${words} mots`);\n    } else {\n      console.log(`⏭️ Chunk ignoré (trop court): \"${currentTitle}\" — ${words} mots`);\n    }\n    \n    // Nouveau chunk\n    currentTitle = line.replace(/^#+\\s/, '').trim();\n    currentChunk = [line];\n    wordCount = 0;\n    \n  } else {\n    currentChunk.push(line);\n    wordCount += line.split(/\\s+/).filter(w => w.length > 0).length;\n    \n    // Coupe si trop long\n    if (wordCount >= MOTS_MAX) {\n      const content = currentChunk.join('\\n').trim();\n      chunkIndex++;\n      sections.push({\n        index: chunkIndex,\n        titre: currentTitle + ` (partie ${Math.ceil(chunkIndex)})`,\n        contenu: content,\n        mots: wordCount\n      });\n      console.log(`📦 Chunk ${chunkIndex} (coupé): \"${currentTitle}\" — ${wordCount} mots`);\n      currentChunk = [];\n      wordCount = 0;\n    }\n  }\n}\n\n// Dernier chunk\nif (currentChunk.length > 0) {\n  const content = currentChunk.join('\\n').trim();\n  const words = content.split(/\\s+/).length;\n  if (words >= MOTS_MIN) {\n    chunkIndex++;\n    sections.push({\n      index: chunkIndex,\n      titre: currentTitle,\n      contenu: content,\n      mots: words\n    });\n  }\n}\n\nconsole.log(`\\n🎯 Total: ${sections.length} chunks générés sur ${chunkIndex} tentatives`);\nconsole.log(`📊 Mots moyens par chunk: ${Math.round(sections.reduce((a,s) => a+s.mots, 0) / sections.length)}`);\n\n// Retourne chaque chunk comme un item séparé\nreturn sections.map(s => ({ json: s }));"
-      },
-      "id": "node-4",
-      "name": "✂️ HTML→Markdown + Chunks",
+      "id": "node-chunks",
+      "name": "HTML vers Markdown et Chunks",
       "type": "n8n-nodes-base.code",
-      "position": [900, 300],
-      "notes": "Convertit HTML en Markdown propre et découpe en chunks ~500 mots. Chaque chunk devient un item séparé pour le traitement parallèle."
+      "typeVersion": 2,
+      "position": [
+        1220,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const html = String($input.first().json.data || $input.first().json.body || '');\nconst MOTS_MAX = 500;\nconst MOTS_MIN = 50;\n\nlet md = html\n  .replace(/<h1[^>]*>(.*?)<\\/h1>/gi, '# $1\\n\\n')\n  .replace(/<h2[^>]*>(.*?)<\\/h2>/gi, '## $1\\n\\n')\n  .replace(/<h3[^>]*>(.*?)<\\/h3>/gi, '### $1\\n\\n')\n  .replace(/<strong[^>]*>(.*?)<\\/strong>/gi, '**$1**')\n  .replace(/<b[^>]*>(.*?)<\\/b>/gi, '**$1**')\n  .replace(/<em[^>]*>(.*?)<\\/em>/gi, '*$1*')\n  .replace(/<li[^>]*>(.*?)<\\/li>/gi, '- $1\\n')\n  .replace(/<p[^>]*>(.*?)<\\/p>/gi, '$1\\n\\n')\n  .replace(/<br\\s*\\/?>/gi, '\\n')\n  .replace(/<[^>]+>/g, '')\n  .replace(/&nbsp;/g, ' ')\n  .replace(/\\n{3,}/g, '\\n\\n')\n  .trim();\n\nconst sections = [];\nconst lines = md.split('\\n');\nlet chunk = [];\nlet titre = 'Introduction';\nlet mots = 0;\nlet idx = 0;\n\nfor (const line of lines) {\n  if ((line.startsWith('# ') || line.startsWith('## ')) && chunk.length > 0) {\n    const content = chunk.join('\\n').trim();\n    const w = content.split(/\\s+/).length;\n    if (w >= MOTS_MIN) { idx++; sections.push({ index: idx, titre, contenu: content, mots: w }); }\n    titre = line.replace(/^#+\\s/, '').trim();\n    chunk = [line];\n    mots = 0;\n  } else {\n    chunk.push(line);\n    mots += line.split(/\\s+/).filter(w => w.length > 0).length;\n    if (mots >= MOTS_MAX) {\n      idx++;\n      sections.push({ index: idx, titre: titre + ' suite', contenu: chunk.join('\\n').trim(), mots });\n      chunk = [];\n      mots = 0;\n    }\n  }\n}\n\nif (chunk.length > 0) {\n  const content = chunk.join('\\n').trim();\n  const w = content.split(/\\s+/).length;\n  if (w >= MOTS_MIN) { idx++; sections.push({ index: idx, titre, contenu: content, mots: w }); }\n}\n\nconsole.log('Total chunks:', sections.length);\nreturn sections.map(s => ({ json: s }));"
+      }
     },
     {
+      "id": "node-deepseek",
+      "name": "DeepSeek Metadonnees",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1440,
+        300
+      ],
       "parameters": {
         "method": "POST",
         "url": "https://api.deepseek.com/v1/chat/completions",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ $env.DEEPSEEK_API_KEY }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
-        "body": "={\n  \"model\": \"deepseek-chat\",\n  \"max_tokens\": 400,\n  \"temperature\": 0.1,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Tu es un expert en marketing de réseau MLM. Analyse le chunk de texte et retourne UNIQUEMENT un objet JSON valide, sans markdown, sans explication, sans texte avant ou après. Format strict : {\\\"module\\\": string, \\\"sous_theme\\\": string, \\\"difficulte\\\": string, \\\"type\\\": string, \\\"source\\\": string, \\\"tags\\\": [string], \\\"resume\\\": string}. Valeurs autorisées - module: prospection|invitation|presentation|suivi|recrutement|mindset|leadership|systeme|general. sous_theme: texte libre court. difficulte: debutant|intermediaire|expert. type: technique|anecdote|exercice|script|principe|definition. source: Big Al|Go Pro|4 couleurs|autre. tags: tableau de 2-5 mots-clés courts en français. resume: 1 phrase max 100 caractères.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Chunk #{{ $json.index }} — Titre: {{ $json.titre }}\\n\\nContenu (extrait):\\n{{ $json.contenu.substring(0, 800) }}\"\n    }\n  ]\n}",
-        "options": {
-          "timeout": 15000
+        "body": "={\n  \"model\": \"deepseek-chat\",\n  \"max_tokens\": 300,\n  \"temperature\": 0.1,\n  \"messages\": [\n    {\"role\": \"system\", \"content\": \"Expert MLM. Retourne UNIQUEMENT du JSON valide sans markdown. Format: {\\\"module\\\": string, \\\"difficulte\\\": string, \\\"type\\\": string, \\\"tags\\\": [string], \\\"resume\\\": string}. module: prospection|invitation|presentation|suivi|recrutement|mindset|leadership|general. difficulte: debutant|intermediaire|expert. type: technique|anecdote|exercice|script|principe.\"},\n    {\"role\": \"user\", \"content\": \"Titre: {{ $json.titre }}\\nContenu: {{ $json.contenu.substring(0, 600) }}\"}\n  ]\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "deepseek-cred",
+          "name": "DeepSeek API"
         }
-      },
-      "id": "node-5",
-      "name": "🤖 DeepSeek → Métadonnées",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [1120, 300],
-      "notes": "Génère les métadonnées JSON pour chaque chunk via DeepSeek. Temperature 0.1 pour des résultats cohérents. Timeout 15s."
+      }
     },
     {
-      "parameters": {
-        "jsCode": "/**\n * NŒUD 5b — Préparation de l'Upsert Flowise\n * \n * But : Parser la réponse DeepSeek et assembler\n *       le payload pour l'upsert dans Chroma.\n * \n * Gestion d'erreur : si le JSON DeepSeek est invalide,\n * utilise des métadonnées génériques pour ne pas bloquer.\n */\n\nconst deepseekResponse = $input.first().json;\n\n// Récupère le chunk original depuis le nœud précédent\n// (on passe par $('nom-noeud') pour accéder aux données du bon nœud)\nlet chunk;\ntry {\n  chunk = $('✂️ HTML→Markdown + Chunks').first().json;\n} catch(e) {\n  console.log('⚠️ Impossible de récupérer le chunk original:', e.message);\n  chunk = { titre: 'Inconnu', contenu: '', mots: 0, index: 0 };\n}\n\nconsole.log(`\\n🔍 Traitement chunk #${chunk.index}: \"${chunk.titre}\"`);\n\n// ── PARSE MÉTADONNÉES DEEPSEEK ───────────────────────────\nlet metadata = {};\nlet parseSuccess = false;\n\ntry {\n  const content = deepseekResponse?.choices?.[0]?.message?.content || '';\n  console.log('📤 Réponse DeepSeek brute:', content.substring(0, 200));\n  \n  // Nettoie le JSON (supprime markdown si présent)\n  const cleaned = content\n    .replace(/```json\\s*/gi, '')\n    .replace(/```\\s*/gi, '')\n    .trim();\n  \n  metadata = JSON.parse(cleaned);\n  parseSuccess = true;\n  console.log('✅ Métadonnées parsées:', JSON.stringify(metadata));\n  \n} catch(e) {\n  // Fallback : métadonnées génériques si parsing échoue\n  console.log('⚠️ Parsing JSON échoué, utilisation des métadonnées par défaut:', e.message);\n  metadata = {\n    module: 'general',\n    sous_theme: 'non_classe',\n    difficulte: 'debutant',\n    type: 'principe',\n    source: 'Big Al',\n    tags: ['mlm', 'formation'],\n    resume: chunk.titre.substring(0, 100)\n  };\n}\n\n// ── ASSEMBLAGE DU PAYLOAD FLOWISE ───────────────────────\nconst payload = {\n  // Texte du chunk en Markdown\n  text: chunk.contenu,\n  \n  // Métadonnées enrichies\n  metadata: {\n    // Métadonnées générées par DeepSeek\n    ...metadata,\n    \n    // Métadonnées techniques\n    titre: chunk.titre,\n    chunk_index: chunk.index,\n    mots: chunk.mots,\n    langue: 'fr',\n    parse_success: parseSuccess,\n    \n    // Timestamps\n    indexed_at: new Date().toISOString(),\n    source_file: 'big_al_happy_network'\n  }\n};\n\nconsole.log(`\\n📦 Payload prêt pour Flowise:`);\nconsole.log(`   Texte: ${payload.text.length} caractères`);\nconsole.log(`   Module: ${payload.metadata.module}`);\nconsole.log(`   Tags: ${payload.metadata.tags?.join(', ')}`);\n\nreturn [{ json: payload }];"
-      },
-      "id": "node-5b",
-      "name": "🔧 Prépare Upsert",
+      "id": "node-prepare",
+      "name": "Preparer Upsert",
       "type": "n8n-nodes-base.code",
-      "position": [1340, 300],
-      "notes": "Parse la réponse DeepSeek et assemble le payload pour Flowise. Fallback automatique si le JSON est invalide."
+      "typeVersion": 2,
+      "position": [
+        1660,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst chunk = $('HTML vers Markdown et Chunks').first().json;\n\nlet meta = {};\ntry {\n  const content = response.choices[0].message.content;\n  meta = JSON.parse(content.replace(/```json|```/g, '').trim());\n} catch(e) {\n  meta = { module: 'general', difficulte: 'debutant', type: 'principe', tags: ['mlm'], resume: chunk.titre };\n}\n\nreturn [{ json: {\n  text: chunk.contenu,\n  metadata: { ...meta, titre: chunk.titre, index: chunk.index, mots: chunk.mots, langue: 'fr', source: 'big_al', indexed_at: new Date().toISOString() }\n}}];"
+      }
     },
     {
+      "id": "node-flowise",
+      "name": "Flowise vers Chroma",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1880,
+        300
+      ],
       "parameters": {
         "method": "POST",
-        "url": "=https://flowise-nsfn.srv1651221.hstgr.cloud/api/v1/vector/upsert/{{ $env.ID Document Store Flowise || 'TON_STORE_ID_ICI' }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
+        "url": "https://flowise-nsfn.srv1651221.hstgr.cloud/api/v1/vector/upsert/TON_STORE_ID_ICI",
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
-        "body": "={\n  \"texts\": [{{ JSON.stringify($json.text) }}],\n  \"metadata\": [{{ JSON.stringify($json.metadata) }}]\n}",
-        "options": {
-          "timeout": 30000,
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          }
-        }
-      },
-      "id": "node-6",
-      "name": "📤 Flowise → Chroma",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [1560, 300],
-      "notes": "Envoie le chunk et ses métadonnées dans Chroma via l'API Flowise Document Store. Remplace ID Document Store Flowise par l'ID de ton store."
+        "body": "={ \"texts\": [{{ JSON.stringify($json.text) }}], \"metadata\": [{{ JSON.stringify($json.metadata) }}] }",
+        "options": {}
+      }
     }
   ],
   "connections": {
-    "🚀 Déclencheur Manuel": {
-      "main": [[{"node": "📄 Lire le PDF", "type": "main", "index": 0}]]
+    "Declencheur Manuel": {
+      "main": [
+        [
+          {
+            "node": "Lire le PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "📄 Lire le PDF": {
-      "main": [[{"node": "🔄 Gotenberg PDF→HTML", "type": "main", "index": 0}]]
+    "Lire le PDF": {
+      "main": [
+        [
+          {
+            "node": "Gotenberg PDF vers HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "🔄 Gotenberg PDF→HTML": {
-      "main": [[{"node": "✂️ HTML→Markdown + Chunks", "type": "main", "index": 0}]]
+    "Gotenberg PDF vers HTML": {
+      "main": [
+        [
+          {
+            "node": "HTML vers Markdown et Chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "✂️ HTML→Markdown + Chunks": {
-      "main": [[{"node": "🤖 DeepSeek → Métadonnées", "type": "main", "index": 0}]]
+    "HTML vers Markdown et Chunks": {
+      "main": [
+        [
+          {
+            "node": "DeepSeek Metadonnees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "🤖 DeepSeek → Métadonnées": {
-      "main": [[{"node": "🔧 Prépare Upsert", "type": "main", "index": 0}]]
+    "DeepSeek Metadonnees": {
+      "main": [
+        [
+          {
+            "node": "Preparer Upsert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "🔧 Prépare Upsert": {
-      "main": [[{"node": "📤 Flowise → Chroma", "type": "main", "index": 0}]]
+    "Preparer Upsert": {
+      "main": [
+        [
+          {
+            "node": "Flowise vers Chroma",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
-    "executionOrder": "v1",
-    "saveManualExecutions": true,
-    "callerPolicy": "workflowsFromSameOwner",
-    "errorWorkflow": ""
-  },
-  "tags": ["RAG", "Upline", "Chroma", "Flowise"]
+    "executionOrder": "v1"
+  }
 }
