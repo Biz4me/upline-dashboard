@@ -111,6 +111,7 @@ export default function FormationOverview() {
                 padding: '20px 24px',
                 display: 'flex',
                 alignItems: 'center',
+                minHeight: 120,
                 gap: 20,
                 opacity: effectiveLocked ? 0.85 : 1,
                 cursor: effectiveLocked ? 'default' : 'pointer',
@@ -170,7 +171,7 @@ export default function FormationOverview() {
                 )}
               </div>
 
-              <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1 }}>
                     Module {mod.id} · {mod.duree}
