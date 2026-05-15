@@ -1,710 +1,422 @@
 'use client'
-
 import { useState } from 'react'
 import Link from 'next/link'
+import { Sparkles, MessageSquare, Mic, BookOpen, Users, BarChart3, Zap, Check, X, ChevronDown, Star, ArrowRight } from 'lucide-react'
 
 export default function LandingPage() {
   const [billing, setBilling] = useState<'mensuel' | 'annuel'>('mensuel')
   const [faqOpen, setFaqOpen] = useState<boolean[]>([false, false, false, false, false, false])
+  const [demoOpen, setDemoOpen] = useState(false)
+  const [demoMessages, setDemoMessages] = useState<{role: 'user'|'atlas', text: string}[]>([
+    { role: 'atlas', text: 'Bonjour ! Je suis Atlas, votre coach IA MLM. Dites-moi sur quoi vous voulez progresser aujourd\'hui ?' }
+  ])
+  const [demoInput, setDemoInput] = useState('')
+  const [demoCount, setDemoCount] = useState(0)
+  const [demoEmail, setDemoEmail] = useState('')
+  const [demoStep, setDemoStep] = useState<'chat'|'email'>('chat')
 
-  const toggleFaq = (index: number) => {
-    setFaqOpen(prev => {
-      const next = [...prev]
-      next[index] = !next[index]
-      return next
-    })
+  const toggleFaq = (i: number) => {
+    setFaqOpen(prev => { const n = [...prev]; n[i] = !n[i]; return n })
   }
 
-  const c = {
-    bg: '#161410',
-    sidebar: '#1E1B14',
-    card: '#252018',
-    border: '#3A3020',
-    gold: '#E2B84A',
-    goldHover: '#ECC85E',
-    text: '#F5F0E8',
-    secondary: '#C8B48E',
-    muted: '#6A5A3A',
-    darkBorder: '#2A2318',
-    footerBg: '#0F0D0A',
-    green: '#22c55e',
+  const sendDemoMessage = () => {
+    if (!demoInput.trim() || demoCount >= 3) return
+    const newMessages = [...demoMessages, { role: 'user' as const, text: demoInput }]
+    setDemoMessages(newMessages)
+    setDemoInput('')
+    const count = demoCount + 1
+    setDemoCount(count)
+
+    setTimeout(() => {
+      if (count >= 3) {
+        setDemoMessages(prev => [...prev, {
+          role: 'atlas',
+          text: 'Tu vois le potentiel ? Imagine avoir Atlas disponible 24h/24 pendant 7 jours complets. Crée ton compte maintenant — aucune carte requise.'
+        }])
+        setDemoStep('email')
+      } else {
+        const responses = [
+          'Excellente question ! En MLM, la clé est de traiter chaque prospect comme une personne unique. → Commence par poser 2 questions ouvertes avant tout pitch. → Écoute 80% du temps, parle 20%. Tu veux qu\'on pratique ensemble ?',
+          'Parfait ! Pour les objections, la méthode Feel/Felt/Found est redoutable. → "Je comprends ce que tu ressens (Feel)..." → "D\'autres ont ressenti la même chose (Felt)..." → "Mais ils ont trouvé que... (Found)". Quelle objection te pose le plus de problèmes ?',
+        ]
+        setDemoMessages(prev => [...prev, { role: 'atlas', text: responses[count - 1] || responses[0] }])
+      }
+    }, 800)
   }
 
-  const styles = `
-    .btn-gold {
-      background: ${c.gold};
-      color: ${c.bg};
-      font-weight: 700;
-      padding: 13px 26px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: background 0.2s;
-    }
-    .btn-gold:hover { background: ${c.goldHover}; }
-    .btn-outline {
-      background: transparent;
-      color: #FFF;
-      border: 1px solid ${c.border};
-      padding: 13px 26px;
-      border-radius: 10px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: border-color 0.2s;
-    }
-    .btn-outline:hover { border-color: ${c.gold}; }
-    .card {
-      background: ${c.sidebar};
-      border: 1px solid ${c.border};
-      border-radius: 12px;
-      padding: 20px;
-    }
-    .tag {
-      background: rgba(226,184,74,0.12);
-      color: ${c.gold};
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 20px;
-      border: 1px solid rgba(226,184,74,0.3);
-      letter-spacing: 0.05em;
-      display: inline-block;
-    }
-    .stars { color: ${c.gold}; font-size: 13px; }
-  `
+  const features = [
+    { icon: MessageSquare, title: 'Coaching IA personnalisé', desc: 'Atlas adapte ses conseils à votre niveau, vos objectifs et votre société MLM', color: '#6D5EF5' },
+    { icon: Mic, title: 'Simulations vocales', desc: 'Entraînez-vous en conditions réelles : appels, invitations, présentations, closing', color: '#22D3EE' },
+    { icon: BookOpen, title: 'Base de connaissances', desc: 'Scripts, méthodes, psychologie de vente, leadership et social selling', color: '#22C55E' },
+    { icon: Users, title: "Communauté d'entraide", desc: 'Partagez vos résultats, scripts et participez à des challenges', color: '#F59E0B' },
+    { icon: BarChart3, title: 'Analytics & Suivi', desc: 'Visualisez vos progrès et célébrez chaque victoire', color: '#8B5CF6' },
+    { icon: Zap, title: 'Agnostique MLM', desc: 'Compatible avec Herbalife, Amway, Forever Living et toute autre société', color: '#06B6D4' },
+  ]
 
-  const Logo = () => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <div style={{
-        width: 30, height: 30, borderRadius: 8, background: c.gold,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontWeight: 700, fontSize: 13, color: c.bg,
-      }}>A</div>
-      <span style={{ fontWeight: 700, fontSize: 16, color: '#FFF' }}>Upline</span>
-      <span style={{ fontWeight: 700, fontSize: 16, color: c.gold }}>.ai</span>
-    </div>
-  )
+  const stats = [
+    { val: '500+', label: 'Distributeurs actifs' },
+    { val: '12+', label: 'Sociétés MLM' },
+    { val: '24/7', label: 'Disponibilité Atlas' },
+    { val: '4.9★', label: 'Satisfaction' },
+  ]
 
-  const Section = ({ children, style = {}, id }: { children: React.ReactNode; style?: React.CSSProperties; id?: string }) => (
-    <section id={id} style={{ width: '100%', ...style }}>{children}</section>
-  )
+  const testimonials = [
+    { name: 'Marie L.', company: 'Herbalife', text: 'Atlas m\'a aidé à doubler mes recrutements en 3 mois. Les simulations d\'objections sont bluffantes de réalisme.', stars: 5 },
+    { name: 'Sophie K.', company: 'Forever Living', text: 'Enfin un outil qui comprend le MLM ! La formation est structurée et les conseils d\'Atlas sont toujours pertinents.', stars: 5 },
+    { name: 'Jean-Marc D.', company: 'Amway', text: "Le meilleur investissement pour mon business. Mon équipe utilise aussi Atline et nos résultats s'envolent.", stars: 5 },
+  ]
+
+  const faqs = [
+    { q: 'Atline.ai fonctionne avec ma société MLM ?', a: 'Oui ! Atline.ai est 100% agnostique — il fonctionne avec Herbalife, Amway, Forever Living, Oriflame, et toute autre société MLM. Atlas adapte ses conseils à votre société spécifique.' },
+    { q: 'Que se passe-t-il après les 7 jours d\'essai ?', a: 'Vous passez automatiquement en plan Starter (gratuit) avec 5 messages Atlas/jour et accès au module 1. Aucune carte bancaire requise pour l\'essai.' },
+    { q: 'Mes données sont-elles sécurisées ?', a: 'Absolument. Vos données sont chiffrées et ne sont jamais partagées avec des tiers ni avec votre société MLM.' },
+    { q: 'Puis-je annuler à tout moment ?', a: 'Oui, sans engagement. Annulation en 1 clic depuis votre profil, effective immédiatement.' },
+    { q: 'Atlas remplace-t-il mon upline ?', a: "Non, Atlas complète votre upline. Il est disponible 24h/24 pour les questions du quotidien, les entraînements et le suivi — des tâches que votre upline n'a pas toujours le temps de faire." },
+    { q: 'Comment fonctionne la commission 20% Pro ?', a: 'En plan Pro, vous gagnez 20% de commission sur chaque abonnement Coach ou Pro souscrit via votre lien de parrainage, versé via Stripe Connect.' },
+  ]
 
   return (
-    <div style={{ background: c.bg, minHeight: '100vh', color: c.text, fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      <style dangerouslySetInnerHTML={{ __html: styles }} />
+    <div style={{ minHeight: '100vh', background: '#0F172A', color: 'white', fontFamily: 'var(--font-body, DM Sans, sans-serif)' }}>
 
-      {/* ===== SECTION 1 — Header ===== */}
-      <header style={{
-        position: 'sticky', top: 0, zIndex: 100,
-        background: c.bg, borderBottom: `1px solid ${c.darkBorder}`,
-        padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      }}>
-        <Logo />
-        <nav style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-          <a href="#features" style={{ color: c.secondary, fontSize: 13, textDecoration: 'none' }}>Fonctionnalités</a>
-          <a href="#pricing" style={{ color: c.secondary, fontSize: 13, textDecoration: 'none' }}>Pricing</a>
-          <a href="#blog" style={{ color: c.secondary, fontSize: 13, textDecoration: 'none' }}>Blog</a>
-          <Link href="/login" style={{ color: c.secondary, fontSize: 13, textDecoration: 'none' }}>Se connecter</Link>
-        </nav>
-        <Link href="/signup" className="btn-gold" style={{ padding: '8px 16px', fontSize: 13 }}>
-          Essayer 1h gratuit
-        </Link>
-      </header>
-
-      {/* ===== SECTION 2 — Hero ===== */}
-      <Section style={{ padding: '72px 32px 56px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 700, margin: '0 auto' }}>
-          <div className="tag" style={{ marginBottom: 20 }}>
-            COACH MLM IA — AGNOSTIQUE — TOUTES SOCIÉTÉS
+      {/* NAVBAR */}
+      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(15,23,42,0.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 32px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16, boxShadow: '0 4px 12px rgba(109,94,245,0.4)' }}>A</div>
+            <span style={{ fontSize: 20, fontWeight: 800, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Atline.ai</span>
           </div>
-          <h1 style={{ fontSize: 44, fontWeight: 700, color: '#FFF', lineHeight: 1.15, margin: '0 0 20px' }}>
-            Le coach MLM qui<br />
-            <span style={{ color: c.gold }}>ne dort jamais</span>
-          </h1>
-          <p style={{ color: c.secondary, fontSize: 16, lineHeight: 1.75, marginBottom: 32 }}>
-            Atlas, ton coach IA spécialisé MLM, te guide 24/7 pour trouver des prospects,
-            gérer les objections et structurer ton business.
-          </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
-            <Link href="/signup" className="btn-gold">
-              Essayer Atlas 1h gratuitement →
-            </Link>
-            <a href="#demo" className="btn-outline">
-              Voir la démo
-            </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+            <a href="#features" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>Fonctionnalités</a>
+            <Link href="/pricing" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>Tarifs</Link>
+            <Link href="/blog" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>Blog</Link>
+            <Link href="/login" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>Se connecter</Link>
           </div>
-          <p style={{ color: c.muted, fontSize: 12 }}>
-            Sans carte bancaire · Accès immédiat · Timer visible
-          </p>
-        </div>
-      </Section>
-
-      {/* ===== SECTION 2b — Chat Atlas mockup ===== */}
-      <Section style={{ padding: '0 32px 32px' }}>
-        <div style={{
-          background: c.sidebar, borderRadius: 14, padding: 20,
-          maxWidth: 500, margin: '0 auto', border: `1px solid ${c.border}`,
-        }}>
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <div style={{
-              width: 26, height: 26, borderRadius: '50%', background: c.gold,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 700, fontSize: 12, color: c.bg,
-            }}>A</div>
-            <span style={{ color: c.secondary, fontSize: 12 }}>Atlas — Coach IA · En ligne</span>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: c.green, marginLeft: 'auto' }} />
-          </div>
-          {/* Bulle Atlas 1 */}
-          <div style={{
-            background: c.card, borderRadius: '4px 14px 14px 14px',
-            padding: '10px 14px', fontSize: 13, color: c.text, maxWidth: '85%', marginBottom: 10,
-          }}>
-            Bonjour ! Je suis Atlas. Dis-moi ta société MLM et ton objectif — je t'aide à passer au niveau supérieur 🏔️
-          </div>
-          {/* Bulle User */}
-          <div style={{
-            background: c.gold, borderRadius: '14px 4px 14px 14px',
-            color: c.bg, fontWeight: 500, padding: '10px 14px', fontSize: 13,
-            marginLeft: 'auto', maxWidth: '70%', marginBottom: 10,
-          }}>
-            Comment trouver plus de prospects ?
-          </div>
-          {/* Bulle Atlas 2 */}
-          <div style={{
-            background: c.card, borderRadius: '4px 14px 14px 14px',
-            padding: '10px 14px', fontSize: 13, color: c.text, maxWidth: '85%', marginBottom: 16,
-            whiteSpace: 'pre-line',
-          }}>
-            Commence par ta liste chaude. Note 10 personnes que tu connais sans pression. Pas pour les recruter — juste pour identifier qui pourrait être intéressé.{"\n\n"}→ Quel est ton marché principal : famille, amis ou collègues ?
-          </div>
-          {/* Input fake */}
-          <div style={{ display: 'flex', gap: 8 }}>
-            <div style={{
-              flex: 1, background: c.bg, border: `1px solid ${c.border}`,
-              borderRadius: 8, padding: '9px 12px', color: c.text, fontSize: 13,
-            }}>
-              <span style={{ color: c.muted }}>Écrire à Atlas...</span>
-            </div>
-            <button className="btn-gold" style={{ padding: '9px 14px', fontSize: 13 }}>→</button>
-          </div>
-        </div>
-      </Section>
-
-      {/* ===== SECTION 3 — Stats bar ===== */}
-      <Section style={{ borderBottom: `1px solid ${c.darkBorder}` }}>
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 32px 40px' }}>
-          {[
-            { num: '500+', label: 'Distributeurs coachés' },
-            { num: '12+', label: 'Sociétés MLM' },
-            { num: '24/7', label: 'Coach disponible' },
-            { num: '4.9★', label: 'Note moyenne' },
-          ].map((stat, i) => (
-            <div key={i} style={{
-              padding: '0 32px',
-              borderRight: i < 3 ? `1px solid ${c.darkBorder}` : 'none',
-              textAlign: 'center',
-            }}>
-              <div style={{ fontSize: 28, fontWeight: 700, color: c.gold }}>{stat.num}</div>
-              <div style={{ fontSize: 12, color: c.secondary, marginTop: 4 }}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{
-          padding: '16px 32px', display: 'flex', gap: 24,
-          alignItems: 'center', justifyContent: 'center',
-          borderBottom: `1px solid ${c.darkBorder}`,
-        }}>
-          <span style={{ color: c.muted, fontSize: 11, fontWeight: 600, letterSpacing: '0.06em' }}>COMPATIBLE AVEC</span>
-          {['Herbalife', 'Forever Living', 'Amway', 'Nu Skin', 'doTERRA'].map((name, i) => (
-            <span key={name} style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-              <span style={{ color: c.secondary, fontSize: 13, fontWeight: 600 }}>{name}</span>
-              {i < 4 && <span style={{ color: c.border }}>·</span>}
-            </span>
-          ))}
-          <span style={{ color: c.secondary, fontSize: 13, fontWeight: 600 }}>et toutes les autres</span>
-        </div>
-      </Section>
-
-      {/* ===== SECTION 4 — Comment ça marche ===== */}
-      <Section id="how" style={{ padding: '56px 32px' }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#FFF', margin: '0 0 8px' }}>Comment ça marche</h2>
-          <p style={{ color: c.secondary, fontSize: 15 }}>3 étapes pour transformer ton business MLM</p>
-        </div>
-        <div style={{ display: 'flex', maxWidth: 800, margin: '0 auto', alignItems: 'flex-start', justifyContent: 'center', gap: 0 }}>
-          {[
-            { n: '1', title: 'Inscris-toi', desc: 'Email + pseudo + ta société MLM. 30 secondes et tu es dans le dashboard.' },
-            { n: '2', title: 'Atlas te coache', desc: 'Formation, prospects, objections — Atlas s\'adapte à ta société et ton niveau.' },
-            { n: '3', title: 'Tu performes', desc: 'Plus de prospects, meilleur suivi, équipe motivée. Résultats mesurables dès la 1ère semaine.' },
-          ].map((step, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ textAlign: 'center', maxWidth: 220, padding: '0 16px' }}>
-                <div style={{
-                  width: 48, height: 48, borderRadius: '50%', background: c.gold,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 18, color: c.bg, fontWeight: 700,
-                  margin: '0 auto 12px',
-                }}>{step.n}</div>
-                <div style={{ color: '#FFF', fontWeight: 600, marginBottom: 6 }}>{step.title}</div>
-                <div style={{ color: c.secondary, fontSize: 13 }}>{step.desc}</div>
-              </div>
-              {i < 2 && (
-                <div style={{ color: c.border, fontSize: 24, padding: '0 8px', alignSelf: 'center' }}>→</div>
-              )}
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ===== SECTION 5 — Fonctionnalités ===== */}
-      <Section id="features" style={{ padding: '56px 32px', background: c.sidebar }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#FFF', margin: '0 0 8px' }}>Fonctionnalités</h2>
-          <p style={{ color: c.secondary, fontSize: 15 }}>Tout ce qu'il te faut pour performer en MLM</p>
-        </div>
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14,
-          maxWidth: 800, margin: '0 auto',
-        }}>
-          {[
-            { emoji: '🚀', title: 'Formation structurée', desc: '8 modules progressifs Go Pro. Quiz, jeux de rôle et exercices pratiques avec Atlas.' },
-            { emoji: '📊', title: 'Suivi de tes prospects', desc: 'Pipeline visuel 5 étapes. Qualification par personnalité. Appel direct depuis mobile.' },
-            { emoji: '🏆', title: 'Gamification motivante', desc: 'Badges, XP, streak quotidien. Défis terrain et formation. Leaderboard équipe.' },
-            { emoji: '💬', title: 'Communauté active', desc: 'Espaces par société MLM. Victoires, techniques, objections. Top contributeurs.' },
-          ].map((f, i) => (
-            <div key={i} className="card">
-              <div style={{ fontSize: 22, marginBottom: 10 }}>{f.emoji}</div>
-              <div style={{ color: '#FFF', fontWeight: 600, marginBottom: 6 }}>{f.title}</div>
-              <div style={{ color: c.secondary, fontSize: 13 }}>{f.desc}</div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ===== SECTION 6 — Témoignages ===== */}
-      <Section style={{ padding: '56px 32px' }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#FFF', margin: '0 0 8px' }}>Témoignages</h2>
-          <p style={{ color: c.secondary, fontSize: 15 }}>Des distributeurs MLM de toutes sociétés</p>
-        </div>
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14,
-          maxWidth: 900, margin: '0 auto',
-        }}>
-          {[
-            {
-              stars: 5, citation: 'Atlas m\'a aidée à structurer mon approche prospection. J\'ai doublé mes contacts qualifiés en 3 semaines.',
-              author: 'Marie D.', company: 'Herbalife',
-              avatarBg: c.gold, avatarColor: c.bg,
-            },
-            {
-              stars: 5, citation: 'La formation Go Pro intégrée est un game changer. Je me sens enfin équipée pour parler à n\'importe qui.',
-              author: 'Sophie B.', company: 'Forever Living',
-              avatarBg: c.border, avatarColor: c.gold, border: `2px solid ${c.gold}`,
-            },
-            {
-              stars: 5, citation: 'Le suivi de prospects visuel m\'a fait gagner un temps fou. Mon équipe a grandi de 8 personnes en 2 mois.',
-              author: 'Jean-Marc T.', company: 'Amway',
-              avatarBg: c.border, avatarColor: c.gold,
-            },
-          ].map((t, i) => (
-            <div key={i} className="card" style={t.border ? { border: t.border } : {}}>
-              <div className="stars" style={{ marginBottom: 12 }}>{'★'.repeat(t.stars)}</div>
-              <p style={{ color: c.text, fontSize: 14, lineHeight: 1.6, marginBottom: 16, fontStyle: 'italic' }}>
-                "{t.citation}"
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{
-                  width: 28, height: 28, borderRadius: '50%', background: t.avatarBg,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 700, fontSize: 12, color: t.avatarColor,
-                }}>{t.author[0]}</div>
-                <div>
-                  <div style={{ color: '#FFF', fontSize: 13, fontWeight: 600 }}>{t.author}</div>
-                  <div style={{ color: c.muted, fontSize: 11 }}>{t.company}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ===== SECTION 7 — Pricing ===== */}
-      <Section id="pricing" style={{ padding: '56px 32px', background: c.sidebar }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#FFF', margin: '0 0 8px' }}>Pricing</h2>
-          <p style={{ color: c.secondary, fontSize: 15 }}>Choisis le plan qui correspond à ton ambition</p>
-        </div>
-        {/* Toggle */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-          <div style={{ display: 'inline-flex', gap: 4, background: c.card, padding: 4, borderRadius: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button
-              onClick={() => setBilling('mensuel')}
-              style={{
-                background: billing === 'mensuel' ? c.gold : 'transparent',
-                color: billing === 'mensuel' ? c.bg : c.secondary,
-                fontWeight: billing === 'mensuel' ? 700 : 400,
-                border: 'none', borderRadius: 6, padding: '8px 16px', fontSize: 13,
-                cursor: 'pointer',
-              }}
-            >Mensuel</button>
-            <button
-              onClick={() => setBilling('annuel')}
-              style={{
-                background: billing === 'annuel' ? c.gold : 'transparent',
-                color: billing === 'annuel' ? c.bg : c.secondary,
-                fontWeight: billing === 'annuel' ? 700 : 400,
-                border: 'none', borderRadius: 6, padding: '8px 16px', fontSize: 13,
-                cursor: 'pointer',
-              }}
-            >Annuel <span style={{ fontSize: 10, opacity: 0.8 }}>-20%</span></button>
-          </div>
-        </div>
-        {/* Plans */}
-        <div style={{ display: 'flex', gap: 14, maxWidth: 800, margin: '0 auto', alignItems: 'stretch' }}>
-          {/* Starter */}
-          <div className="card" style={{ flex: 1, position: 'relative' }}>
-            <div style={{ color: c.secondary, fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', marginBottom: 12 }}>STARTER</div>
-            <div style={{ fontSize: 36, fontWeight: 700, color: '#FFF', marginBottom: 4 }}>$0</div>
-            <div style={{ color: c.secondary, fontSize: 13, marginBottom: 16 }}>pour toujours</div>
-            <div className="tag" style={{ marginBottom: 20 }}>Je découvre le MLM</div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px', color: c.secondary, fontSize: 13, lineHeight: 2 }}>
-              <li>✓ Accès limité à Atlas</li>
-              <li>✓ 2 modules de formation</li>
-              <li>✓ Communauté publique</li>
-            </ul>
-            <Link href="/signup" style={{
-              display: 'block', textAlign: 'center',
-              background: c.card, border: `1px solid ${c.border}`,
-              color: c.text, padding: '12px', borderRadius: 10,
-              textDecoration: 'none', fontSize: 13, fontWeight: 600,
-            }}>Commencer gratuitement</Link>
-          </div>
-          {/* Coach */}
-          <div className="card" style={{ flex: 1, position: 'relative', border: `2px solid ${c.gold}` }}>
-            <div style={{
-              position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
-              background: c.gold, color: c.bg, fontSize: 10, fontWeight: 700,
-              padding: '4px 12px', borderRadius: 20, letterSpacing: '0.05em',
-            }}>PLUS POPULAIRE</div>
-            <div style={{ color: c.gold, fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', marginBottom: 12 }}>COACH</div>
-            <div style={{ fontSize: 36, fontWeight: 700, color: '#FFF', marginBottom: 4 }}>
-              ${billing === 'mensuel' ? '19' : '15'}
-            </div>
-            <div style={{ color: c.secondary, fontSize: 13, marginBottom: 16 }}>/mois</div>
-            <div className="tag" style={{ marginBottom: 20 }}>Je veux performer</div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px', color: c.secondary, fontSize: 13, lineHeight: 2 }}>
-              <li>✓ Atlas illimité</li>
-              <li>✓ 8 modules Go Pro complets</li>
-              <li>✓ Pipeline prospects</li>
-              <li>✓ Gamification + badges</li>
-            </ul>
-            <Link href="/signup" className="btn-gold" style={{ display: 'block', textAlign: 'center' }}>
-              Démarrer à ${billing === 'mensuel' ? '19' : '15'}/mois →
-            </Link>
-          </div>
-          {/* Pro */}
-          <div className="card" style={{ flex: 1, position: 'relative' }}>
-            <div style={{ color: c.secondary, fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', marginBottom: 12 }}>PRO</div>
-            <div style={{ fontSize: 36, fontWeight: 700, color: '#FFF', marginBottom: 4 }}>
-              ${billing === 'mensuel' ? '39' : '31'}
-            </div>
-            <div style={{ color: c.secondary, fontSize: 13, marginBottom: 16 }}>/mois</div>
-            <div className="tag" style={{ marginBottom: 20 }}>Je dirige une équipe</div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px', color: c.secondary, fontSize: 13, lineHeight: 2 }}>
-              <li>✓ Tout le plan Coach</li>
-              <li>✓ Leaderboard équipe</li>
-              <li>✓ Analytics avancées</li>
-              <li>✓ Parrainage commission 20%</li>
-            </ul>
-            <Link href="/signup" style={{
-              display: 'block', textAlign: 'center',
-              background: c.card, border: `1px solid ${c.border}`,
-              color: c.text, padding: '12px', borderRadius: 10,
-              textDecoration: 'none', fontSize: 13, fontWeight: 600,
-            }}>Passer Pro →</Link>
-          </div>
-        </div>
-        {/* Garanties */}
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 32, flexWrap: 'wrap' }}>
-          {[
-            { icon: '🛡️', text: 'Remboursé 7j' },
-            { icon: '⚡', text: 'Trial 1h', highlight: true },
-            { icon: '🔄', text: 'Sans engagement' },
-            { icon: '💰', text: 'Pro s\'autofinance' },
-          ].map((g, i) => (
-            <div key={i} style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              background: g.highlight ? 'rgba(226,184,74,0.08)' : 'transparent',
-              border: g.highlight ? `1px solid rgba(226,184,74,0.25)` : `1px solid ${c.border}`,
-              color: g.highlight ? c.gold : c.secondary,
-              padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-            }}>
-              <span>{g.icon}</span> {g.text}
-            </div>
-          ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: 20 }}>
-          <Link href="/pricing" style={{ color: c.gold, fontSize: 13, textDecoration: 'none' }}>
-            Voir la comparaison complète →
-          </Link>
-        </div>
-      </Section>
-
-      {/* ===== SECTION 8 — Parrainage ===== */}
-      <Section style={{ padding: '56px 32px' }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#FFF', margin: '0 0 8px' }}>Parrainage</h2>
-          <p style={{ color: c.secondary, fontSize: 15 }}>Fais grandir la communauté et fais-toi rémunérer</p>
-        </div>
-        <div style={{ display: 'flex', gap: 20, maxWidth: 700, margin: '0 auto', alignItems: 'stretch' }}>
-          {[
-            {
-              phase: 'Phase 1', title: 'Mois gratuits',
-              desc: 'Parraine tes premiers filleuls et gagne des mois gratuits sur ton abonnement. Chaque filleul actif = 1 mois offert.',
-            },
-            {
-              phase: 'Phase 2', title: 'Commission 20% cash',
-              desc: 'Dès que tu as 3 filleuls actifs, tu passes en commission cash : 20% de leurs abonnements versés chaque mois.',
-              border: `2px solid ${c.gold}`,
-            },
-            {
-              phase: 'Exemple', title: '',
-              desc: '',
-              custom: (
-                <div>
-                  <div style={{ color: c.gold, fontWeight: 700, fontSize: 20, marginBottom: 4 }}>5 filleuls Pro</div>
-                  <div style={{ color: c.gold, fontWeight: 700, fontSize: 24, marginBottom: 8 }}>= $39/mois</div>
-                  <div style={{ color: c.secondary, fontSize: 13 }}>Ton plan Pro financé + $0 net</div>
-                </div>
-              ),
-            },
-          ].map((p, i) => (
-            <div key={i} className="card" style={{
-              flex: 1, textAlign: 'center',
-              border: p.border || `1px solid ${c.border}`,
-            }}>
-              {p.custom || (
-                <>
-                  <div style={{ color: c.gold, fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', marginBottom: 8 }}>{p.phase}</div>
-                  <div style={{ color: '#FFF', fontWeight: 700, fontSize: 18, marginBottom: 10 }}>{p.title}</div>
-                  <div style={{ color: c.secondary, fontSize: 13, lineHeight: 1.6 }}>{p.desc}</div>
-                </>
-              )}
-              {i < 2 && (
-                <div style={{ color: c.border, fontSize: 24, position: 'absolute', right: -18, top: '50%', transform: 'translateY(-50%)' }}>→</div>
-              )}
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ===== SECTION 9 — FAQ ===== */}
-      <Section style={{ padding: '56px 32px', background: c.sidebar }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#FFF', margin: '0 0 8px' }}>FAQ</h2>
-          <p style={{ color: c.secondary, fontSize: 15 }}>Les questions les plus fréquentes</p>
-        </div>
-        <div style={{ maxWidth: 700, margin: '0 auto' }}>
-          {[
-            {
-              q: 'Atlas fonctionne-t-il avec ma société MLM ?',
-              a: 'Oui ! Atlas est agnostique et fonctionne avec toutes les sociétés MLM : Herbalife, Forever Living, Amway, Nu Skin, doTERRA, et toutes les autres. Il s\'adapte à ton contexte spécifique.',
-            },
-            {
-              q: 'Puis-je vraiment essayer gratuitement ?',
-              a: 'Absolument. Tu as 1 heure gratuite sans carte bancaire. Un timer est visible pour que tu saches exactement où tu en es.',
-            },
-            {
-              q: 'Comment Atlas m\'aide-t-il à trouver des prospects ?',
-              a: 'Atlas te guide étape par étape : liste chaude, approche personnalisée par personnalité, gestion des objections, et suivi structuré dans un pipeline visuel.',
-            },
-            {
-              q: 'Puis-je annuler mon abonnement à tout moment ?',
-              a: 'Oui, sans engagement et sans frais. Tu peux annuler depuis ton dashboard en un clic. Remboursement sous 7 jours si tu n\'es pas satisfait.',
-            },
-            {
-              q: 'Quelle est la différence entre Coach et Pro ?',
-              a: 'Coach te donne accès à toute la formation, Atlas illimité et le suivi prospects. Pro ajoute le leaderboard équipe, les analytics avancées et le parrainage avec commission.',
-            },
-            {
-              q: 'Le parrainage fonctionne comment ?',
-              a: 'Parraine des filleuls et gagne des mois gratuits (Phase 1) puis 20% de commission cash sur leurs abonnements (Phase 2). 5 filleuls Pro = ton plan Pro financé.',
-            },
-          ].map((faq, i) => (
-            <div
-              key={i}
-              onClick={() => toggleFaq(i)}
-              style={{
-                borderBottom: `0.5px solid ${c.border}`,
-                padding: '16px 0', cursor: 'pointer',
-              }}
+              onClick={() => setDemoOpen(true)}
+              style={{ background: 'rgba(109,94,245,0.15)', border: '1.5px solid #6D5EF5', color: '#a78bfa', borderRadius: 10, padding: '9px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 500, color: '#FFF', fontSize: 14 }}>{faq.q}</span>
-                <span style={{ color: c.gold, fontSize: 18, fontWeight: 300 }}>{faqOpen[i] ? '−' : '+'}</span>
+              Démo Atlas →
+            </button>
+            <Link href="/signup" style={{
+              background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+              color: 'white', borderRadius: 10, padding: '9px 20px', fontSize: 13, fontWeight: 700,
+              textDecoration: 'none', boxShadow: '0 4px 12px rgba(109,94,245,0.35)',
+            }}>
+              Essayer 7 jours →
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <section style={{ position: 'relative', overflow: 'hidden', padding: '100px 32px 80px', textAlign: 'center' }}>
+        <div style={{ position: 'absolute', top: -100, left: '20%', width: 500, height: 500, background: '#6D5EF5', borderRadius: '50%', filter: 'blur(120px)', opacity: 0.12 }} />
+        <div style={{ position: 'absolute', bottom: -100, right: '20%', width: 400, height: 400, background: '#22D3EE', borderRadius: '50%', filter: 'blur(120px)', opacity: 0.1 }} />
+        <div style={{ position: 'relative', maxWidth: 900, margin: '0 auto' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 50, padding: '6px 16px', marginBottom: 32 }}>
+            <Sparkles size={14} color="#22D3EE" />
+            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', fontWeight: 500 }}>Your AI Upline — Coach MLM disponible 24h/24</span>
+          </div>
+          <h1 style={{ fontSize: 72, fontWeight: 900, lineHeight: 1.05, marginBottom: 24, fontFamily: 'var(--font-title, Plus Jakarta Sans, sans-serif)' }}>
+            Le coach IA universel<br />
+            pour les <span style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>leaders MLM</span>
+          </h1>
+          <p style={{ fontSize: 20, color: 'rgba(255,255,255,0.7)', marginBottom: 48, maxWidth: 600, margin: '0 auto 48px', lineHeight: 1.6 }}>
+            Atline.ai transforme chaque distributeur MLM en professionnel du réseau grâce à un coach IA disponible 24h/24, quelle que soit votre société.
+          </p>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
+            <button
+              onClick={() => setDemoOpen(true)}
+              style={{ background: 'rgba(109,94,245,0.15)', border: '2px solid #6D5EF5', color: 'white', borderRadius: 14, padding: '16px 32px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
+            >
+              <Sparkles size={18} color="#a78bfa" />
+              Démo avec Atlas
+            </button>
+            <Link href="/signup" style={{
+              background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+              color: 'white', borderRadius: 14, padding: '16px 32px', fontSize: 16, fontWeight: 700,
+              textDecoration: 'none', boxShadow: '0 8px 32px rgba(109,94,245,0.4)', display: 'flex', alignItems: 'center', gap: 8,
+            }}>
+              Essayer 7 jours gratuitement
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
+            ✓ Aucune carte requise &nbsp;•&nbsp; ✓ Accès immédiat &nbsp;•&nbsp; ✓ Compatible toutes sociétés MLM
+          </p>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section style={{ padding: '0 32px 80px' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}>
+          {stats.map((s, i) => (
+            <div key={i} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '24px 16px' }}>
+              <div style={{ fontSize: 36, fontWeight: 800, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: 8 }}>{s.val}</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section id="features" style={{ padding: '80px 32px', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <h2 style={{ fontSize: 48, fontWeight: 800, marginBottom: 16, fontFamily: 'var(--font-title)' }}>
+              Tout ce dont vous avez besoin<br />pour réussir
+            </h2>
+            <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)' }}>Train smarter. Recruit faster.</p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+            {features.map((f, i) => {
+              const Icon = f.icon
+              return (
+                <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 28, transition: 'all 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = f.color; e.currentTarget.style.background = `${f.color}10` }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)' }}
+                >
+                  <div style={{ width: 52, height: 52, borderRadius: 14, background: `${f.color}20`, border: `1px solid ${f.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                    <Icon size={24} color={f.color} strokeWidth={2} />
+                  </div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{f.title}</h3>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }}>{f.desc}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* POURQUOI ATLINE */}
+      <section style={{ padding: '80px 32px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <h2 style={{ fontSize: 48, fontWeight: 800, marginBottom: 16, fontFamily: 'var(--font-title)' }}>Pourquoi Atline.ai ?</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
+            {[
+              { icon: '⚡', title: 'Agnostique MLM', desc: 'Compatible avec toutes les sociétés : Herbalife, Amway, Forever Living...', color: '#6D5EF5' },
+              { icon: '🎯', title: 'Scalable mondialement', desc: 'Compétences universelles applicables partout dans le monde', color: '#22D3EE' },
+              { icon: '📈', title: 'Forte rétention', desc: "Coaching quotidien qui crée l'habitude et les résultats", color: '#22C55E' },
+            ].map((item, i) => (
+              <div key={i} style={{ textAlign: 'center' }}>
+                <div style={{ width: 72, height: 72, borderRadius: '50%', background: `${item.color}20`, border: `2px solid ${item.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, margin: '0 auto 20px' }}>
+                  {item.icon}
+                </div>
+                <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>{item.title}</h3>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }}>{item.desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section style={{ padding: '80px 32px', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 48, fontWeight: 800, textAlign: 'center', marginBottom: 64, fontFamily: 'var(--font-title)' }}>Ce que disent nos membres</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+            {testimonials.map((t, i) => (
+              <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 28 }}>
+                <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
+                  {[...Array(t.stars)].map((_, j) => <Star key={j} size={16} fill="#F59E0B" color="#F59E0B" />)}
+                </div>
+                <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, marginBottom: 20 }}>"{t.text}"</p>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>{t.name}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{t.company}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING PREVIEW */}
+      <section style={{ padding: '80px 32px' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
+          <h2 style={{ fontSize: 48, fontWeight: 800, marginBottom: 16, fontFamily: 'var(--font-title)' }}>Des prix simples et transparents</h2>
+          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)', marginBottom: 48 }}>Commencez gratuitement, évoluez à votre rythme</p>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
+            {[
+              { name: 'Starter', price: '$0', desc: 'Pour découvrir', color: 'rgba(255,255,255,0.06)' },
+              { name: 'Coach', price: '$19', desc: 'Pour performer', color: 'rgba(109,94,245,0.2)', border: '#6D5EF5', popular: true },
+              { name: 'Pro', price: '$39', desc: 'Pour les leaders', color: 'rgba(34,211,238,0.1)', border: '#22D3EE' },
+            ].map((p, i) => (
+              <div key={i} style={{ background: p.color, border: `2px solid ${p.border || 'rgba(255,255,255,0.08)'}`, borderRadius: 20, padding: '28px 32px', minWidth: 200, position: 'relative' }}>
+                {p.popular && <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: 20, padding: '3px 14px', fontSize: 11, fontWeight: 800, whiteSpace: 'nowrap' }}>POPULAIRE</div>}
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{p.name}</div>
+                <div style={{ fontSize: 40, fontWeight: 900, marginBottom: 4 }}>{p.price}</div>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>/mois · {p.desc}</div>
+              </div>
+            ))}
+          </div>
+          <Link href="/pricing" style={{ color: '#a78bfa', fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            Voir le détail complet des plans <ArrowRight size={16} />
+          </Link>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ padding: '80px 32px', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ maxWidth: 700, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 48, fontWeight: 800, textAlign: 'center', marginBottom: 64, fontFamily: 'var(--font-title)' }}>Questions fréquentes</h2>
+          {faqs.map((faq, i) => (
+            <div key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: 0 }}>
+              <button
+                onClick={() => toggleFaq(i)}
+                style={{ width: '100%', background: 'transparent', border: 'none', color: 'white', padding: '20px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', fontSize: 16, fontWeight: 600, textAlign: 'left' }}
+              >
+                {faq.q}
+                <ChevronDown size={20} style={{ transform: faqOpen[i] ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} />
+              </button>
               {faqOpen[i] && (
-                <p style={{ color: c.secondary, fontSize: 13, lineHeight: 1.7, margin: '12px 0 0', paddingRight: 24 }}>
-                  {faq.a}
-                </p>
+                <div style={{ paddingBottom: 20, fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>{faq.a}</div>
               )}
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      {/* ===== SECTION 10 — Blog aperçu ===== */}
-      <Section id="blog" style={{ padding: '56px 32px' }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#FFF', margin: '0 0 8px' }}>Blog</h2>
-          <p style={{ color: c.secondary, fontSize: 15 }}>Conseils, techniques et success stories</p>
+      {/* CTA FINAL */}
+      <section style={{ padding: '80px 32px' }}>
+        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center', background: 'linear-gradient(135deg, rgba(109,94,245,0.2), rgba(34,211,238,0.1))', border: '1px solid rgba(109,94,245,0.3)', borderRadius: 24, padding: '64px 48px' }}>
+          <h2 style={{ fontSize: 48, fontWeight: 800, marginBottom: 16, fontFamily: 'var(--font-title)' }}>
+            Prêt à devenir un leader MLM ?
+          </h2>
+          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', marginBottom: 40 }}>
+            Scale your network with AI. Rejoignez des milliers de distributeurs qui utilisent Atline.ai.
+          </p>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setDemoOpen(true)}
+              style={{ background: 'rgba(109,94,245,0.2)', border: '2px solid #6D5EF5', color: 'white', borderRadius: 12, padding: '14px 28px', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}
+            >
+              Démo gratuite →
+            </button>
+            <Link href="/signup" style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', borderRadius: 12, padding: '14px 28px', fontSize: 15, fontWeight: 700, textDecoration: 'none', boxShadow: '0 8px 24px rgba(109,94,245,0.35)' }}>
+              Commencer maintenant
+            </Link>
+          </div>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginTop: 24 }}>✓ Aucune carte • ✓ 7 jours gratuits • ✓ Annulation immédiate</p>
         </div>
-        <div style={{ display: 'flex', gap: 14, maxWidth: 900, margin: '0 auto' }}>
-          {[
-            { tag: 'PROSPECTION', title: '5 phrases pour briser la glace avec n\'importe quel prospect', time: '5 min', author: 'Atlas' },
-            { tag: 'FORMATION', title: 'Comment Atlas utilise Go Pro pour structurer ta formation', time: '8 min', author: 'Patrice' },
-            { tag: 'SUCCESS STORY', title: 'De 0 à 15 distributeurs en 90 jours avec Upline.ai', time: '4 min', author: 'Marie D.' },
-          ].map((article, i) => (
-            <div key={i} className="card" style={{ flex: 1 }}>
-              <div style={{
-                height: 60, background: 'rgba(226,184,74,0.08)',
-                border: `1px solid ${c.border}`, borderRadius: 8,
-                marginBottom: 12,
-              }} />
-              <div className="tag" style={{ marginBottom: 10 }}>{article.tag}</div>
-              <div style={{ color: '#FFF', fontWeight: 600, fontSize: 15, marginBottom: 8, lineHeight: 1.4 }}>
-                {article.title}
-              </div>
-              <p style={{ color: c.secondary, fontSize: 13, lineHeight: 1.5, marginBottom: 12 }}>
-                Découvre les stratégies et techniques qui ont fait la différence pour des distributeurs comme toi.
-              </p>
-              <div style={{ color: c.muted, fontSize: 11 }}>
-                {article.author} · {article.time}
-              </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer style={{ padding: '48px 32px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48 }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+              <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>A</div>
+              <span style={{ fontWeight: 800, fontSize: 16, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Atline.ai</span>
             </div>
-          ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: 32 }}>
-          <Link href="/blog" className="btn-outline">
-            Voir tous les articles →
-          </Link>
-        </div>
-      </Section>
-
-      {/* ===== SECTION 11 — CTA final ===== */}
-      <Section style={{ padding: '72px 32px', background: c.gold, textAlign: 'center' }}>
-        <h2 style={{ fontSize: 32, fontWeight: 700, color: c.bg, margin: '0 0 12px' }}>
-          Prêt à passer au niveau supérieur ?
-        </h2>
-        <p style={{ color: 'rgba(22,20,16,0.7)', fontSize: 15, marginBottom: 32 }}>
-          Rejoins 500+ distributeurs qui coachent avec Atlas.
-        </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
-          <Link href="/signup" style={{
-            background: c.bg, color: c.gold, fontWeight: 700,
-            padding: '14px 28px', borderRadius: 10, textDecoration: 'none', display: 'inline-block',
-          }}>
-            Essayer 1h gratuitement →
-          </Link>
-          <a href="#pricing" style={{
-            background: 'transparent', color: c.bg,
-            border: '1.5px solid rgba(22,20,16,0.3)',
-            padding: '14px 28px', borderRadius: 10, textDecoration: 'none', display: 'inline-block',
-            fontWeight: 600,
-          }}>
-            Voir les plans
-          </a>
-        </div>
-        <p style={{ color: 'rgba(22,20,16,0.5)', fontSize: 12, marginTop: 16 }}>
-          Sans carte bancaire · Annulable à tout moment
-        </p>
-      </Section>
-
-      {/* ===== SECTION 12 — Footer ===== */}
-      <footer style={{ background: c.footerBg, padding: '48px 32px' }}>
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr',
-          gap: 40, maxWidth: 1100, margin: '0 auto',
-        }}>
-          {/* Col 1 */}
-          <div>
-            <Logo />
-            <p style={{ color: c.muted, fontSize: 13, marginTop: 12, lineHeight: 1.6 }}>
-              La plateforme IA qui forme et coache les distributeurs MLM.
-            </p>
-            <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-              {['X', 'in', 'ig'].map((social) => (
-                <div key={social} style={{
-                  width: 32, height: 32, borderRadius: '50%',
-                  border: `1px solid ${c.darkBorder}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: c.secondary, fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                }}>{social}</div>
-              ))}
-            </div>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>Le coach IA universel pour les distributeurs MLM. Formez, recrutez et développez votre réseau avec l'aide de l'IA.</p>
           </div>
-          {/* Col 2 */}
           <div>
-            <div style={{ color: '#FFF', fontWeight: 700, fontSize: 13, marginBottom: 16 }}>Produit</div>
-            {[
-              { label: 'Fonctionnalités', href: '#features' },
-              { label: 'Pricing', href: '#pricing' },
-              { label: 'Blog', href: '#blog' },
-              { label: 'Dashboard', href: '/dashboard' },
-              { label: 'Se connecter', href: '/login' },
-            ].map((link) => (
-              <div key={link.label} style={{ marginBottom: 8 }}>
-                <Link href={link.href} style={{ color: c.secondary, fontSize: 13, textDecoration: 'none' }}>
-                  {link.label}
-                </Link>
-              </div>
-            ))}
+            <div style={{ fontWeight: 700, marginBottom: 16, fontSize: 14 }}>Produit</div>
+            {['Fonctionnalités', 'Tarifs', 'Blog', 'Roadmap'].map(l => <div key={l} style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 10, cursor: 'pointer' }}>{l}</div>)}
           </div>
-          {/* Col 3 */}
           <div>
-            <div style={{ color: '#FFF', fontWeight: 700, fontSize: 13, marginBottom: 16 }}>Ressources</div>
-            {[
-              { label: 'Formation MLM', href: '#' },
-              { label: 'Guide prospection', href: '#' },
-              { label: 'Gestion objections', href: '#' },
-              { label: 'À propos', href: '#' },
-            ].map((link) => (
-              <div key={link.label} style={{ marginBottom: 8 }}>
-                <a href={link.href} style={{ color: c.secondary, fontSize: 13, textDecoration: 'none' }}>
-                  {link.label}
-                </a>
-              </div>
-            ))}
+            <div style={{ fontWeight: 700, marginBottom: 16, fontSize: 14 }}>Légal</div>
+            {['CGU', 'Politique de confidentialité', 'Cookies', 'Mentions légales'].map(l => <div key={l} style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 10, cursor: 'pointer' }}>{l}</div>)}
           </div>
-          {/* Col 4 */}
           <div>
-            <div style={{ color: '#FFF', fontWeight: 700, fontSize: 13, marginBottom: 16 }}>Légal</div>
-            {[
-              { label: 'Confidentialité', href: '#' },
-              { label: 'CGU', href: '#' },
-              { label: 'Cookies', href: '#' },
-              { label: 'Contact', href: '#' },
-            ].map((link) => (
-              <div key={link.label} style={{ marginBottom: 8 }}>
-                <a href={link.href} style={{ color: c.secondary, fontSize: 13, textDecoration: 'none' }}>
-                  {link.label}
-                </a>
-              </div>
-            ))}
+            <div style={{ fontWeight: 700, marginBottom: 16, fontSize: 14 }}>Contact</div>
+            {['hello@atline.ai', 'Support', 'Partenariats'].map(l => <div key={l} style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 10, cursor: 'pointer' }}>{l}</div>)}
           </div>
         </div>
-        <div style={{
-          borderTop: `1px solid ${c.darkBorder}`,
-          marginTop: 32, paddingTop: 24, textAlign: 'center',
-        }}>
-          <p style={{ color: c.muted, fontSize: 12 }}>© 2026 Upline.ai — Tous droits réservés</p>
+        <div style={{ maxWidth: 1200, margin: '32px auto 0', paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 Atline.ai — Tous droits réservés</span>
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>Made with ❤️ for MLM professionals</span>
         </div>
       </footer>
+
+      {/* DEMO MODAL */}
+      {demoOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          onClick={(e) => { if (e.target === e.currentTarget) setDemoOpen(false) }}>
+          <div style={{ background: '#111827', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 24, width: '100%', maxWidth: 560, maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            {/* Modal header */}
+            <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Sparkles size={18} color="white" />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 15 }}>Atlas — Coach IA</div>
+                  <div style={{ fontSize: 12, color: '#22C55E' }}>● En ligne</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                {demoCount < 3 && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{3 - demoCount} message{3 - demoCount > 1 ? 's' : ''} restant{3 - demoCount > 1 ? 's' : ''}</span>}
+                <button onClick={() => setDemoOpen(false)} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: 20 }}>✕</button>
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {demoMessages.map((msg, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                  <div style={{
+                    maxWidth: '80%',
+                    background: msg.role === 'user' ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : 'rgba(255,255,255,0.06)',
+                    border: msg.role === 'atlas' ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                    borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                    padding: '12px 16px',
+                    fontSize: 14,
+                    lineHeight: 1.6,
+                    color: 'white',
+                    whiteSpace: 'pre-wrap',
+                  }}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Input ou CTA email */}
+            {demoStep === 'chat' && demoCount < 3 ? (
+              <div style={{ padding: '16px 24px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 12 }}>
+                <input
+                  value={demoInput}
+                  onChange={e => setDemoInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendDemoMessage()}
+                  placeholder="Posez une question à Atlas..."
+                  style={{ flex: 1, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, padding: '12px 16px', color: 'white', fontSize: 14, outline: 'none' }}
+                />
+                <button
+                  onClick={sendDemoMessage}
+                  style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', borderRadius: 12, padding: '12px 20px', color: 'white', cursor: 'pointer', fontWeight: 700 }}
+                >
+                  →
+                </button>
+              </div>
+            ) : (
+              <div style={{ padding: '20px 24px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, textAlign: 'center' }}>
+                  Continuez avec Atlas — 7 jours gratuits
+                </div>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <input
+                    value={demoEmail}
+                    onChange={e => setDemoEmail(e.target.value)}
+                    placeholder="Votre email..."
+                    style={{ flex: 1, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '11px 14px', color: 'white', fontSize: 13, outline: 'none' }}
+                  />
+                  <Link
+                    href={`/signup?email=${encodeURIComponent(demoEmail)}`}
+                    style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', borderRadius: 10, padding: '11px 20px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}
+                  >
+                    Démarrer →
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

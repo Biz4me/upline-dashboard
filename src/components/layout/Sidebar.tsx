@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { useSidebar } from '@/context/SidebarContext'
 import {
   Home, Rocket, BarChart2, MessageCircle, Trophy, Share2,
-  ChevronLeft, ChevronRight, LogOut, Settings
+  ChevronLeft, ChevronRight, LogOut, Settings, Users
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 
@@ -12,7 +12,8 @@ const navItems = [
   { href: '/', icon: Home, label: 'Accueil' },
   { href: '/formation', icon: Rocket, label: 'Formation' },
   { href: '/business', icon: BarChart2, label: 'Business' },
-  { href: '/communaute', icon: MessageCircle, label: 'Communauté' },
+  { href: '/chat', icon: MessageCircle, label: 'Chat Atlas' },
+  { href: '/communaute', icon: Users, label: 'Communauté' },
   { href: '/achievements', icon: Trophy, label: 'Succès' },
   { href: '/parrainage', icon: Share2, label: 'Parrainage' },
 ]
