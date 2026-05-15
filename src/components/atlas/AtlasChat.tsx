@@ -14,6 +14,7 @@ interface AtlasChatProps {
   context?: string
   placeholder?: string
   suggestions?: string[]
+  prenom?: string
 }
 
 export default function AtlasChat({
@@ -22,6 +23,7 @@ export default function AtlasChat({
   context,
   placeholder = 'Écrire à Atlas...',
   suggestions = [],
+  prenom,
 }: AtlasChatProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
@@ -205,147 +207,145 @@ export default function AtlasChat({
     return 'En ligne'
   }
 
+  const hasMessages = messages.length > 0
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--bg-page)', color: 'var(--text)' }}>
-      {/* Header */}
-      <div className="flex items-center gap-3" style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
-        <div className="w-7 h-7 bg-[linear-gradient(135deg,#6D5EF5,#22D3EE)] rounded-lg flex items-center justify-center text-white font-bold text-xs">
-          A
-        </div>
-        <div>
-          <div className="text-[var(--text-on-card)] text-sm font-medium">Atlas — Coach IA</div>
-          <div className="text-[var(--text-muted)] text-xs">
-            {getStatusText()}
-          </div>
-        </div>
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--bg-page)', color: 'var(--text)', position: 'relative' }}>
 
-      {/* Messages */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '16px',
-          background: 'var(--bg-page)',
-        }}
-      >
-        {messages.length === 0 && (
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
-            {/* Avatar Atlas */}
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
-            {/* Bulle */}
-            <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
-              <p className="text-sm">
-                {context
-                  ? `Je suis ton coach pour : ${context}. Pose-moi des questions !`
-                  : "Bonjour ! Je suis Atlas, ton coach MLM. Comment puis-je t'aider aujourd'hui ?"}
-              </p>
+      {/* Mode centré — aucun message */}
+      {!hasMessages && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px' }}>
+          {/* Bienvenue */}
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 8px 24px rgba(109,94,245,0.35)', fontSize: 28 }}>
+              🏔️
             </div>
+            <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 8, fontFamily: 'var(--font-title)' }}>
+              {prenom ? `Bonjour ${prenom} 👋` : 'Bonjour 👋'}
+            </h1>
+            <p style={{ fontSize: 16, color: 'var(--text-secondary)', maxWidth: 400 }}>
+              Je suis Atlas, ton coach MLM personnel. Comment puis-je t'aider aujourd'hui ?
+            </p>
           </div>
-        )}
-        {messages.map((msg, i) =>
-          msg.role === 'assistant' ? (
-            /* Messages Atlas (gauche) */
-            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
-              {/* Avatar Atlas */}
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
-              {/* Bulle */}
-              <div className="atlas-markdown" style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
-                <ReactMarkdown components={{
-                  p: ({ children }) => (
-                    <p style={{ margin: '0 0 12px 0', lineHeight: '1.8', fontSize: '14px', color: 'var(--text)' }}>
-                      {children}
-                    </p>
-                  ),
-                  strong: ({ children }) => (
-                    <strong style={{ fontWeight: '600', color: 'var(--text)' }}>
-                      {children}
-                    </strong>
-                  ),
-                  ul: ({ children }) => (
-                    <ul style={{ margin: '8px 0 12px 0', paddingLeft: '0', listStyle: 'none' }}>
-                      {children}
-                    </ul>
-                  ),
-                  li: ({ children }) => (
-                    <li style={{ margin: '6px 0', paddingLeft: '16px', position: 'relative', fontSize: '14px', lineHeight: '1.7', color: 'var(--text)' }}>
-                      <span style={{ position: 'absolute', left: '0', color: '#6D5EF5' }}>→</span>
-                      {children}
-                    </li>
-                  ),
-                  ol: ({ children }) => (
-                    <ol style={{ margin: '8px 0 12px 0', paddingLeft: '20px' }}>
-                      {children}
-                    </ol>
-                  ),
-                  blockquote: ({ children }) => (
-                    <div style={{ borderLeft: '3px solid #6D5EF5', paddingLeft: '12px', margin: '10px 0', color: 'var(--text-secondary)', fontSize: '13px' }}>
-                      {children}
-                    </div>
-                  ),
-                }}>{msg.content}</ReactMarkdown>
-              </div>
-            </div>
-          ) : (
-            /* Messages Utilisateur (droite) */
-            <div key={i} style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
-              {/* Bulle */}
-              <div style={{ maxWidth: '75%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: '18px 4px 18px 18px', padding: '10px 16px', color: 'white', fontWeight: '500' }}>
-                {msg.content}
-              </div>
-            </div>
-          )
-        )}
-        {loading && !isStreaming && (
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
-            {/* Avatar Atlas */}
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
-            {/* Bulle */}
-            <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
-              <span className="inline-flex gap-1">
-                <span className="animate-bounce">●</span>
-                <span className="animate-bounce" style={{ animationDelay: '0.15s' }}>●</span>
-                <span className="animate-bounce" style={{ animationDelay: '0.3s' }}>●</span>
-              </span>
-            </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
 
-      {/* Suggestions */}
-      {suggestions.length > 0 && messages.length === 0 && (
-        <div className="flex gap-2 flex-wrap" style={{ padding: '8px 16px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
-          {suggestions.map((s, i) => (
-            <button
-              key={i}
-              onClick={() => sendMessage(s)}
-              className="text-xs bg-[var(--primary-bg)] border border-[rgba(109,94,245,0.25)] text-[#a78bfa] px-3 py-2 rounded-lg transition-colors"
-            >
-              {s}
-            </button>
-          ))}
+          {/* Suggestions */}
+          {suggestions.length > 0 && (
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 32, maxWidth: 600 }}>
+              {suggestions.map((s, i) => (
+                <button
+                  key={i}
+                  onClick={() => sendMessage(s)}
+                  style={{
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 20,
+                    padding: '10px 18px',
+                    fontSize: 13,
+                    color: 'var(--text-secondary)',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#6D5EF5'; e.currentTarget.style.color = '#a78bfa' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Input centré */}
+          <div style={{ width: '100%', maxWidth: 680 }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, background: 'var(--bg-card)', border: '1.5px solid var(--border)', borderRadius: 16, padding: '12px 16px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Pose une question à Atlas..."
+                disabled={loading || isStreaming}
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 15, color: 'var(--text)', caretColor: '#6D5EF5' }}
+              />
+              <button
+                type="submit"
+                disabled={loading || isStreaming || !input.trim()}
+                style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 10, padding: '8px 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', opacity: (!input.trim() || loading || isStreaming) ? 0.5 : 1 }}
+              >
+                →
+              </button>
+            </form>
+          </div>
         </div>
       )}
 
-      {/* Input */}
-      <form onSubmit={handleSubmit} className="flex gap-2" style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', flexShrink: 0, background: 'var(--bg-page)' }}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={placeholder}
-          disabled={loading || isStreaming}
-          className="flex-1 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text)] placeholder-[var(--text-muted)] outline-none focus:border-[#6D5EF5] transition-colors disabled:opacity-50"
-        />
-        <button
-          type="submit"
-          disabled={loading || isStreaming || !input.trim()}
-          className="bg-[linear-gradient(135deg,#6D5EF5,#22D3EE)] text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50 shadow-[0_4px_12px_rgba(109,94,245,0.35)]"
-        >
-          →
-        </button>
-      </form>
+      {/* Mode conversation — messages + input en bas */}
+      {hasMessages && (
+        <>
+          {/* Zone messages scrollable */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '24px 24px 0' }}>
+            <div style={{ maxWidth: 680, margin: '0 auto' }}>
+              {messages.map((msg, i) =>
+                msg.role === 'assistant' ? (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '24px' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, flexShrink: 0 }}>A</div>
+                    <div className="atlas-markdown" style={{ flex: 1, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
+                      <ReactMarkdown components={{
+                        p: ({ children }) => <p style={{ margin: '0 0 12px 0', lineHeight: '1.8', fontSize: '14px', color: 'var(--text)' }}>{children}</p>,
+                        strong: ({ children }) => <strong style={{ fontWeight: 600, color: 'var(--text)' }}>{children}</strong>,
+                        ul: ({ children }) => <ul style={{ margin: '8px 0 12px 0', paddingLeft: 0, listStyle: 'none' }}>{children}</ul>,
+                        li: ({ children }) => <li style={{ margin: '6px 0', paddingLeft: '16px', position: 'relative', fontSize: '14px', lineHeight: '1.7', color: 'var(--text)' }}><span style={{ position: 'absolute', left: 0, color: '#6D5EF5' }}>→</span>{children}</li>,
+                        ol: ({ children }) => <ol style={{ margin: '8px 0 12px 0', paddingLeft: '20px' }}>{children}</ol>,
+                        blockquote: ({ children }) => <div style={{ borderLeft: '3px solid #6D5EF5', paddingLeft: '12px', margin: '10px 0', color: 'var(--text-secondary)', fontSize: '13px' }}>{children}</div>,
+                      }}>{msg.content}</ReactMarkdown>
+                    </div>
+                  </div>
+                ) : (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '24px' }}>
+                    <div style={{ maxWidth: '75%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: '18px 4px 18px 18px', padding: '10px 16px', color: 'white', fontWeight: 500, fontSize: 14 }}>
+                      {msg.content}
+                    </div>
+                  </div>
+                )
+              )}
+              {loading && !isStreaming && (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '24px' }}>
+                  <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, flexShrink: 0 }}>A</div>
+                  <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px' }}>
+                    <span className="inline-flex gap-1">
+                      <span className="animate-bounce">●</span>
+                      <span className="animate-bounce" style={{ animationDelay: '0.15s' }}>●</span>
+                      <span className="animate-bounce" style={{ animationDelay: '0.3s' }}>●</span>
+                    </span>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          </div>
+
+          {/* Input fixe en bas */}
+          <div style={{ flexShrink: 0, padding: '16px 24px', borderTop: '1px solid var(--border)', background: 'var(--bg-page)' }}>
+            <div style={{ maxWidth: 680, margin: '0 auto' }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, background: 'var(--bg-card)', border: '1.5px solid var(--border)', borderRadius: 16, padding: '10px 14px' }}>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={placeholder}
+                  disabled={loading || isStreaming}
+                  style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 14, color: 'var(--text)', caretColor: '#6D5EF5' }}
+                />
+                <button
+                  type="submit"
+                  disabled={loading || isStreaming || !input.trim()}
+                  style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 10, padding: '8px 16px', fontSize: 14, fontWeight: 700, cursor: 'pointer', opacity: (!input.trim() || loading || isStreaming) ? 0.5 : 1 }}
+                >
+                  →
+                </button>
+              </form>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
