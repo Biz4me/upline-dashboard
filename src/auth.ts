@@ -17,7 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         try {
           const result = await pool.query(
             'SELECT id, email, password_hash, prenom, nom, username, role FROM users WHERE LOWER(email) = LOWER($1) OR LOWER(username) = LOWER($1)',
-            [credentials.email]
+            [credentials.identifier]
           )
           const user = result.rows[0]
           if (!user) return null
