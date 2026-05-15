@@ -111,7 +111,7 @@ function UnitSection({ unit, moduleId, unitIndex }: { unit: Unit; moduleId: numb
   const unitStatus = allDone ? 'done' : hasCurrent ? 'current' : allLocked ? 'locked' : 'available'
 
   const unitColors = {
-    done: { bg: 'rgba(88,204,2,0.1)', border: 'rgba(88,204,2,0.3)', color: '#58CC02', icon: '✓' },
+    done: { bg: 'rgba(34,197,94,0.1)', border: 'rgba(34,197,94,0.3)', color: '#22C55E', icon: '✓' },
     current: { bg: 'rgba(109,94,245,0.1)', border: 'rgba(109,94,245,0.3)', color: '#a78bfa', icon: '🔥' },
     available: { bg: 'var(--bg-card)', border: 'var(--border)', color: 'var(--text-secondary)', icon: '○' },
     locked: { bg: 'var(--bg-card)', border: 'var(--border)', color: 'var(--text-muted)', icon: '🔒' },
@@ -233,7 +233,7 @@ function UnitSection({ unit, moduleId, unitIndex }: { unit: Unit; moduleId: numb
                 left: '50%',
                 width: 4,
                 height: 24,
-                background: lesson.status === 'done' ? '#58CC02' : 'var(--border)',
+                background: lesson.status === 'done' ? '#22C55E' : 'var(--border)',
                 transform: 'translateX(-50%)',
                 zIndex: -1,
               }}

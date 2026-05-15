@@ -26,7 +26,7 @@ export default function LessonNode({ lesson, moduleId, unitId, showAtlas = false
 
   const getColors = () => {
     if (isLocked) return { bg: 'var(--bg-card)', border: 'var(--border)', shadow: 'none' }
-    if (isDone) return { bg: '#58CC02', border: '#3d9900', shadow: '0 4px 0 #3d9900' }
+    if (isDone) return { bg: '#22C55E', border: '#16A34A', shadow: '0 4px 0 #16A34A' }
     if (isCurrent) return { bg: '#6D5EF5', border: '#5B4DD4', shadow: '0 0 0 6px rgba(109,94,245,0.2), 0 4px 0 #5B4DD4' }
     if (isBoss) return { bg: '#FF9600', border: '#CC7700', shadow: '0 4px 0 #CC7700' }
     if (lesson.type === 'theory') return { bg: '#1E293B', border: '#334155', shadow: '0 4px 0 #334155' }

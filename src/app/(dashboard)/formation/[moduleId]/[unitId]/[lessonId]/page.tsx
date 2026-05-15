@@ -103,7 +103,7 @@ export default function LessonPage({
           }}
         >
           <div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: '#58CC02' }}>+{lesson.xp}</div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: '#22C55E' }}>+{lesson.xp}</div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>XP gagnés</div>
           </div>
           <div>

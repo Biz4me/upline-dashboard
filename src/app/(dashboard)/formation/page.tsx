@@ -23,7 +23,7 @@ export default function FormationOverview() {
   const getStatusColors = (status: string) => {
     switch (status) {
       case 'done':
-        return { bg: '#58CC02', border: '#3d9900', text: 'white', shadow: '#3d9900' }
+        return { bg: '#22C55E', border: '#16A34A', text: 'white', shadow: '#16A34A' }
       case 'current':
         return { bg: '#6D5EF5', border: '#5B4DD4', text: 'white', shadow: '#5B4DD4' }
       case 'available':
@@ -181,7 +181,7 @@ export default function FormationOverview() {
                     </span>
                   )}
                   {isDone && (
-                    <span style={{ fontSize: 10, fontWeight: 800, color: '#58CC02', background: 'rgba(88,204,2,0.15)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
+                    <span style={{ fontSize: 10, fontWeight: 800, color: '#22C55E', background: 'rgba(34,197,94,0.15)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
                       ✓ Terminé
                     </span>
                   )}
@@ -209,7 +209,7 @@ export default function FormationOverview() {
 
                 {isDone && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#58CC02', fontSize: 12, fontWeight: 700 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#22C55E', fontSize: 12, fontWeight: 700 }}>
                       <Trophy size={14} strokeWidth={2.5} />
                       Module maîtrisé
                     </div>
@@ -220,8 +220,8 @@ export default function FormationOverview() {
                       }}
                       style={{
                         background: 'transparent',
-                        border: '1.5px solid #6D5EF5',
-                        color: '#6D5EF5',
+                        border: '1.5px solid #22C55E',
+                        color: '#22C55E',
                         borderRadius: 10,
                         padding: '6px 14px',
                         fontSize: 11,
