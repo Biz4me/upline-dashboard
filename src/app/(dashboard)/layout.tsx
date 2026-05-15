@@ -2,17 +2,20 @@
 import { SessionProvider, signOut } from 'next-auth/react'
 import { SidebarProvider, useSidebar } from '@/context/SidebarContext'
 import Sidebar from '@/components/layout/Sidebar'
-import BottomNav from '@/components/layout/BottomNav'
 import ThemeToggle from '@/components/layout/ThemeToggle'
-import { Bell, User, LogOut } from 'lucide-react'
+import { Bell, LogOut, User, Menu } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState, useRef, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 
 function DashboardInner({ children }: { children: React.ReactNode }) {
-  const { collapsed } = useSidebar()
+  const { mobileOpen, setMobileOpen } = useSidebar()
   const router = useRouter()
+  const { data: session } = useSession()
   const [showMenu, setShowMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  const initials = session?.user?.name ? session.user.name.slice(0, 1).toUpperCase() : 'U'
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -25,68 +28,146 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-page)' }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--bg-page)' }}>
       <Sidebar />
-      <div className="flex flex-col flex-1 overflow-hidden" style={{ transition: 'all 0.25s ease' }}>
-        <header className="hidden md:flex items-center justify-end gap-3 px-6 py-4 flex-shrink-0" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-page)' }}>
-          <ThemeToggle />
-          <button className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--primary-bg)', border: '1px solid rgba(109,94,245,0.2)', color: '#a78bfa' }}>
-            <Bell size={16} strokeWidth={1.8} />
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+
+        {/* Header */}
+        <header style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+          padding: '0 20px',
+          height: 64,
+          flexShrink: 0,
+          borderBottom: '1px solid var(--border)',
+          background: 'var(--bg-page)',
+        }}>
+
+          {/* Hamburger mobile */}
+          <button
+            className="md:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: 'var(--primary-bg)',
+              border: '1px solid rgba(109,94,245,0.2)',
+              color: '#a78bfa',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            <Menu size={18} />
           </button>
-          <div ref={menuRef} style={{ position: 'relative' }}>
+
+          {/* Logo mobile (centré) */}
+          <div className="md:hidden" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 28, height: 28, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ color: 'white', fontWeight: 800, fontSize: 13 }}>A</span>
+            </div>
+            <span style={{ fontSize: 16, fontWeight: 800, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Atline.ai
+            </span>
+          </div>
+
+          {/* Spacer desktop */}
+          <div className="hidden md:block" style={{ flex: 1 }} />
+
+          {/* Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <ThemeToggle />
+
+            {/* Cloche */}
             <button
-              onClick={() => setShowMenu(!showMenu)}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold"
-              style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white' }}
+              style={{
+                width: 36, height: 36, borderRadius: 10,
+                background: 'var(--primary-bg)',
+                border: '1px solid rgba(109,94,245,0.2)',
+                color: '#a78bfa',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer',
+              }}
             >
-              P
+              <Bell size={16} strokeWidth={1.8} />
             </button>
-            {showMenu && (
-              <div
-                className="rounded-xl shadow-lg py-2 flex flex-col min-w-[160px]"
+
+            {/* Avatar dropdown */}
+            <div ref={menuRef} style={{ position: 'relative' }}>
+              <button
+                onClick={() => setShowMenu(!showMenu)}
                 style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: '44px',
+                  width: 36, height: 36, borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+                  border: 'none', color: 'white',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 14, fontWeight: 800, cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(109,94,245,0.35)',
+                }}
+              >
+                {initials}
+              </button>
+
+              {showMenu && (
+                <div style={{
+                  position: 'absolute', right: 0, top: 44,
                   background: 'var(--bg-card)',
                   border: '1px solid var(--border)',
                   borderRadius: 14,
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
                   zIndex: 50,
                   minWidth: 180,
-                  padding: '8px',
-                }}
-              >
-                <button
-                  onClick={() => { setShowMenu(false); router.push('/profil') }}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm transition-colors"
-                  style={{ color: 'var(--text)' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--primary-bg)'; e.currentTarget.style.color = '#a78bfa' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text)' }}
-                >
-                  <User size={16} strokeWidth={1.8} />
-                  Profil
-                </button>
-                <div style={{ borderTop: '1px solid var(--border)', margin: '4px 0' }} />
-                <button
-                  onClick={() => signOut({ callbackUrl: '/login' })}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm transition-colors"
-                  style={{ color: '#ef4444' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--primary-bg)'; e.currentTarget.style.color = '#a78bfa' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#ef4444' }}
-                >
-                  <LogOut size={16} strokeWidth={1.8} />
-                  Déconnexion
-                </button>
-              </div>
-            )}
+                  padding: 6,
+                  overflow: 'hidden',
+                }}>
+                  {/* User info */}
+                  <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--border)', marginBottom: 4 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{session?.user?.name}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{session?.user?.email}</div>
+                  </div>
+
+                  <button
+                    onClick={() => { setShowMenu(false); router.push('/profil') }}
+                    style={{
+                      width: '100%', background: 'transparent', border: 'none',
+                      padding: '9px 14px', borderRadius: 8, cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      fontSize: 13, fontWeight: 600, color: 'var(--text)',
+                      textAlign: 'left',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-bg)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <User size={14} color="#a78bfa" />
+                    Mon profil
+                  </button>
+
+                  <button
+                    onClick={() => signOut({ callbackUrl: '/login' })}
+                    style={{
+                      width: '100%', background: 'transparent', border: 'none',
+                      padding: '9px 14px', borderRadius: 8, cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      fontSize: 13, fontWeight: 600, color: '#EF4444',
+                      textAlign: 'left',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <LogOut size={14} />
+                    Se déconnecter
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-8 pb-24 md:pb-8">
+
+        {/* Contenu */}
+        <main style={{ flex: 1, overflowY: 'auto', padding: '0' }}>
           {children}
         </main>
       </div>
-      <BottomNav />
     </div>
   )
 }
@@ -94,9 +175,9 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-    <SidebarProvider>
-      <DashboardInner>{children}</DashboardInner>
-    </SidebarProvider>
+      <SidebarProvider>
+        <DashboardInner>{children}</DashboardInner>
+      </SidebarProvider>
     </SessionProvider>
   )
 }
