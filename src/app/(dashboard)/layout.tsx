@@ -25,19 +25,19 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-page)' }}>
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden" style={{ transition: 'all 0.25s ease' }}>
-        <header className="hidden md:flex items-center justify-end gap-3 px-6 py-4 flex-shrink-0" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
+        <header className="hidden md:flex items-center justify-end gap-3 px-6 py-4 flex-shrink-0" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-page)' }}>
           <ThemeToggle />
-          <button className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
+          <button className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--primary-bg)', border: '1px solid rgba(109,94,245,0.2)', color: '#a78bfa' }}>
             <Bell size={16} strokeWidth={1.8} />
           </button>
           <div ref={menuRef} style={{ position: 'relative' }}>
             <button
               onClick={() => setShowMenu(!showMenu)}
               className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold"
-              style={{ background: 'var(--gold)', color: 'var(--bg)' }}
+              style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white' }}
             >
               P
             </button>
@@ -50,13 +50,19 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
                   top: '44px',
                   background: 'var(--bg-card)',
                   border: '1px solid var(--border)',
+                  borderRadius: 14,
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
                   zIndex: 50,
+                  minWidth: 180,
+                  padding: '8px',
                 }}
               >
                 <button
                   onClick={() => { setShowMenu(false); router.push('/profil') }}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm transition-colors hover:opacity-80"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm transition-colors"
                   style={{ color: 'var(--text)' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--primary-bg)'; e.currentTarget.style.color = '#a78bfa' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text)' }}
                 >
                   <User size={16} strokeWidth={1.8} />
                   Profil
@@ -64,8 +70,10 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
                 <div style={{ borderTop: '1px solid var(--border)', margin: '4px 0' }} />
                 <button
                   onClick={() => signOut({ callbackUrl: '/login' })}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm transition-colors hover:opacity-80"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm transition-colors"
                   style={{ color: '#ef4444' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--primary-bg)'; e.currentTarget.style.color = '#a78bfa' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#ef4444' }}
                 >
                   <LogOut size={16} strokeWidth={1.8} />
                   Déconnexion
