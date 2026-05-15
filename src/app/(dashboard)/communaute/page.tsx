@@ -1,309 +1,220 @@
 'use client'
 import { useState } from 'react'
-
-type Onglet = 'general' | 'societe' | 'equipe'
+import { Heart, MessageSquare, Share2, Plus, Trophy, Users } from 'lucide-react'
 
 const posts = [
   {
-    id: 1,
-    auteur: "Marie D.",
-    avatar: "M",
-    societe: "Herbalife",
-    temps: "Il y a 2h",
-    contenu: "J'ai recruté mon 1er distributeur aujourd'hui ! 6 mois de travail, 47 invitations, 12 présentations. La persévérance paie toujours 🎉",
-    likes: 24,
-    commentaires: 8,
-    onglet: "general",
-    liked: false,
+    id: 1, author: 'Marie D.', initials: 'M', company: 'Herbalife', time: 'Il y a 2h',
+    content: "J'ai recruté mon 1er distributeur aujourd'hui ! 6 mois de travail, 47 invitations, 12 présentations. La persévérance paie toujours 🎉",
+    likes: 24, comments: 8, color: '#FF9600',
   },
   {
-    id: 2,
-    auteur: "Patrice H.",
-    avatar: "P",
-    societe: "Herbalife",
-    temps: "Il y a 5h",
-    contenu: "Tip du jour : La technique Feel/Felt/Found de Tom Schreiter est magique pour l'objection 'c'est une pyramide'. Testez-la ce soir !",
-    likes: 18,
-    commentaires: 5,
-    onglet: "general",
-    liked: true,
+    id: 2, author: 'Patrice H.', initials: 'P', company: 'Herbalife', time: 'Il y a 5h',
+    content: "Tip du jour : La technique Feel/Felt/Found de Tom Schreiter est magique pour l'objection 'c'est une pyramide'. Testez-la ce soir !",
+    likes: 19, comments: 5, color: '#6D5EF5', isMe: true,
   },
   {
-    id: 3,
-    auteur: "Sophie B.",
-    avatar: "S",
-    societe: "Forever Living",
-    temps: "Il y a 1j",
-    contenu: "Question : Comment vous gérez les prospects qui disent 'je dois en parler à mon conjoint' ? Atlas m'a donné un super script hier !",
-    likes: 31,
-    commentaires: 14,
-    onglet: "general",
-    liked: false,
-  },
-  {
-    id: 4,
-    auteur: "Marc L.",
-    avatar: "M",
-    societe: "Herbalife",
-    temps: "Il y a 3h",
-    contenu: "Nouveau record personnel : 8 contacts qualifiés en une seule journée avec la méthode FORM. Merci le module 2 ! 💪",
-    likes: 15,
-    commentaires: 3,
-    onglet: "societe",
-    liked: false,
-  },
-  {
-    id: 5,
-    auteur: "Marie D.",
-    avatar: "M",
-    societe: "Herbalife",
-    temps: "Il y a 1j",
-    contenu: "Rappel équipe : réunion Zoom lundi 19h pour les nouveaux distributeurs. Patrice animera la session sur les invitations. Soyez là !",
-    likes: 7,
-    commentaires: 4,
-    onglet: "equipe",
-    liked: false,
-  },
-  {
-    id: 6,
-    auteur: "Jean M.",
-    avatar: "J",
-    societe: "Herbalife",
-    temps: "Il y a 2j",
-    contenu: "Ma première semaine sur Upline.ai — j'ai déjà 3 prospects qualifiés dans mon CRM et Atlas m'a aidé à préparer mes scripts. Game changer !",
-    likes: 12,
-    commentaires: 6,
-    onglet: "equipe",
-    liked: false,
+    id: 3, author: 'Sophie B.', initials: 'S', company: 'Forever Living', time: 'Il y a 1j',
+    content: "Question : Comment vous gérez les prospects qui disent 'je dois en parler à mon conjoint' ? Atlas m'a donné une technique incroyable hier.",
+    likes: 31, comments: 12, color: '#22D3EE',
   },
 ]
 
-const topContributeurs = [
-  { nom: "Marie Dupont", avatar: "M", posts: 42, societe: "Herbalife", rang: 1 },
-  { nom: "Patrice H.", avatar: "P", posts: 18, societe: "Herbalife", rang: 2, estMoi: true },
-  { nom: "Sophie B.", avatar: "S", posts: 31, societe: "Forever Living", rang: 3 },
-  { nom: "Jean Martin", avatar: "J", posts: 7, societe: "Herbalife", rang: 4 },
+const spaces = [
+  { name: 'Herbalife', members: 47, color: '#FF9600', active: true },
+  { name: 'Forever Living', members: 23, color: '#22C55E' },
+  { name: 'Amway', members: 31, color: '#22D3EE' },
+  { name: 'Autres', members: 89, color: '#64748B' },
 ]
 
-const societes = [
-  { nom: "Herbalife", couleur: "#E2B84A", membres: 47, actif: true },
-  { nom: "Forever Living", couleur: "#4ade80", membres: 23, actif: false },
-  { nom: "Amway", couleur: "#60a5fa", membres: 31, actif: false },
-  { nom: "Autres", couleur: "#A89878", membres: 89, actif: false },
+const topContributors = [
+  { name: 'Marie Dupont', posts: 42, initials: 'M', color: '#FF9600', medal: '🥇' },
+  { name: 'Patrice H.', posts: 18, initials: 'P', color: '#6D5EF5', medal: '🥈', isMe: true },
+  { name: 'Sophie B.', posts: 31, initials: 'S', color: '#22D3EE', medal: '🥉' },
 ]
 
-export default function Communaute() {
-  const [onglet, setOnglet] = useState<Onglet>('general')
-  const [likedPosts, setLikedPosts] = useState<number[]>([2])
-  const [nouveauPost, setNouveauPost] = useState('')
-  const [showPost, setShowPost] = useState(false)
-
-  const postsFiltres = posts.filter(p => p.onglet === onglet)
+export default function CommunautePage() {
+  const [activeTab, setActiveTab] = useState('general')
+  const [likedPosts, setLikedPosts] = useState<number[]>([])
 
   const toggleLike = (id: number) => {
-    setLikedPosts(prev =>
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    )
+    setLikedPosts(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id])
   }
 
+  const tabs = [
+    { id: 'general', label: '🌍 Général' },
+    { id: 'herbalife', label: '🟠 Herbalife' },
+    { id: 'equipe', label: '👥 Mon équipe' },
+  ]
+
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 28px 60px' }}>
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
         <div>
-          <h1 className="text-[var(--text-muted)]xl font-semibold text-[var(--text)]">Communauté</h1>
-          <p className="text-[var(--text-secondary)] mt-1">Partagez vos victoires et progressez ensemble</p>
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 4, fontFamily: 'var(--font-title)' }}>
+            Communauté
+          </h1>
+          <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>Partagez vos victoires et progressez ensemble</p>
         </div>
-        <button
-          onClick={() => setShowPost(!showPost)}
-          className="bg-[#E2B84A] hover:bg-[#ECC85E] text-black font-semibold px-4 py-2 rounded-xl text-sm transition-colors"
-        >
-          ✍️ Publier
+        <button style={{
+          background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+          border: 'none', color: 'white', borderRadius: 12,
+          padding: '10px 20px', fontSize: 13, fontWeight: 700,
+          cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
+          boxShadow: '0 4px 12px rgba(109,94,245,0.35)',
+        }}>
+          <Plus size={16} strokeWidth={2.5} />
+          Publier
         </button>
       </div>
 
-      {/* Nouveau post */}
-      {showPost && (
-        <div className="bg-[var(--bg-card)] border border-[#E2B84A]/30 rounded-xl p-6 text-[var(--text-on-card)]">
-          <textarea
-            value={nouveauPost}
-            onChange={e => setNouveauPost(e.target.value)}
-            placeholder="Partagez une victoire, un tip, une question... (restez anonyme sur les données sensibles)"
-            className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm text-[var(--text-secondary)] placeholder-[var(--text-muted)] outline-none focus:border-[#E2B84A] transition-colors resize-none h-24"
-          />
-          <div className="flex items-center justify-between mt-3">
-            <span className="text-[#3d3420] text-xs">💡 Anonymisez vos données business sensibles</span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowPost(false)}
-                className="text-sm bg-[var(--gold-muted)] hover:bg-[var(--gold-muted)] text-[var(--text-secondary)] px-4 py-2 rounded-lg transition-colors"
-              >
-                Annuler
-              </button>
-              <button className="text-sm bg-[#E2B84A] hover:bg-[#ECC85E] text-black font-semibold px-4 py-2 rounded-lg transition-colors">
-                Publier
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 24 }}>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        {/* Colonne principale */}
-        <div className="lg:col-span-2 space-y-4">
-
-          {/* Onglets */}
-          <div className="flex bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-1 gap-1 text-[var(--text-on-card)]">
-            {([
-              { id: 'general', label: '🌍 Général' },
-              { id: 'societe', label: '🟠 Herbalife' },
-              { id: 'equipe', label: '👥 Mon équipe' },
-            ] as { id: Onglet; label: string }[]).map(o => (
-              <button
-                key={o.id}
-                onClick={() => setOnglet(o.id)}
-                className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  onglet === o.id
-                    ? 'bg-[#E2B84A] text-black'
-                    : 'text-[var(--text-muted)] hover:text-[var(--text)]'
-                }`}
-              >
-                {o.label}
+        {/* LEFT — Posts */}
+        <div>
+          {/* Tabs */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 20, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 6 }}>
+            {tabs.map(tab => (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+                flex: 1, background: activeTab === tab.id ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : 'transparent',
+                border: 'none', color: activeTab === tab.id ? 'white' : 'var(--text-secondary)',
+                borderRadius: 10, padding: '9px 16px', fontSize: 13, fontWeight: 700,
+                cursor: 'pointer', transition: 'all 0.15s',
+              }}>
+                {tab.label}
               </button>
             ))}
           </div>
 
           {/* Posts */}
-          <div className="space-y-4">
-            {postsFiltres.length === 0 ? (
-              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 text-center text-[var(--text-on-card)]">
-                <div className="text-[var(--text-muted)]xl mb-2">💬</div>
-                <p className="text-[var(--text-muted)]">Aucun post dans cet espace pour l'instant</p>
-                <button
-                  onClick={() => setShowPost(true)}
-                  className="mt-3 text-sm text-[#E2B84A] hover:underline"
-                >
-                  Soyez le premier à publier →
-                </button>
-              </div>
-            ) : (
-              postsFiltres.map(post => (
-                <div key={post.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6 text-[var(--text-on-card)]">
-                  {/* Header post */}
-                  <div className="flex items-center gap-3.5 mb-3">
-                    <div className="w-8 h-8 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] font-bold text-sm flex-shrink-0">
-                      {post.avatar}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[var(--text-on-card)] text-sm font-medium">{post.auteur}</span>
-                        <span className="text-xs bg-[var(--gold-muted)] text-[var(--text-muted)] px-2 py-0.5 rounded-full">{post.societe}</span>
-                      </div>
-                      <div className="text-[#3d3420] text-xs">{post.temps}</div>
-                    </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {posts.map(post => (
+              <div key={post.id} style={{
+                background: 'var(--bg-card)',
+                border: `1px solid ${post.isMe ? 'rgba(109,94,245,0.3)' : 'var(--border)'}`,
+                borderRadius: 16, padding: '20px 22px',
+                boxShadow: post.isMe ? '0 0 0 3px rgba(109,94,245,0.08)' : 'none',
+                transition: 'border-color 0.15s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(109,94,245,0.3)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = post.isMe ? 'rgba(109,94,245,0.3)' : 'var(--border)'}
+              >
+                {/* Author */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                  <div style={{
+                    width: 40, height: 40, borderRadius: '50%',
+                    background: post.isMe ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : `${post.color}30`,
+                    border: `2px solid ${post.color}50`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontWeight: 800, fontSize: 14, color: post.isMe ? 'white' : post.color,
+                  }}>
+                    {post.initials}
                   </div>
-
-                  {/* Contenu */}
-                  <p className="text-[#D4C8A8] text-sm leading-relaxed mb-4">{post.contenu}</p>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-4 pt-3 border-t border-[var(--border)]">
-                    <button
-                      onClick={() => toggleLike(post.id)}
-                      className={`flex items-center gap-1.5 text-sm transition-colors ${
-                        likedPosts.includes(post.id) ? 'text-[#E2B84A]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
-                      }`}
-                    >
-                      {likedPosts.includes(post.id) ? '❤️' : '🤍'}
-                      <span>{likedPosts.includes(post.id) ? post.likes + 1 : post.likes}</span>
-                    </button>
-                    <button className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors">
-                      💬 <span>{post.commentaires}</span>
-                    </button>
-                    <button className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors ml-auto">
-                      ↗️ Partager
-                    </button>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>
+                        {post.author} {post.isMe && <span style={{ fontSize: 11, color: '#6D5EF5' }}>← toi</span>}
+                      </span>
+                      <span style={{
+                        fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20,
+                        background: `${post.color}20`, color: post.color,
+                      }}>
+                        {post.company}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{post.time}</div>
                   </div>
                 </div>
-              ))
-            )}
+
+                {/* Content */}
+                <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 16 }}>
+                  {post.content}
+                </p>
+
+                {/* Actions */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
+                  <button
+                    onClick={() => toggleLike(post.id)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      background: 'transparent', border: 'none',
+                      color: likedPosts.includes(post.id) ? '#FF4B4B' : 'var(--text-muted)',
+                      cursor: 'pointer', fontSize: 13, fontWeight: 600,
+                    }}
+                  >
+                    <Heart size={16} fill={likedPosts.includes(post.id) ? '#FF4B4B' : 'none'} />
+                    {post.likes + (likedPosts.includes(post.id) ? 1 : 0)}
+                  </button>
+                  <button style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+                    <MessageSquare size={16} />
+                    {post.comments}
+                  </button>
+                  <button style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 13, fontWeight: 600, marginLeft: 'auto' }}>
+                    <Share2 size={14} />
+                    Partager
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Colonne droite */}
-        <div className="space-y-4">
+        {/* RIGHT */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
           {/* Espaces société */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
-            <h3 className="text-[var(--text-on-card)] font-medium mb-3">🏢 Espaces société</h3>
-            <div className="space-y-2">
-              {societes.map((s, i) => (
-                <div
-                  key={i}
-                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
-                    s.actif
-                      ? 'bg-[#E2B84A]/10 border border-[#E2B84A]/20'
-                      : 'bg-[var(--bg)] hover:bg-[var(--gold-muted)]'
-                  }`}
-                >
-                  <div
-                    className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ background: s.couleur }}
-                  ></div>
-                  <div className="flex-1">
-                    <div className={`text-sm font-medium ${s.actif ? 'text-[#E2B84A]' : 'text-[var(--text-secondary)]'}`}>
-                      {s.nom}
-                    </div>
-                    <div className="text-[#3d3420] text-xs">{s.membres} membres</div>
-                  </div>
-                  {s.actif && <span className="text-xs text-[#E2B84A]">✓</span>}
-                </div>
-              ))}
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 20 }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Users size={16} color="#6D5EF5" />
+              Espaces société
             </div>
+            {spaces.map((s, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 10, marginBottom: 6,
+                background: s.active ? 'rgba(109,94,245,0.08)' : 'transparent',
+                border: s.active ? '1px solid rgba(109,94,245,0.2)' : '1px solid transparent',
+                cursor: 'pointer', transition: 'all 0.15s',
+              }}
+                onMouseEnter={e => { if (!s.active) e.currentTarget.style.background = 'var(--primary-muted)' }}
+                onMouseLeave={e => { if (!s.active) e.currentTarget.style.background = 'transparent' }}
+              >
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
+                <span style={{ flex: 1, fontSize: 13, fontWeight: s.active ? 700 : 500, color: s.active ? '#a78bfa' : 'var(--text-secondary)' }}>{s.name}</span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{s.members} membres</span>
+                {s.active && <span style={{ color: '#6D5EF5', fontSize: 14, fontWeight: 700 }}>✓</span>}
+              </div>
+            ))}
           </div>
 
           {/* Top contributeurs */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
-            <h3 className="text-[var(--text-on-card)] font-medium mb-3">🏅 Top contributeurs</h3>
-            <div className="space-y-2">
-              {topContributeurs.map((c, i) => (
-                <div
-                  key={i}
-                  className={`flex items-center gap-3 p-2 rounded-lg ${
-                    c.estMoi ? 'bg-[#E2B84A]/10' : ''
-                  }`}
-                >
-                  <span className="text-sm w-4 flex-shrink-0">
-                    {c.rang === 1 ? '🥇' : c.rang === 2 ? '🥈' : c.rang === 3 ? '🥉' : `${c.rang}.`}
-                  </span>
-                  <div className="w-7 h-7 rounded-full bg-[#E2B84A]/20 flex items-center justify-center text-[#E2B84A] font-bold text-xs flex-shrink-0">
-                    {c.avatar}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className={`text-sm truncate ${c.estMoi ? 'text-[#E2B84A]' : 'text-[var(--text-secondary)]'}`}>
-                      {c.nom} {c.estMoi && '← toi'}
-                    </div>
-                  </div>
-                  <span className="text-[var(--text-muted)] text-xs flex-shrink-0">{c.posts} posts</span>
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 20 }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Trophy size={16} color="#F59E0B" />
+              Top contributeurs
+            </div>
+            {topContributors.map((c, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0',
+                borderBottom: i < topContributors.length - 1 ? '1px solid var(--border)' : 'none',
+              }}>
+                <span style={{ fontSize: 18 }}>{c.medal}</span>
+                <div style={{
+                  width: 32, height: 32, borderRadius: '50%',
+                  background: c.isMe ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : `${c.color}25`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 12, fontWeight: 800, color: c.isMe ? 'white' : c.color,
+                }}>
+                  {c.initials}
                 </div>
-              ))}
-            </div>
+                <span style={{ flex: 1, fontSize: 13, fontWeight: c.isMe ? 700 : 500, color: c.isMe ? '#a78bfa' : 'var(--text)' }}>
+                  {c.name} {c.isMe && '← toi'}
+                </span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{c.posts} posts</span>
+              </div>
+            ))}
           </div>
-
-          {/* Règles communauté */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
-            <h3 className="text-[var(--text-on-card)] font-medium mb-3">📋 Règles</h3>
-            <div className="space-y-2 text-xs text-[var(--text-muted)]">
-              <div className="flex gap-2"><span>✅</span><span>Partagez vos victoires et apprentissages</span></div>
-              <div className="flex gap-2"><span>✅</span><span>Posez des questions constructives</span></div>
-              <div className="flex gap-2"><span>❌</span><span>Pas de données prospects sensibles</span></div>
-              <div className="flex gap-2"><span>❌</span><span>Pas de promotion d'autres plateformes</span></div>
-              <div className="flex gap-2"><span>❌</span><span>Pas de dénigrement de sociétés MLM</span></div>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
