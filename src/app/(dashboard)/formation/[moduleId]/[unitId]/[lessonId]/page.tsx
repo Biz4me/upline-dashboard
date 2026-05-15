@@ -85,11 +85,11 @@ export default function LessonPage({
     return (
       <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '60px 20px' }}>
         <div style={{ fontSize: 80, marginBottom: 16 }}>🎉</div>
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--gold)', marginBottom: 12 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#6D5EF5', marginBottom: 12 }}>
           Leçon terminée !
         </h1>
         <p style={{ color: 'var(--text-secondary)', marginBottom: 32 }}>
-          Tu as gagné <strong style={{ color: 'var(--gold)' }}>+{lesson.xp} XP</strong>
+          Tu as gagné <strong style={{ color: '#6D5EF5' }}>+{lesson.xp} XP</strong>
         </p>
         <div
           style={{
@@ -118,8 +118,8 @@ export default function LessonPage({
         <button
           onClick={() => router.push(`/formation/${moduleId}`)}
           style={{
-            background: 'var(--gold)',
-            color: '#161410',
+            background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+            color: 'white',
             border: 'none',
             borderRadius: 12,
             padding: '14px 40px',
@@ -128,6 +128,7 @@ export default function LessonPage({
             cursor: 'pointer',
             textTransform: 'uppercase',
             letterSpacing: 0.5,
+            boxShadow: '0 8px 24px rgba(109,94,245,0.35)',
           }}
         >
           Continuer le parcours →
@@ -160,7 +161,7 @@ export default function LessonPage({
             style={{
               width: `${progress}%`,
               height: '100%',
-              background: '#58CC02',
+              background: '#6D5EF5',
               borderRadius: 6,
               transition: 'width 0.3s',
             }}
@@ -182,7 +183,7 @@ export default function LessonPage({
           <div
             style={{
               background: 'var(--bg-card)',
-              border: '2px solid var(--border)',
+              border: '2px solid rgba(109,94,245,0.2)',
               borderRadius: 16,
               borderBottomLeftRadius: 4,
               padding: '14px 20px',
@@ -205,23 +206,23 @@ export default function LessonPage({
 
             let bg = 'var(--bg-card)'
             let border = 'var(--border)'
-            let numBg = 'var(--gold-muted)'
-            let numColor = 'var(--text)'
+            let numBg = 'rgba(109,94,245,0.1)'
+            let numColor = '#a78bfa'
 
             if (showCorrect) {
-              bg = 'rgba(88,204,2,0.1)'
-              border = '#58CC02'
-              numBg = '#58CC02'
+              bg = 'rgba(34,197,94,0.1)'
+              border = '#22C55E'
+              numBg = '#22C55E'
               numColor = 'white'
             } else if (isWrong) {
-              bg = 'rgba(255,75,75,0.08)'
-              border = '#FF4B4B'
-              numBg = '#FF4B4B'
+              bg = 'rgba(239,68,68,0.08)'
+              border = '#EF4444'
+              numBg = '#EF4444'
               numColor = 'white'
             } else if (isSelected) {
-              bg = 'rgba(28,176,246,0.08)'
-              border = '#1CB0F6'
-              numBg = '#1CB0F6'
+              bg = 'rgba(109,94,245,0.08)'
+              border = '#6D5EF5'
+              numBg = '#6D5EF5'
               numColor = 'white'
             }
 
@@ -300,7 +301,7 @@ export default function LessonPage({
             onClick={handleValidate}
             disabled={selected === null}
             style={{
-              background: selected === null ? 'var(--gold-muted)' : '#58CC02',
+              background: selected === null ? 'var(--gold-muted)' : '#6D5EF5',
               color: selected === null ? 'var(--text-muted)' : 'white',
               border: 'none',
               borderRadius: 12,
@@ -310,7 +311,7 @@ export default function LessonPage({
               cursor: selected === null ? 'not-allowed' : 'pointer',
               textTransform: 'uppercase',
               letterSpacing: 0.5,
-              boxShadow: selected === null ? 'none' : '0 4px 0 #3d9900',
+              boxShadow: selected === null ? 'none' : '0 4px 0 #5B4DD4',
             }}
           >
             Valider
@@ -319,7 +320,7 @@ export default function LessonPage({
           <button
             onClick={handleNext}
             style={{
-              background: current.choices[selected!].correct ? '#58CC02' : '#FF4B4B',
+              background: current.choices[selected!].correct ? '#22C55E' : '#EF4444',
               color: 'white',
               border: 'none',
               borderRadius: 12,
@@ -329,7 +330,7 @@ export default function LessonPage({
               cursor: 'pointer',
               textTransform: 'uppercase',
               letterSpacing: 0.5,
-              boxShadow: current.choices[selected!].correct ? '0 4px 0 #3d9900' : '0 4px 0 #cc3636',
+              boxShadow: current.choices[selected!].correct ? '0 4px 0 #16A34A' : '0 4px 0 #dc2626',
             }}
           >
             Continuer →

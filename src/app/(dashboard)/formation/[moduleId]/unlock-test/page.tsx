@@ -95,8 +95,8 @@ export default function UnlockTestPage({ params }: { params: { moduleId: string 
         {!passed && (
           <div
             style={{
-              background: 'rgba(255,75,75,0.08)',
-              border: '1.5px solid rgba(255,75,75,0.3)',
+              background: 'rgba(239,68,68,0.06)',
+              border: '1.5px solid rgba(239,68,68,0.2)',
               borderRadius: 12,
               padding: 16,
               marginBottom: 24,
@@ -111,8 +111,8 @@ export default function UnlockTestPage({ params }: { params: { moduleId: string 
         <button
           onClick={() => router.push('/formation')}
           style={{
-            background: 'var(--gold)',
-            color: '#161410',
+            background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+            color: 'white',
             border: 'none',
             borderRadius: 12,
             padding: '14px 40px',
@@ -121,6 +121,7 @@ export default function UnlockTestPage({ params }: { params: { moduleId: string 
             cursor: 'pointer',
             textTransform: 'uppercase',
             letterSpacing: 0.5,
+            boxShadow: '0 8px 24px rgba(109,94,245,0.35)',
           }}
         >
           Retour à la formation
@@ -168,15 +169,15 @@ export default function UnlockTestPage({ params }: { params: { moduleId: string 
       {/* Header test */}
       <div
         style={{
-          background: 'rgba(28,176,246,0.08)',
-          border: '1.5px solid rgba(28,176,246,0.3)',
+          background: 'rgba(109,94,245,0.08)',
+          border: '1.5px solid rgba(109,94,245,0.3)',
           borderRadius: 12,
           padding: '10px 16px',
           marginBottom: 24,
           textAlign: 'center',
           fontSize: 12,
           fontWeight: 700,
-          color: '#1CB0F6',
+          color: '#a78bfa',
           textTransform: 'uppercase',
           letterSpacing: 1,
         }}
@@ -217,23 +218,23 @@ export default function UnlockTestPage({ params }: { params: { moduleId: string 
 
             let bg = 'var(--bg-card)'
             let border = 'var(--border)'
-            let numBg = 'var(--gold-muted)'
-            let numColor = 'var(--text)'
+            let numBg = 'rgba(109,94,245,0.1)'
+            let numColor = '#a78bfa'
 
             if (showCorrect) {
-              bg = 'rgba(88,204,2,0.1)'
-              border = '#58CC02'
-              numBg = '#58CC02'
+              bg = 'rgba(34,197,94,0.1)'
+              border = '#22C55E'
+              numBg = '#22C55E'
               numColor = 'white'
             } else if (isWrong) {
-              bg = 'rgba(255,75,75,0.08)'
-              border = '#FF4B4B'
-              numBg = '#FF4B4B'
+              bg = 'rgba(239,68,68,0.08)'
+              border = '#EF4444'
+              numBg = '#EF4444'
               numColor = 'white'
             } else if (isSelected) {
-              bg = 'rgba(28,176,246,0.08)'
-              border = '#1CB0F6'
-              numBg = '#1CB0F6'
+              bg = 'rgba(109,94,245,0.08)'
+              border = '#6D5EF5'
+              numBg = '#6D5EF5'
               numColor = 'white'
             }
 
@@ -298,7 +299,7 @@ export default function UnlockTestPage({ params }: { params: { moduleId: string 
             onClick={handleValidate}
             disabled={selected === null}
             style={{
-              background: selected === null ? 'var(--gold-muted)' : '#1CB0F6',
+              background: selected === null ? 'var(--gold-muted)' : '#6D5EF5',
               color: selected === null ? 'var(--text-muted)' : 'white',
               border: 'none',
               borderRadius: 12,
@@ -308,7 +309,7 @@ export default function UnlockTestPage({ params }: { params: { moduleId: string 
               cursor: selected === null ? 'not-allowed' : 'pointer',
               textTransform: 'uppercase',
               letterSpacing: 0.5,
-              boxShadow: selected === null ? 'none' : '0 4px 0 #0a87bf',
+              boxShadow: selected === null ? 'none' : '0 4px 0 #5B4DD4',
             }}
           >
             Valider

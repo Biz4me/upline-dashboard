@@ -25,9 +25,9 @@ export default function FormationOverview() {
       case 'done':
         return { bg: '#58CC02', border: '#3d9900', text: 'white', shadow: '#3d9900' }
       case 'current':
-        return { bg: 'var(--gold)', border: 'var(--gold-hover)', text: '#161410', shadow: 'var(--gold-hover)' }
+        return { bg: '#6D5EF5', border: '#5B4DD4', text: 'white', shadow: '#5B4DD4' }
       case 'available':
-        return { bg: 'var(--bg-card)', border: 'var(--gold)', text: 'var(--text)', shadow: 'var(--gold-hover)' }
+        return { bg: 'var(--bg-card)', border: '#6D5EF5', text: 'var(--text)', shadow: '#5B4DD4' }
       case 'locked':
       default:
         return { bg: 'var(--bg-card)', border: 'var(--border)', text: 'var(--text-muted)', shadow: 'var(--border)' }
@@ -63,10 +63,10 @@ export default function FormationOverview() {
             Progression globale
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ flex: 1, height: 12, background: 'var(--gold-muted)', borderRadius: 6, overflow: 'hidden' }}>
-              <div style={{ width: `${stats.globalProgress}%`, height: '100%', background: 'var(--gold)', borderRadius: 6, transition: 'width 0.5s' }} />
+            <div style={{ flex: 1, height: 12, background: 'rgba(109,94,245,0.15)', borderRadius: 6, overflow: 'hidden' }}>
+              <div style={{ width: `${stats.globalProgress}%`, height: '100%', background: '#6D5EF5', borderRadius: 6, transition: 'width 0.5s' }} />
             </div>
-            <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--gold)' }}>{stats.globalProgress}%</span>
+            <span style={{ fontSize: 16, fontWeight: 800, color: '#6D5EF5' }}>{stats.globalProgress}%</span>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 20 }}>
@@ -75,7 +75,7 @@ export default function FormationOverview() {
             <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Leçons</div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--gold)' }}>{stats.currentModule?.id || 1}/8</div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: '#6D5EF5' }}>{stats.currentModule?.id || 1}/8</div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Modules</div>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function FormationOverview() {
               onClick={handleCardClick}
               style={{
                 background: 'var(--bg-card)',
-                border: `2px solid ${effectiveStatus === 'current' ? 'var(--gold)' : 'var(--border)'}`,
+                border: `2px solid ${effectiveStatus === 'current' ? '#6D5EF5' : 'var(--border)'}`,
                 borderRadius: 16,
                 padding: '20px 24px',
                 display: 'flex',
@@ -115,18 +115,18 @@ export default function FormationOverview() {
                 opacity: effectiveLocked ? 0.85 : 1,
                 cursor: effectiveLocked ? 'default' : 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: effectiveStatus === 'current' ? '0 0 0 4px rgba(226,184,74,0.1)' : 'none',
+                boxShadow: effectiveStatus === 'current' ? '0 0 0 4px rgba(109,94,245,0.1)' : 'none',
               }}
               onMouseEnter={(e) => {
                 if (!effectiveLocked) {
                   e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.borderColor = 'var(--gold)'
+                  e.currentTarget.style.borderColor = '#6D5EF5'
                 }
               }}
               onMouseLeave={(e) => {
                 if (!effectiveLocked) {
                   e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.borderColor = effectiveStatus === 'current' ? 'var(--gold)' : 'var(--border)'
+                  e.currentTarget.style.borderColor = effectiveStatus === 'current' ? '#6D5EF5' : 'var(--border)'
                 }
               }}
             >
@@ -176,7 +176,7 @@ export default function FormationOverview() {
                     Module {mod.id} · {mod.duree}
                   </span>
                   {mod.status === 'current' && (
-                    <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--gold)', background: 'var(--gold-bg)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
+                    <span style={{ fontSize: 10, fontWeight: 800, color: '#6D5EF5', background: 'rgba(109,94,245,0.12)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
                       🔥 En cours
                     </span>
                   )}
@@ -200,10 +200,10 @@ export default function FormationOverview() {
 
                 {mod.progression > 0 && mod.progression < 100 && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ flex: 1, height: 8, background: 'var(--gold-muted)', borderRadius: 4, overflow: 'hidden', maxWidth: 250 }}>
-                      <div style={{ width: `${mod.progression}%`, height: '100%', background: 'var(--gold)', borderRadius: 4 }} />
+                    <div style={{ flex: 1, height: 8, background: 'rgba(109,94,245,0.15)', borderRadius: 4, overflow: 'hidden', maxWidth: 250 }}>
+                      <div style={{ width: `${mod.progression}%`, height: '100%', background: '#6D5EF5', borderRadius: 4 }} />
                     </div>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--gold)' }}>{mod.progression}%</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#6D5EF5' }}>{mod.progression}%</span>
                   </div>
                 )}
 
@@ -220,8 +220,8 @@ export default function FormationOverview() {
                       }}
                       style={{
                         background: 'transparent',
-                        border: '1.5px solid #58CC02',
-                        color: '#58CC02',
+                        border: '1.5px solid #6D5EF5',
+                        color: '#6D5EF5',
                         borderRadius: 10,
                         padding: '6px 14px',
                         fontSize: 11,

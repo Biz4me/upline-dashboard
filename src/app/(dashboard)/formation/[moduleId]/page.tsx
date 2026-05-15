@@ -41,8 +41,8 @@ export default function ModuleDetail({ params }: { params: { moduleId: string } 
     <div style={{ maxWidth: 700, margin: '0 auto', paddingBottom: 60 }}>
       <div
         style={{
-          background: 'linear-gradient(135deg, #2A2018 0%, #1E1B14 100%)',
-          border: '2px solid var(--gold)',
+          background: 'linear-gradient(135deg, #1E1B2E 0%, #0F172A 100%)',
+          border: '2px solid #6D5EF5',
           borderRadius: 16,
           padding: '14px 20px',
           marginBottom: 32,
@@ -63,7 +63,7 @@ export default function ModuleDetail({ params }: { params: { moduleId: string } 
           <ArrowLeft size={22} />
         </button>
         <div style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: '#6D5EF5', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>
             Module {mod.id} · {mod.progression}%
           </div>
           <div style={{ fontSize: 15, fontWeight: 800, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -72,13 +72,13 @@ export default function ModuleDetail({ params }: { params: { moduleId: string } 
         </div>
         <button
           style={{
-            background: 'rgba(226,184,74,0.15)',
-            border: '1.5px solid rgba(226,184,74,0.35)',
+            background: 'rgba(109,94,245,0.12)',
+            border: '1.5px solid rgba(109,94,245,0.3)',
             borderRadius: 10,
             padding: '8px 14px',
             fontSize: 12,
             fontWeight: 700,
-            color: 'var(--gold)',
+            color: '#a78bfa',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -112,7 +112,7 @@ function UnitSection({ unit, moduleId, unitIndex }: { unit: Unit; moduleId: numb
 
   const unitColors = {
     done: { bg: 'rgba(88,204,2,0.1)', border: 'rgba(88,204,2,0.3)', color: '#58CC02', icon: '✓' },
-    current: { bg: 'var(--gold-bg)', border: 'rgba(226,184,74,0.35)', color: 'var(--gold)', icon: '🔥' },
+    current: { bg: 'rgba(109,94,245,0.1)', border: 'rgba(109,94,245,0.3)', color: '#a78bfa', icon: '🔥' },
     available: { bg: 'var(--bg-card)', border: 'var(--border)', color: 'var(--text-secondary)', icon: '○' },
     locked: { bg: 'var(--bg-card)', border: 'var(--border)', color: 'var(--text-muted)', icon: '🔒' },
   }[unitStatus]
