@@ -6,6 +6,7 @@ interface SidebarContextType {
   setCollapsed: (v: boolean) => void
   mobileOpen: boolean
   setMobileOpen: (v: boolean) => void
+  isMobile: boolean
 }
 
 const SidebarContext = createContext<SidebarContextType>({
@@ -13,18 +14,22 @@ const SidebarContext = createContext<SidebarContextType>({
   setCollapsed: () => {},
   mobileOpen: false,
   setMobileOpen: () => {},
+  isMobile: false,
 })
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Collapse automatique sur tablette
+  // Collapse automatique sur tablette + détection mobile
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1024 && window.innerWidth >= 768) {
+      const width = window.innerWidth
+      setIsMobile(width < 768)
+      if (width < 1024 && width >= 768) {
         setCollapsed(true)
-      } else if (window.innerWidth >= 1024) {
+      } else if (width >= 1024) {
         setCollapsed(false)
       }
     }
@@ -34,7 +39,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <SidebarContext.Provider value={{ collapsed, setCollapsed, mobileOpen, setMobileOpen }}>
+    <SidebarContext.Provider value={{ collapsed, setCollapsed, mobileOpen, setMobileOpen, isMobile }}>
       {children}
     </SidebarContext.Provider>
   )

@@ -20,7 +20,7 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname()
-  const { collapsed, setCollapsed, mobileOpen, setMobileOpen } = useSidebar()
+  const { collapsed, setCollapsed, mobileOpen, setMobileOpen, isMobile } = useSidebar()
   const { data: session } = useSession()
   const user = session?.user
   const initials = user?.name ? user.name.slice(0, 1).toUpperCase() : 'U'
@@ -227,10 +227,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop + Tablette : sidebar sticky */}
-      <div
-        className="hidden md:flex"
-        style={{ position: 'sticky', top: 0, height: '100vh', zIndex: 30 }}
-      >
+      <div style={{ display: isMobile ? 'none' : 'flex', position: 'sticky', top: 0, height: '100vh', zIndex: 30 }}>
         <NavContent />
       </div>
 

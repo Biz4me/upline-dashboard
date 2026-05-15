@@ -9,7 +9,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 
 function DashboardInner({ children }: { children: React.ReactNode }) {
-  const { mobileOpen, setMobileOpen } = useSidebar()
+  const { mobileOpen, setMobileOpen, isMobile } = useSidebar()
   const router = useRouter()
   const { data: session } = useSession()
   const [showMenu, setShowMenu] = useState(false)
@@ -44,37 +44,28 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
           background: 'var(--bg-page)',
         }}>
 
-          {/* Hamburger — mobile uniquement */}
-          <button
-            className="md:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            style={{
-              width: 36, height: 36, borderRadius: 10,
-              background: 'var(--primary-bg)',
-              border: '1px solid rgba(109,94,245,0.2)',
-              color: '#a78bfa',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <Menu size={18} />
-          </button>
+          {/* Hamburger — mobile uniquement via JS */}
+          {isMobile && (
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--primary-bg)', border: '1px solid rgba(109,94,245,0.2)', color: '#a78bfa', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+            >
+              <Menu size={18} />
+            </button>
+          )}
 
-          {/* Logo centré — mobile uniquement */}
-          <div
-            className="md:hidden"
-            style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 8 }}
-          >
-            <div style={{ width: 28, height: 28, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: 'white', fontWeight: 800, fontSize: 13 }}>A</span>
+          {/* Logo centré — mobile uniquement via JS */}
+          {isMobile && (
+            <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 28, height: 28, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ color: 'white', fontWeight: 800, fontSize: 13 }}>A</span>
+              </div>
+              <span style={{ fontSize: 16, fontWeight: 800, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Atline.ai</span>
             </div>
-            <span style={{ fontSize: 16, fontWeight: 800, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Atline.ai
-            </span>
-          </div>
+          )}
 
           {/* Spacer desktop */}
-          <div className="hidden md:block" style={{ flex: 1 }} />
+          <div style={{ flex: 1 }} />
 
           {/* Actions — toujours visibles */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
