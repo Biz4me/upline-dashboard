@@ -178,13 +178,13 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="w-full max-w-md px-6">
+    <div className="w-full max-w-md px-6" style={{ background: '#0F172A' }}>
       {/* Logo */}
       <div className="flex justify-center mb-6">
         <div className="flex items-center gap-1 text-2xl font-bold" style={{ fontFamily: 'var(--font-title), sans-serif' }}>
-          <span style={{ color: 'var(--text)' }}>Upline.</span>
-          <span style={{ color: 'var(--gold)' }}>ai</span>
-          <span style={{ color: 'var(--gold)' }} className="text-3xl ml-0.5">A</span>
+          <span style={{ color: 'var(--text)' }}>Atline.</span>
+          <span style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ai</span>
+          <span style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="text-3xl ml-0.5">A</span>
         </div>
       </div>
 
@@ -199,7 +199,7 @@ export default function SignupPage() {
             className="h-full rounded-full transition-all duration-500"
             style={{
               width: step === 1 ? '50%' : '100%',
-              background: 'var(--gold)',
+              background: '#6D5EF5',
             }}
           />
         </div>
@@ -214,7 +214,7 @@ export default function SignupPage() {
             Créer mon compte
           </h1>
           <p className="text-center mb-6 text-sm" style={{ color: 'var(--text-muted)' }}>
-            Rejoignez Upline.ai et propulsez votre MLM
+            Rejoignez Atline.ai et propulsez votre MLM
           </p>
 
           <form onSubmit={handleStep1} className="space-y-4">
@@ -335,9 +335,9 @@ export default function SignupPage() {
                     onClick={() => setSociete(s)}
                     className="px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
                     style={{
-                      background: societe === s ? 'var(--gold)' : 'var(--bg-input)',
+                      background: societe === s ? '#6D5EF5' : 'var(--bg-input)',
                       color: societe === s ? '#fff' : 'var(--text)',
-                      border: societe === s ? '1px solid var(--gold)' : '1px solid var(--border)',
+                      border: societe === s ? '1px solid #6D5EF5' : '1px solid var(--border)',
                     }}
                   >
                     {s}
@@ -372,14 +372,14 @@ export default function SignupPage() {
               disabled={!step1Valid}
               className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50"
               style={{
-                background: 'var(--gold)',
+                background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
                 color: '#fff',
               }}
               onMouseEnter={(e) => {
-                if (step1Valid) (e.target as HTMLElement).style.background = 'var(--gold-hover)'
+                if (step1Valid) (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #5a4dd4, #1cbad1)'
               }}
               onMouseLeave={(e) => {
-                (e.target as HTMLElement).style.background = 'var(--gold)'
+                (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #6D5EF5, #22D3EE)'
               }}
             >
               Continuer →
@@ -448,9 +448,9 @@ export default function SignupPage() {
                     onClick={() => setNiveau(n)}
                     className="flex-1 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
                     style={{
-                      background: niveau === n ? 'var(--gold)' : 'var(--bg-input)',
+                      background: niveau === n ? '#6D5EF5' : 'var(--bg-input)',
                       color: niveau === n ? '#fff' : 'var(--text)',
-                      border: niveau === n ? '1px solid var(--gold)' : '1px solid var(--border)',
+                      border: niveau === n ? '1px solid #6D5EF5' : '1px solid var(--border)',
                     }}
                   >
                     {n}
@@ -471,9 +471,9 @@ export default function SignupPage() {
                     onClick={() => setObjectif(o)}
                     className="px-4 py-3 rounded-xl text-sm font-medium transition-all text-left"
                     style={{
-                      background: objectif === o ? 'var(--gold)' : 'var(--bg-input)',
+                      background: objectif === o ? '#6D5EF5' : 'var(--bg-input)',
                       color: objectif === o ? '#fff' : 'var(--text)',
-                      border: objectif === o ? '1px solid var(--gold)' : '1px solid var(--border)',
+                      border: objectif === o ? '1px solid #6D5EF5' : '1px solid var(--border)',
                     }}
                   >
                     {o}
@@ -493,14 +493,14 @@ export default function SignupPage() {
               disabled={loading}
               className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50"
               style={{
-                background: 'var(--gold)',
+                background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
                 color: '#fff',
               }}
               onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.background = 'var(--gold-hover)'
+                (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #5a4dd4, #1cbad1)'
               }}
               onMouseLeave={(e) => {
-                (e.target as HTMLElement).style.background = 'var(--gold)'
+                (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #6D5EF5, #22D3EE)'
               }}
             >
               {loading ? 'Création...' : 'Démarrer avec Atlas →'}
@@ -525,7 +525,7 @@ export default function SignupPage() {
         <Link
           href="/login"
           className="font-medium transition-colors"
-          style={{ color: 'var(--gold)' }}
+          style={{ color: '#a78bfa' }}
         >
           Se connecter
         </Link>
