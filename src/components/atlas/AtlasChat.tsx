@@ -206,10 +206,10 @@ export default function AtlasChat({
   }
 
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
+    <div className="bg-[var(--bg-page)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-7 h-7 bg-[#E2B84A] rounded-lg flex items-center justify-center text-black font-bold text-xs">
+        <div className="w-7 h-7 bg-[linear-gradient(135deg,#6D5EF5,#22D3EE)] rounded-lg flex items-center justify-center text-white font-bold text-xs">
           A
         </div>
         <div>
@@ -227,12 +227,13 @@ export default function AtlasChat({
           maxHeight: '500px',
           overflowY: 'auto',
           padding: '16px',
+          background: 'var(--bg-page)',
         }}
       >
         {messages.length === 0 && (
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
             {/* Avatar Atlas */}
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
             {/* Bulle */}
             <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
               <p className="text-sm">
@@ -248,7 +249,7 @@ export default function AtlasChat({
             /* Messages Atlas (gauche) */
             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
               {/* Avatar Atlas */}
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
               {/* Bulle */}
               <div className="atlas-markdown" style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
                 <ReactMarkdown components={{
@@ -269,7 +270,7 @@ export default function AtlasChat({
                   ),
                   li: ({ children }) => (
                     <li style={{ margin: '6px 0', paddingLeft: '16px', position: 'relative', fontSize: '14px', lineHeight: '1.7', color: 'var(--text)' }}>
-                      <span style={{ position: 'absolute', left: '0', color: 'var(--gold)' }}>→</span>
+                      <span style={{ position: 'absolute', left: '0', color: '#6D5EF5' }}>→</span>
                       {children}
                     </li>
                   ),
@@ -279,7 +280,7 @@ export default function AtlasChat({
                     </ol>
                   ),
                   blockquote: ({ children }) => (
-                    <div style={{ borderLeft: '3px solid var(--gold)', paddingLeft: '12px', margin: '10px 0', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                    <div style={{ borderLeft: '3px solid #6D5EF5', paddingLeft: '12px', margin: '10px 0', color: 'var(--text-secondary)', fontSize: '13px' }}>
                       {children}
                     </div>
                   ),
@@ -290,7 +291,7 @@ export default function AtlasChat({
             /* Messages Utilisateur (droite) */
             <div key={i} style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
               {/* Bulle */}
-              <div style={{ maxWidth: '75%', background: 'var(--gold)', borderRadius: '18px 4px 18px 18px', padding: '10px 16px', color: 'var(--bg)', fontWeight: '500' }}>
+              <div style={{ maxWidth: '75%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: '18px 4px 18px 18px', padding: '10px 16px', color: 'white', fontWeight: '500' }}>
                 {msg.content}
               </div>
             </div>
@@ -299,9 +300,9 @@ export default function AtlasChat({
         {loading && !isStreaming && (
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '16px' }}>
             {/* Avatar Atlas */}
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '13px', flexShrink: 0 }}>A</div>
             {/* Bulle */}
-            <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text-muted)' }}>
+            <div style={{ maxWidth: '75%', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px 18px 18px 18px', padding: '12px 16px', color: 'var(--text)' }}>
               <span className="inline-flex gap-1">
                 <span className="animate-bounce">●</span>
                 <span className="animate-bounce" style={{ animationDelay: '0.15s' }}>●</span>
@@ -320,7 +321,7 @@ export default function AtlasChat({
             <button
               key={i}
               onClick={() => sendMessage(s)}
-              className="text-xs bg-[var(--gold-muted)] hover:bg-[var(--gold-muted)] text-[var(--text-secondary)] px-3 py-2 rounded-lg transition-colors"
+              className="text-xs bg-[var(--primary-bg)] border border-[rgba(109,94,245,0.25)] text-[#a78bfa] px-3 py-2 rounded-lg transition-colors"
             >
               {s}
             </button>
@@ -336,12 +337,12 @@ export default function AtlasChat({
           onChange={(e) => setInput(e.target.value)}
           placeholder={placeholder}
           disabled={loading || isStreaming}
-          className="flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] placeholder-[var(--text-muted)] outline-none focus:border-[#E2B84A] transition-colors disabled:opacity-50"
+          className="flex-1 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text)] placeholder-[var(--text-muted)] outline-none focus:border-[#6D5EF5] transition-colors disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={loading || isStreaming || !input.trim()}
-          className="bg-[#E2B84A] hover:bg-[#ECC85E] text-black font-bold px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+          className="bg-[linear-gradient(135deg,#6D5EF5,#22D3EE)] text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50 shadow-[0_4px_12px_rgba(109,94,245,0.35)]"
         >
           →
         </button>
