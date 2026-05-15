@@ -74,7 +74,7 @@ export default function ProfilPage() {
   }
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 28px 60px' }}>
+    <div className="overflow-x-fix page-padding" style={{ maxWidth: 800, margin: '0 auto' }}>
 
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
@@ -156,7 +156,7 @@ export default function ProfilPage() {
             Informations personnelles
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid-2">
           {[
             { label: 'Prénom', key: 'prenom', icon: User },
             { label: 'Nom', key: 'nom', icon: User },
@@ -212,7 +212,7 @@ export default function ProfilPage() {
           <Trophy size={16} color="#6D5EF5" />
           Mon activité MLM
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid-2">
           {[
             { label: 'Société MLM', key: 'societe' },
             { label: 'Niveau actuel', key: 'niveau' },
@@ -247,7 +247,7 @@ export default function ProfilPage() {
           <Calendar size={16} color="#6D5EF5" />
           Informations du compte
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid-2">
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>Email</div>
             <div style={{ fontSize: 14, color: 'var(--text)', padding: '10px 14px' }}>{profile.email}</div>

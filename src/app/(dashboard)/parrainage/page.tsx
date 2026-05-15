@@ -28,7 +28,7 @@ export default function ParrainagePage() {
   ]
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 28px 60px' }}>
+    <div className="overflow-x-fix page-padding" style={{ maxWidth: 900, margin: '0 auto' }}>
 
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
@@ -39,7 +39,7 @@ export default function ParrainagePage() {
       </div>
 
       {/* Stats rapides */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
+      <div className="grid-3" style={{ marginBottom: 24 }}>
         {[
           { icon: Users, label: 'Filleuls actifs', value: '2', color: '#6D5EF5' },
           { icon: Gift, label: 'Mois gratuits gagnés', value: '2', color: '#22C55E' },
@@ -100,7 +100,7 @@ export default function ParrainagePage() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="grid-2">
 
         {/* Récompenses */}
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>

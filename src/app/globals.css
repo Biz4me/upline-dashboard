@@ -209,3 +209,21 @@
   color: var(--text-secondary);
   font-size: 13px;
 }
+
+/* RESPONSIVE UTILITIES */
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-auto { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+.page-padding { padding: 32px 28px 60px; }
+.overflow-x-fix { overflow-x: hidden; max-width: 100%; }
+
+@media (max-width: 768px) {
+  .grid-4 { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { grid-template-columns: 1fr; gap: 12px; }
+  .grid-2 { grid-template-columns: 1fr; gap: 12px; }
+  .grid-auto { grid-template-columns: 1fr; gap: 16px; }
+  .page-padding { padding: 16px 16px 40px; }
+  .hide-mobile { display: none !important; }
+  .full-mobile { width: 100% !important; }
+}

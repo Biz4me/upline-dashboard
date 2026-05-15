@@ -35,7 +35,7 @@ export default function FormationOverview() {
   }
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', paddingBottom: 40 }}>
+    <div className="overflow-x-fix page-padding" style={{ maxWidth: 900, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 6, fontFamily: 'var(--font-title)' }}>
           Formation

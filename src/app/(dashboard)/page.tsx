@@ -39,7 +39,7 @@ export default function Accueil() {
   const prenom = session?.user?.name?.split(' ')[0] || 'toi'
 
   return (
-    <div style={{ minHeight: '100vh', padding: '32px 32px 60px' }}>
+    <div className="overflow-x-fix page-padding" style={{ minHeight: '100vh' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         {/* Header */}
@@ -53,7 +53,7 @@ export default function Accueil() {
         </div>
 
         {/* Stats Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 32 }}>
+        <div className="grid-4" style={{ marginBottom: 32 }}>
           {stats.map((stat, i) => {
             const Icon = stat.icon
             return (
@@ -88,7 +88,7 @@ export default function Accueil() {
         </div>
 
         {/* Graphique + Achievements */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20, marginBottom: 32 }}>
+        <div className="grid-auto" style={{ marginBottom: 32 }}>
 
           {/* Graphique */}
           <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>

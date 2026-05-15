@@ -34,7 +34,7 @@ export default function AchievementsPage() {
   const unlockedCount = badges.filter(b => b.unlocked).length
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 28px 60px' }}>
+    <div className="overflow-x-fix page-padding" style={{ maxWidth: 900, margin: '0 auto' }}>
 
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
@@ -100,7 +100,7 @@ export default function AchievementsPage() {
 
       {/* BADGES */}
       {tab === 'badges' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3">
           {badges.map(badge => (
             <div key={badge.id} style={{
               background: badge.unlocked ? 'var(--bg-card)' : 'var(--bg-card)',

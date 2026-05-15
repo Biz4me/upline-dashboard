@@ -41,10 +41,10 @@ export default function BusinessPage() {
   const pipeline = ['Liste', 'Invité', 'Présenté', 'Suivi', 'Oui !']
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 28px 60px' }}>
+    <div className="overflow-x-fix page-padding" style={{ maxWidth: 1100, margin: '0 auto' }}>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 4, fontFamily: 'var(--font-title)' }}>
             Mon Business
@@ -64,7 +64,7 @@ export default function BusinessPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+      <div className="grid-4" style={{ marginBottom: 24 }}>
         {stats.map((s, i) => {
           const Icon = s.icon
           return (
