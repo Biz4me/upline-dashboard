@@ -1,535 +1,209 @@
 'use client'
-
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-
-const SOCIETES = ['Herbalife', 'Forever Living', 'Amway', 'Nu Skin', 'doTERRA', 'Autres']
-const NIVEAUX = ['Débutant', 'Intermédiaire', 'Expert']
-const OBJECTIFS = [
-  'Recruter des distributeurs',
-  'Augmenter mes ventes',
-  'Me former au MLM',
-  'Développer mon leadership',
-]
-
-function getPasswordStrength(pw: string): { label: string; color: string; width: string } {
-  if (!pw) return { label: '', color: 'transparent', width: '0%' }
-  let score = 0
-  if (pw.length >= 8) score++
-  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++
-  if (/\d/.test(pw)) score++
-  if (/[^a-zA-Z0-9]/.test(pw)) score++
-
-  if (score <= 1) return { label: 'Faible', color: '#ef4444', width: '33%' }
-  if (score === 2) return { label: 'Moyen', color: '#f59e0b', width: '66%' }
-  return { label: 'Fort', color: '#22c55e', width: '100%' }
-}
+import Link from 'next/link'
+import { Eye, EyeOff, Sparkles, ArrowRight, Check } from 'lucide-react'
 
 export default function SignupPage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
-
-  // Step 1
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [username, setUsername] = useState('')
-  const [societe, setSociete] = useState('')
-  const [autreSociete, setAutreSociete] = useState('')
-
-  // Step 2
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [niveau, setNiveau] = useState('')
-  const [objectif, setObjectif] = useState('')
-
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [form, setForm] = useState({
+    email: '', password: '', username: '', societe: '',
+    prenom: '', nom: '', telephone: '', niveau: '', objectif: ''
+  })
 
-  const usernameValid = username.length >= 3 && username.length <= 20 && /^[a-zA-Z0-9_]+$/.test(username)
-  const usernameTouched = username.length > 0
-  const pwStrength = getPasswordStrength(password)
-  const passwordsMatch = password === confirmPassword && confirmPassword.length > 0
-
-  const step1Valid =
-    email.includes('@') &&
-    password.length >= 6 &&
-    passwordsMatch &&
-    usernameValid &&
-    societe !== '' &&
-    (societe !== 'Autres' || autreSociete.trim() !== '')
-
-  const finalSociete = societe === 'Autres' ? autreSociete.trim() : societe
+  const set = (k: string, v: string) => setForm(prev => ({ ...prev, [k]: v }))
 
   const handleStep1 = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    if (!step1Valid) return
-    setStep(2)
+    setLoading(true)
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, password: form.password, username: form.username, societe: form.societe }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Erreur lors de la création du compte'); return }
+      setStep(2)
+    } catch { setError('Une erreur est survenue') }
+    finally { setLoading(false) }
   }
 
   const handleStep2 = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
     setLoading(true)
-
     try {
-      const res = await fetch('/api/auth/register', {
+      const { signIn } = await import('next-auth/react')
+      await signIn('credentials', { redirect: false, identifier: form.email, password: form.password })
+      await fetch('/api/user/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          prenom: '',
-          nom: '',
-          username,
-          societe: finalSociete,
-        }),
+        body: JSON.stringify({ prenom: form.prenom, nom: form.nom, telephone: form.telephone, niveau: form.niveau, objectif: form.objectif }),
       })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setError(data.error || 'Erreur lors de l\'inscription')
-        setLoading(false)
-        return
-      }
-
-      // Connexion automatique après inscription
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        setError('Compte créé mais erreur de connexion')
-        setLoading(false)
-        return
-      }
-
-      // Sauvegarde étape 2 si renseignée
-      if (firstName || lastName || niveau || objectif) {
-        await fetch('/api/user/profile', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prenom: firstName,
-            nom: lastName,
-            niveau,
-            objectif,
-            societe: finalSociete,
-          }),
-        })
-      }
-
-      router.push('/')
-    } catch {
-      setError('Erreur serveur')
-      setLoading(false)
-    }
+      router.push('/onboarding')
+    } catch { router.push('/') }
+    finally { setLoading(false) }
   }
 
-  const skipStep2 = async () => {
-    setLoading(true)
-    setError('')
-
-    try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          prenom: '',
-          nom: '',
-          username,
-          societe: finalSociete,
-        }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setError(data.error || 'Erreur lors de l\'inscription')
-        setLoading(false)
-        return
-      }
-
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        setError('Compte créé mais erreur de connexion')
-        setLoading(false)
-        return
-      }
-
-      router.push('/')
-    } catch {
-      setError('Erreur serveur')
-      setLoading(false)
-    }
+  const inputStyle = {
+    width: '100%', background: 'rgba(255,255,255,0.04)',
+    border: '1.5px solid rgba(255,255,255,0.08)',
+    borderRadius: 12, padding: '13px 16px',
+    fontSize: 14, color: 'white', outline: 'none', boxSizing: 'border-box' as const,
   }
 
   return (
-    <div className="w-full max-w-md px-6">
-      {/* Logo */}
-      <div className="flex justify-center mb-6">
-        <div className="flex items-center gap-1 text-2xl font-bold" style={{ fontFamily: 'var(--font-title), sans-serif' }}>
-          <span style={{ color: 'var(--text)' }}>Upline.</span>
-          <span style={{ color: 'var(--gold)' }}>ai</span>
-          <span style={{ color: 'var(--gold)' }} className="text-3xl ml-0.5">A</span>
-        </div>
-      </div>
+    <div style={{ minHeight: '100vh', background: '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: -100, left: '10%', width: 400, height: 400, background: '#6D5EF5', borderRadius: '50%', filter: 'blur(120px)', opacity: 0.1 }} />
+      <div style={{ position: 'absolute', bottom: -100, right: '10%', width: 300, height: 300, background: '#22D3EE', borderRadius: '50%', filter: 'blur(120px)', opacity: 0.08 }} />
 
-      {/* Progression */}
-      <div className="mb-6">
-        <div className="flex justify-between text-xs font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
-          <span>Étape {step}/2</span>
-          <span>{step === 1 ? 'Obligatoire' : 'Optionnel'}</span>
-        </div>
-        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--bg-secondary)' }}>
-          <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: step === 1 ? '50%' : '100%',
-              background: 'var(--gold)',
-            }}
-          />
-        </div>
-      </div>
+      <div style={{ width: '100%', maxWidth: 480, position: 'relative' }}>
 
-      {step === 1 ? (
-        <>
-          <h1
-            className="text-2xl font-bold text-center mb-2"
-            style={{ fontFamily: 'var(--font-title), sans-serif', color: 'var(--text)' }}
-          >
-            Créer mon compte
-          </h1>
-          <p className="text-center mb-6 text-sm" style={{ color: 'var(--text-muted)' }}>
-            Rejoignez Upline.ai et propulsez votre MLM
-          </p>
-
-          <form onSubmit={handleStep1} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                style={{
-                  background: 'var(--bg-input)',
-                  color: 'var(--text)',
-                  border: '1px solid var(--border)',
-                }}
-                placeholder="votre@email.com"
-              />
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <Link href="/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <div style={{ width: 40, height: 40, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(109,94,245,0.4)' }}>
+              <span style={{ color: 'white', fontWeight: 800, fontSize: 18 }}>A</span>
             </div>
+            <span style={{ fontSize: 22, fontWeight: 800, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Atline.ai</span>
+          </Link>
+        </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Mot de passe
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                style={{
-                  background: 'var(--bg-input)',
-                  color: 'var(--text)',
-                  border: '1px solid var(--border)',
-                }}
-                placeholder="••••••••"
-              />
-              {password && (
-                <div className="mt-2">
-                  <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--bg-secondary)' }}>
-                    <div
-                      className="h-full rounded-full transition-all duration-300"
-                      style={{ width: pwStrength.width, background: pwStrength.color }}
-                    />
+        {/* Steps indicator */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 28 }}>
+          {[1, 2].map(s => (
+            <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: '50%',
+                background: step >= s ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : 'rgba(255,255,255,0.06)',
+                border: step >= s ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 13, fontWeight: 800, color: step >= s ? 'white' : 'rgba(255,255,255,0.3)',
+                boxShadow: step >= s ? '0 4px 12px rgba(109,94,245,0.3)' : 'none',
+              }}>
+                {step > s ? <Check size={14} /> : s}
+              </div>
+              {s < 2 && <div style={{ width: 40, height: 2, background: step > s ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : 'rgba(255,255,255,0.06)', borderRadius: 1 }} />}
+            </div>
+          ))}
+        </div>
+
+        {/* Card */}
+        <div style={{ background: '#111827', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 24, padding: '36px 32px', boxShadow: '0 24px 64px rgba(0,0,0,0.4)' }}>
+
+          {step === 1 && (
+            <>
+              <h1 style={{ fontSize: 24, fontWeight: 800, color: 'white', marginBottom: 6, textAlign: 'center' }}>Créer votre compte</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textAlign: 'center', marginBottom: 28 }}>Étape 1/2 — Informations essentielles</p>
+              <form onSubmit={handleStep1} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Email *</label>
+                    <input type="email" value={form.email} onChange={e => set('email', e.target.value)} placeholder="votre@email.com" required style={inputStyle}
+                      onFocus={e => e.target.style.borderColor = '#6D5EF5'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
                   </div>
-                  <p className="text-xs mt-1" style={{ color: pwStrength.color }}>
-                    {pwStrength.label}
-                  </p>
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Pseudo *</label>
+                    <input type="text" value={form.username} onChange={e => set('username', e.target.value)} placeholder="@monpseudo" required style={inputStyle}
+                      onFocus={e => e.target.style.borderColor = '#6D5EF5'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                  </div>
                 </div>
-              )}
-            </div>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Mot de passe *</label>
+                  <div style={{ position: 'relative' }}>
+                    <input type={showPassword ? 'text' : 'password'} value={form.password} onChange={e => set('password', e.target.value)} placeholder="••••••••" required minLength={8}
+                      style={{ ...inputStyle, paddingRight: 48 }}
+                      onFocus={e => e.target.style.borderColor = '#6D5EF5'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Société MLM *</label>
+                  <input type="text" value={form.societe} onChange={e => set('societe', e.target.value)} placeholder="Ex: Herbalife, Amway..." required style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = '#6D5EF5'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                </div>
+                {error && <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#EF4444' }}>{error}</div>}
+                <button type="submit" disabled={loading}
+                  style={{ background: loading ? 'rgba(109,94,245,0.5)' : 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 12, padding: '14px 0', fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', width: '100%', marginTop: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 4px 16px rgba(109,94,245,0.35)' }}>
+                  {loading ? 'Création...' : <><Sparkles size={16} /> Continuer <ArrowRight size={16} /></>}
+                </button>
+              </form>
+            </>
+          )}
 
-            <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Confirmer le mot de passe
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                style={{
-                  background: 'var(--bg-input)',
-                  color: 'var(--text)',
-                  border: confirmPassword.length > 0
-                    ? passwordsMatch
-                      ? '1px solid #22c55e'
-                      : '1px solid #ef4444'
-                    : '1px solid var(--border)',
-                }}
-                placeholder="••••••••"
-              />
-              {confirmPassword.length > 0 && !passwordsMatch && (
-                <p className="text-xs mt-1" style={{ color: '#ef4444' }}>
-                  Les mots de passe ne correspondent pas
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Pseudo
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                style={{
-                  background: 'var(--bg-input)',
-                  color: 'var(--text)',
-                  border: usernameTouched
-                    ? usernameValid
-                      ? '1px solid #22c55e'
-                      : '1px solid #ef4444'
-                    : '1px solid var(--border)',
-                }}
-                placeholder="ex: patrice_mlm"
-              />
-              <p className="text-xs mt-1" style={{ color: usernameTouched ? (usernameValid ? '#22c55e' : '#ef4444') : 'var(--text-muted)' }}>
-                3-20 caractères, lettres chiffres et _ uniquement
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-                Votre société MLM
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {SOCIETES.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setSociete(s)}
-                    className="px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-                    style={{
-                      background: societe === s ? 'var(--gold)' : 'var(--bg-input)',
-                      color: societe === s ? '#fff' : 'var(--text)',
-                      border: societe === s ? '1px solid var(--gold)' : '1px solid var(--border)',
-                    }}
-                  >
-                    {s}
+          {step === 2 && (
+            <>
+              <h1 style={{ fontSize: 24, fontWeight: 800, color: 'white', marginBottom: 6, textAlign: 'center' }}>Personnaliser votre profil</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textAlign: 'center', marginBottom: 28 }}>Étape 2/2 — Optionnel, vous pouvez passer</p>
+              <form onSubmit={handleStep2} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Prénom</label>
+                    <input type="text" value={form.prenom} onChange={e => set('prenom', e.target.value)} placeholder="Votre prénom" style={inputStyle}
+                      onFocus={e => e.target.style.borderColor = '#6D5EF5'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Nom</label>
+                    <input type="text" value={form.nom} onChange={e => set('nom', e.target.value)} placeholder="Votre nom" style={inputStyle}
+                      onFocus={e => e.target.style.borderColor = '#6D5EF5'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Téléphone</label>
+                  <input type="tel" value={form.telephone} onChange={e => set('telephone', e.target.value)} placeholder="+33 6 00 00 00 00" style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = '#6D5EF5'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Niveau actuel</label>
+                  <select value={form.niveau} onChange={e => set('niveau', e.target.value)}
+                    style={{ ...inputStyle, appearance: 'none' as const }}>
+                    <option value="">Choisir...</option>
+                    <option value="debutant">Débutant (0-6 mois)</option>
+                    <option value="intermediaire">Intermédiaire (6-24 mois)</option>
+                    <option value="avance">Avancé (2 ans+)</option>
+                    <option value="leader">Leader d&apos;équipe</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 6 }}>Objectif principal</label>
+                  <input type="text" value={form.objectif} onChange={e => set('objectif', e.target.value)} placeholder="Ex: Atteindre le rang Diamant en 6 mois" style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = '#6D5EF5'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                </div>
+                <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                  <button type="button" onClick={() => router.push('/')}
+                    style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', borderRadius: 12, padding: '13px 0', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                    Passer
                   </button>
-                ))}
-              </div>
-              {societe === 'Autres' && (
-                <input
-                  type="text"
-                  value={autreSociete}
-                  onChange={(e) => setAutreSociete(e.target.value)}
-                  required
-                  className="w-full mt-2 px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                  style={{
-                    background: 'var(--bg-input)',
-                    color: 'var(--text)',
-                    border: '1px solid var(--border)',
-                  }}
-                  placeholder="Nom de votre société"
-                />
-              )}
-            </div>
-
-            {error && (
-              <div className="px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444' }}>
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={!step1Valid}
-              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50"
-              style={{
-                background: 'var(--gold)',
-                color: '#fff',
-              }}
-              onMouseEnter={(e) => {
-                if (step1Valid) (e.target as HTMLElement).style.background = 'var(--gold-hover)'
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLElement).style.background = 'var(--gold)'
-              }}
-            >
-              Continuer →
-            </button>
-          </form>
-        </>
-      ) : (
-        <>
-          <h1
-            className="text-2xl font-bold text-center mb-2"
-            style={{ fontFamily: 'var(--font-title), sans-serif', color: 'var(--text)' }}
-          >
-            Personnalise ton expérience
-          </h1>
-          <p className="text-center mb-6 text-sm" style={{ color: 'var(--text-muted)' }}>
-            Ces infos aident Atlas à mieux te coacher — tu peux les compléter plus tard
-          </p>
-
-          <form onSubmit={handleStep2} className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                  Prénom
-                </label>
-                <input
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                  style={{
-                    background: 'var(--bg-input)',
-                    color: 'var(--text)',
-                    border: '1px solid var(--border)',
-                  }}
-                  placeholder="Jean"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                  Nom
-                </label>
-                <input
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                  style={{
-                    background: 'var(--bg-input)',
-                    color: 'var(--text)',
-                    border: '1px solid var(--border)',
-                  }}
-                  placeholder="Dupont"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-                Votre niveau
-              </label>
-              <div className="flex gap-2">
-                {NIVEAUX.map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setNiveau(n)}
-                    className="flex-1 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-                    style={{
-                      background: niveau === n ? 'var(--gold)' : 'var(--bg-input)',
-                      color: niveau === n ? '#fff' : 'var(--text)',
-                      border: niveau === n ? '1px solid var(--gold)' : '1px solid var(--border)',
-                    }}
-                  >
-                    {n}
+                  <button type="submit" disabled={loading}
+                    style={{ flex: 2, background: loading ? 'rgba(109,94,245,0.5)' : 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 12, padding: '13px 0', fontSize: 14, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 4px 16px rgba(109,94,245,0.35)' }}>
+                    {loading ? 'Enregistrement...' : <><Check size={16} /> Terminer <ArrowRight size={16} /></>}
                   </button>
-                ))}
-              </div>
-            </div>
+                </div>
+              </form>
+            </>
+          )}
 
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-                Objectif principal
-              </label>
-              <div className="grid grid-cols-1 gap-2">
-                {OBJECTIFS.map((o) => (
-                  <button
-                    key={o}
-                    type="button"
-                    onClick={() => setObjectif(o)}
-                    className="px-4 py-3 rounded-xl text-sm font-medium transition-all text-left"
-                    style={{
-                      background: objectif === o ? 'var(--gold)' : 'var(--bg-input)',
-                      color: objectif === o ? '#fff' : 'var(--text)',
-                      border: objectif === o ? '1px solid var(--gold)' : '1px solid var(--border)',
-                    }}
-                  >
-                    {o}
-                  </button>
-                ))}
-              </div>
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0 0' }}>
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>Déjà un compte ?</span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+          </div>
+          <Link href="/login" style={{ display: 'block', textAlign: 'center', color: '#a78bfa', fontSize: 13, fontWeight: 600, textDecoration: 'none', marginTop: 14 }}>
+            Se connecter →
+          </Link>
+        </div>
 
-            {error && (
-              <div className="px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444' }}>
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50"
-              style={{
-                background: 'var(--gold)',
-                color: '#fff',
-              }}
-              onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.background = 'var(--gold-hover)'
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLElement).style.background = 'var(--gold)'
-              }}
-            >
-              {loading ? 'Création...' : 'Démarrer avec Atlas →'}
-            </button>
-
-            <button
-              type="button"
-              onClick={skipStep2}
-              disabled={loading}
-              className="w-full text-center text-sm transition-colors disabled:opacity-50"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Passer cette étape →
-            </button>
-          </form>
-        </>
-      )}
-
-      {/* Lien connexion */}
-      <p className="text-center mt-6 text-sm" style={{ color: 'var(--text-muted)' }}>
-        Déjà un compte ?{' '}
-        <Link
-          href="/login"
-          className="font-medium transition-colors"
-          style={{ color: 'var(--gold)' }}
-        >
-          Se connecter
-        </Link>
-      </p>
+        <p style={{ textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.2)', marginTop: 20 }}>
+          ✓ Aucune carte requise &nbsp;•&nbsp; ✓ 7 jours gratuits
+        </p>
+      </div>
     </div>
   )
 }
