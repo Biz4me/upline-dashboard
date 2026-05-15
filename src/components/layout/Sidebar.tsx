@@ -1,8 +1,12 @@
 'use client'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { Home, Rocket, BarChart2, MessageCircle, Trophy, Share2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { useSidebar } from '@/context/SidebarContext'
+import {
+  Home, Rocket, BarChart2, MessageCircle, Trophy, Share2,
+  ChevronLeft, ChevronRight, LogOut, Settings
+} from 'lucide-react'
+import { signOut, useSession } from 'next-auth/react'
 
 const navItems = [
   { href: '/', icon: Home, label: 'Accueil' },
@@ -15,104 +19,217 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname()
-  const router = useRouter()
   const { collapsed, toggle } = useSidebar()
+  const { data: session } = useSession()
+
+  const user = session?.user
+  const initials = user?.name ? user.name.slice(0, 1).toUpperCase() : 'U'
 
   return (
     <aside
       style={{
-        width: collapsed ? '64px' : '224px',
-        background: 'var(--bg-secondary)',
-        borderRight: '1px solid var(--border)',
-        transition: 'width 0.25s ease',
-        position: 'relative',
-        flexShrink: 0,
+        width: collapsed ? 64 : 220,
+        minWidth: collapsed ? 64 : 220,
+        background: 'var(--sidebar-bg)',
+        borderRight: '1px solid var(--sidebar-border)',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        position: 'sticky',
+        top: 0,
+        transition: 'width 0.2s ease, min-width 0.2s ease',
+        zIndex: 30,
+        overflow: 'hidden',
       }}
-      className="hidden md:flex flex-col h-screen sticky top-0"
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-6 overflow-hidden">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0"
-          style={{ background: 'var(--gold)', color: 'var(--bg)' }}>
-          A
+      <div
+        style={{
+          padding: collapsed ? '20px 0' : '20px 16px',
+          borderBottom: '1px solid var(--sidebar-border)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: collapsed ? 'center' : 'flex-start',
+          gap: 10,
+          minHeight: 64,
+        }}
+      >
+        {/* Icône logo gradient */}
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            background: 'var(--gradient-primary)',
+            borderRadius: 10,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            boxShadow: '0 4px 12px rgba(109,94,245,0.35)',
+          }}
+        >
+          <span style={{ color: 'white', fontWeight: 800, fontSize: 16 }}>A</span>
         </div>
         {!collapsed && (
-          <div className="overflow-hidden">
-            <div className="font-bold text-sm whitespace-nowrap" style={{ fontFamily: 'var(--font-title)', color: 'var(--text)' }}>Upline.ai</div>
-            <div className="text-xs whitespace-nowrap" style={{ color: 'var(--text-secondary)' }}>Coach Atlas</div>
-          </div>
+          <span
+            style={{
+              fontSize: 18,
+              fontWeight: 800,
+              background: 'var(--gradient-primary)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: -0.5,
+              fontFamily: 'var(--font-title)',
+            }}
+          >
+            Atline.ai
+          </span>
         )}
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-2 space-y-1">
+      {/* Navigation */}
+      <nav style={{ flex: 1, padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 2 }}>
         {navItems.map(({ href, icon: Icon, label }) => {
-          const active = pathname === href
+          const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
           return (
-            <div key={href} className="relative group">
-              <Link
-                href={href}
-                className="flex items-center gap-3 px-3 py-3 rounded-lg transition-all"
+            <Link
+              key={href}
+              href={href}
+              title={collapsed ? label : undefined}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: collapsed ? 0 : 12,
+                padding: collapsed ? '10px 0' : '10px 12px',
+                justifyContent: collapsed ? 'center' : 'flex-start',
+                borderRadius: 10,
+                background: isActive ? 'var(--sidebar-active-bg)' : 'transparent',
+                border: isActive ? `1.5px solid var(--sidebar-active-border)` : '1.5px solid transparent',
+                color: isActive ? 'var(--sidebar-active-text)' : 'var(--sidebar-text)',
+                textDecoration: 'none',
+                fontWeight: isActive ? 700 : 500,
+                fontSize: 13,
+                transition: 'all 0.15s',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = 'var(--primary-muted)'
+                  e.currentTarget.style.color = 'var(--primary)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = 'var(--sidebar-text)'
+                }
+              }}
+            >
+              <div
                 style={{
-                  background: active ? 'var(--gold-bg)' : 'transparent',
-                  color: active ? 'var(--gold)' : 'var(--text-secondary)',
-                  justifyContent: collapsed ? 'center' : 'flex-start',
+                  width: 28,
+                  height: 28,
+                  borderRadius: 8,
+                  background: isActive ? 'var(--primary-muted)' : 'transparent',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
                 }}
               >
-                {active ? (
-                  <div style={{ background:'rgba(226,184,74,0.15)', border:'1px solid var(--gold)', borderRadius:'8px', padding:'6px', display:'flex' }}>
-                    <Icon size={18} strokeWidth={1.8} style={{ flexShrink: 0, color: 'var(--gold)' }} />
-                  </div>
-                ) : (
-                  <Icon size={18} strokeWidth={1.8} style={{ flexShrink: 0, color: 'var(--text-secondary)' }} />
-                )}
-                {!collapsed && (
-                  <span className="text-sm font-medium whitespace-nowrap" style={{ fontFamily: 'var(--font-body)' }}>
-                    {label}
-                  </span>
-                )}
-              </Link>
-              {collapsed && (
-                <div className="absolute left-14 top-1/2 -translate-y-1/2 px-2 py-1 rounded-md text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50"
-                  style={{ background: 'var(--text)', color: 'var(--bg)' }}>
-                  {label}
-                </div>
-              )}
-            </div>
+                <Icon size={16} strokeWidth={isActive ? 2.5 : 2} />
+              </div>
+              {!collapsed && <span>{label}</span>}
+            </Link>
           )
         })}
       </nav>
 
-      {/* Avatar */}
+      {/* Footer sidebar */}
       <div
-        className="flex items-center gap-3 px-3 py-4 cursor-pointer overflow-hidden"
-        style={{ borderTop: '1px solid var(--border)', justifyContent: collapsed ? 'center' : 'flex-start' }}
-        onClick={() => router.push('/profil')}
-      >
-        <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
-          style={{ background: 'var(--gold)', color: 'var(--bg)' }}>
-          P
-        </div>
-        {!collapsed && (
-          <div className="overflow-hidden">
-            <div className="text-sm font-medium truncate" style={{ color: 'var(--text)' }}>Patrice</div>
-            <div className="text-xs truncate" style={{ color: 'var(--gold)' }}>⭐ Premium</div>
-          </div>
-        )}
-      </div>
-
-      {/* Toggle button */}
-      <button
-        onClick={toggle}
-        className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center z-10 transition-colors"
         style={{
-          background: 'var(--bg-secondary)',
-          border: '1px solid var(--border)',
-          color: 'var(--text-secondary)',
+          padding: '12px 8px',
+          borderTop: '1px solid var(--sidebar-border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 6,
         }}
       >
-        {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
-      </button>
+        {/* Avatar + nom */}
+        <Link
+          href="/profil"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: collapsed ? 0 : 10,
+            padding: collapsed ? '8px 0' : '8px 10px',
+            justifyContent: collapsed ? 'center' : 'flex-start',
+            borderRadius: 10,
+            textDecoration: 'none',
+            transition: 'background 0.15s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'var(--primary-muted)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+        >
+          <div
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: '50%',
+              background: 'var(--gradient-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 800,
+              fontSize: 14,
+              color: 'white',
+              flexShrink: 0,
+              boxShadow: '0 2px 8px rgba(109,94,245,0.3)',
+            }}
+          >
+            {initials}
+          </div>
+          {!collapsed && (
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {user?.name || 'Profil'}
+              </div>
+              <div style={{ fontSize: 10, color: 'var(--primary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
+                ✦ Premium
+              </div>
+            </div>
+          )}
+        </Link>
+
+        {/* Toggle collapse */}
+        <button
+          onClick={toggle}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '8px',
+            borderRadius: 10,
+            background: 'transparent',
+            border: '1px solid var(--sidebar-border)',
+            color: 'var(--sidebar-text)',
+            cursor: 'pointer',
+            transition: 'all 0.15s',
+            width: '100%',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'var(--primary-muted)'
+            e.currentTarget.style.color = 'var(--primary)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent'
+            e.currentTarget.style.color = 'var(--sidebar-text)'
+          }}
+        >
+          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+      </div>
     </aside>
   )
 }
