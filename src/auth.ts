@@ -9,11 +9,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: 'Email ou pseudo', type: 'text' },
+        identifier: { label: "Email ou pseudo", type: "text" },
         password: { label: 'Mot de passe', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        if (!credentials?.identifier || !credentials?.password) return null
         try {
           const result = await pool.query(
             'SELECT id, email, password_hash, prenom, nom, username, role FROM users WHERE LOWER(email) = LOWER($1) OR LOWER(username) = LOWER($1)',
