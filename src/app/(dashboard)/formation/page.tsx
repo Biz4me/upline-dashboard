@@ -108,10 +108,13 @@ export default function FormationOverview() {
                 background: 'var(--bg-card)',
                 border: `2px solid ${effectiveStatus === 'current' ? '#6D5EF5' : 'var(--border)'}`,
                 borderRadius: 16,
-                padding: '20px 24px',
+                padding: '16px 24px',
                 display: 'flex',
                 alignItems: 'center',
-                minHeight: 120,
+                height: 140,
+                minHeight: 140,
+                maxHeight: 140,
+                overflow: 'hidden',
                 gap: 20,
                 opacity: effectiveLocked ? 0.85 : 1,
                 cursor: effectiveLocked ? 'default' : 'pointer',
@@ -172,7 +175,7 @@ export default function FormationOverview() {
               </div>
 
               <div style={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 2, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1 }}>
                     Module {mod.id} · {mod.duree}
                   </span>
@@ -192,16 +195,17 @@ export default function FormationOverview() {
                     </span>
                   )}
                 </div>
-                <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 6, fontFamily: 'var(--font-title)' }}>
+                <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 2, fontFamily: 'var(--font-title)' }}>
                   {mod.title}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 12 }}>
+                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 4 }}>
                   {mod.description}
                 </div>
 
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4, flexWrap: 'nowrap' }}>
                 {mod.progression > 0 && mod.progression < 100 && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ flex: 1, height: 8, background: 'rgba(109,94,245,0.15)', borderRadius: 4, overflow: 'hidden', maxWidth: 250 }}>
+                    <div style={{ flex: 1, height: 8, background: 'rgba(109,94,245,0.15)', borderRadius: 4, overflow: 'hidden', maxWidth: 150 }}>
                       <div style={{ width: `${mod.progression}%`, height: '100%', background: '#6D5EF5', borderRadius: 4 }} />
                     </div>
                     <span style={{ fontSize: 12, fontWeight: 700, color: '#6D5EF5' }}>{mod.progression}%</span>
@@ -209,7 +213,7 @@ export default function FormationOverview() {
                 )}
 
                 {isDone && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'nowrap' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#22C55E', fontSize: 12, fontWeight: 700 }}>
                       <Trophy size={14} strokeWidth={2.5} />
                       Module maîtrisé
@@ -242,9 +246,9 @@ export default function FormationOverview() {
                 )}
 
                 {effectiveLocked && (
-                  <div style={{ marginTop: 4 }}>
+                  <div>
                     {!unlockState || unlockState.state === 'available' ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'nowrap' }}>
                         <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>
                           🔒 Termine le module {mod.id - 1} d'abord
                         </div>
@@ -294,6 +298,7 @@ export default function FormationOverview() {
                     ) : null}
                   </div>
                 )}
+                </div>
               </div>
             </div>
           )
