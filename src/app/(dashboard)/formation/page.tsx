@@ -1,10 +1,24 @@
 'use client'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { modules, getGlobalStats } from '@/lib/formation-data'
-import { Trophy, Lock, CheckCircle2, Flame } from 'lucide-react'
+import { getUnlockTestState } from '@/lib/unlock-test'
+import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw } from 'lucide-react'
 
 export default function FormationOverview() {
   const stats = getGlobalStats()
+  const router = useRouter()
+  const [unlockStates, setUnlockStates] = useState<Record<number, { state: string; cooldownHoursLeft?: number }>>({})
+
+  useEffect(() => {
+    const states: Record<number, { state: string; cooldownHoursLeft?: number }> = {}
+    modules.forEach(m => {
+      if (m.status === 'locked') {
+        states[m.id] = getUnlockTestState(m.id)
+      }
+    })
+    setUnlockStates(states)
+  }, [])
 
   const getStatusColors = (status: string) => {
     switch (status) {
@@ -71,32 +85,48 @@ export default function FormationOverview() {
         {modules.map((mod) => {
           const colors = getStatusColors(mod.status)
           const isLocked = mod.status === 'locked'
+          const isDone = mod.status === 'done'
+          const unlockState = unlockStates[mod.id]
+          const testPassed = unlockState?.state === 'passed'
+          const inCooldown = unlockState?.state === 'cooldown'
+          const effectiveStatus = isLocked && testPassed ? 'available' : mod.status
+          const effectiveLocked = isLocked && !testPassed
 
-          const cardContent = (
+          const handleCardClick = (e: React.MouseEvent) => {
+            if (effectiveLocked) {
+              e.preventDefault()
+              return
+            }
+            router.push(`/formation/${mod.id}`)
+          }
+
+          return (
             <div
+              key={mod.id}
+              onClick={handleCardClick}
               style={{
                 background: 'var(--bg-card)',
-                border: `2px solid ${mod.status === 'current' ? 'var(--gold)' : 'var(--border)'}`,
+                border: `2px solid ${effectiveStatus === 'current' ? 'var(--gold)' : 'var(--border)'}`,
                 borderRadius: 16,
                 padding: '20px 24px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 20,
-                opacity: isLocked ? 0.6 : 1,
-                cursor: isLocked ? 'not-allowed' : 'pointer',
+                opacity: effectiveLocked ? 0.85 : 1,
+                cursor: effectiveLocked ? 'default' : 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: mod.status === 'current' ? '0 0 0 4px rgba(226,184,74,0.1)' : 'none',
+                boxShadow: effectiveStatus === 'current' ? '0 0 0 4px rgba(226,184,74,0.1)' : 'none',
               }}
               onMouseEnter={(e) => {
-                if (!isLocked) {
+                if (!effectiveLocked) {
                   e.currentTarget.style.transform = 'translateY(-2px)'
                   e.currentTarget.style.borderColor = 'var(--gold)'
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isLocked) {
+                if (!effectiveLocked) {
                   e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.borderColor = mod.status === 'current' ? 'var(--gold)' : 'var(--border)'
+                  e.currentTarget.style.borderColor = effectiveStatus === 'current' ? 'var(--gold)' : 'var(--border)'
                 }
               }}
             >
@@ -118,7 +148,7 @@ export default function FormationOverview() {
                   position: 'relative',
                 }}
               >
-                {mod.status === 'done' ? <CheckCircle2 size={32} strokeWidth={2.5} /> : isLocked ? <Lock size={26} strokeWidth={2.5} /> : mod.id}
+                {isDone ? <CheckCircle2 size={32} strokeWidth={2.5} /> : effectiveLocked ? <Lock size={26} strokeWidth={2.5} /> : mod.id}
                 {mod.status === 'current' && (
                   <div
                     style={{
@@ -150,9 +180,14 @@ export default function FormationOverview() {
                       🔥 En cours
                     </span>
                   )}
-                  {mod.status === 'done' && (
+                  {isDone && (
                     <span style={{ fontSize: 10, fontWeight: 800, color: '#58CC02', background: 'rgba(88,204,2,0.15)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
                       ✓ Terminé
+                    </span>
+                  )}
+                  {testPassed && isLocked && (
+                    <span style={{ fontSize: 10, fontWeight: 800, color: '#1CB0F6', background: 'rgba(28,176,246,0.15)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
+                      ⚡ Test réussi
                     </span>
                   )}
                 </div>
@@ -171,27 +206,95 @@ export default function FormationOverview() {
                     <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--gold)' }}>{mod.progression}%</span>
                   </div>
                 )}
-                {mod.progression === 100 && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#58CC02', fontSize: 12, fontWeight: 700 }}>
-                    <Trophy size={14} strokeWidth={2.5} />
-                    Module maîtrisé
+
+                {isDone && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#58CC02', fontSize: 12, fontWeight: 700 }}>
+                      <Trophy size={14} strokeWidth={2.5} />
+                      Module maîtrisé
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        router.push(`/formation/${mod.id}?mode=revision`)
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: '1.5px solid #58CC02',
+                        color: '#58CC02',
+                        borderRadius: 10,
+                        padding: '6px 14px',
+                        fontSize: 11,
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        textTransform: 'uppercase',
+                        letterSpacing: 0.5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                      }}
+                    >
+                      <RotateCcw size={12} strokeWidth={2.5} />
+                      Réviser
+                    </button>
                   </div>
                 )}
-                {mod.status === 'locked' && (
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>
-                    🔒 Termine le module {mod.id - 1} pour débloquer
+
+                {effectiveLocked && (
+                  <div style={{ marginTop: 4 }}>
+                    {!unlockState || unlockState.state === 'available' ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                        <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>
+                          🔒 Termine le module {mod.id - 1} d'abord
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            router.push(`/formation/${mod.id}/unlock-test`)
+                          }}
+                          style={{
+                            background: 'rgba(28,176,246,0.12)',
+                            border: '1.5px solid #1CB0F6',
+                            color: '#1CB0F6',
+                            borderRadius: 10,
+                            padding: '7px 14px',
+                            fontSize: 11,
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            textTransform: 'uppercase',
+                            letterSpacing: 0.5,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 6,
+                          }}
+                        >
+                          <Sparkles size={12} strokeWidth={2.5} />
+                          Débloquer
+                        </button>
+                      </div>
+                    ) : inCooldown ? (
+                      <div
+                        style={{
+                          alignItems: 'center',
+                          gap: 8,
+                          background: 'rgba(255,75,75,0.08)',
+                          border: '1.5px solid rgba(255,75,75,0.3)',
+                          borderRadius: 10,
+                          padding: '7px 12px',
+                          fontSize: 12,
+                          fontWeight: 700,
+                          color: '#FF4B4B',
+                          display: 'inline-flex',
+                        }}
+                      >
+                        <Clock size={13} strokeWidth={2.5} />
+                        Test à nouveau dans {unlockState.cooldownHoursLeft}h
+                      </div>
+                    ) : null}
                   </div>
                 )}
               </div>
             </div>
-          )
-
-          return isLocked ? (
-            <div key={mod.id}>{cardContent}</div>
-          ) : (
-            <Link key={mod.id} href={`/formation/${mod.id}`} style={{ textDecoration: 'none' }}>
-              {cardContent}
-            </Link>
           )
         })}
       </div>
