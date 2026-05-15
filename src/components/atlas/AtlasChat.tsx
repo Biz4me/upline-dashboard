@@ -206,9 +206,9 @@ export default function AtlasChat({
   }
 
   return (
-    <div className="bg-[var(--bg-page)] border border-[var(--border)] rounded-xl p-5 text-[var(--text-on-card)]">
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--bg-page)', color: 'var(--text)' }}>
       {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3" style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
         <div className="w-7 h-7 bg-[linear-gradient(135deg,#6D5EF5,#22D3EE)] rounded-lg flex items-center justify-center text-white font-bold text-xs">
           A
         </div>
@@ -223,8 +223,7 @@ export default function AtlasChat({
       {/* Messages */}
       <div
         style={{
-          minHeight: '200px',
-          maxHeight: '500px',
+          flex: 1,
           overflowY: 'auto',
           padding: '16px',
           background: 'var(--bg-page)',
@@ -316,7 +315,7 @@ export default function AtlasChat({
 
       {/* Suggestions */}
       {suggestions.length > 0 && messages.length === 0 && (
-        <div className="flex gap-2 mb-3 flex-wrap">
+        <div className="flex gap-2 flex-wrap" style={{ padding: '8px 16px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
           {suggestions.map((s, i) => (
             <button
               key={i}
@@ -330,7 +329,7 @@ export default function AtlasChat({
       )}
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="flex gap-2" style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', flexShrink: 0, background: 'var(--bg-page)' }}>
         <input
           type="text"
           value={input}
