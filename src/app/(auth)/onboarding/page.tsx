@@ -95,9 +95,9 @@ export default function OnboardingPage() {
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
               style={{
-                background: i + 1 <= step ? '#6D5EF5' : 'var(--bg-input)',
+                background: i + 1 <= step ? 'var(--gold)' : 'var(--bg-input)',
                 color: i + 1 <= step ? '#fff' : 'var(--text-muted)',
-                border: `2px solid ${i + 1 <= step ? '#6D5EF5' : 'var(--border)'}`,
+                border: `2px solid ${i + 1 <= step ? 'var(--gold)' : 'var(--border)'}`,
               }}
             >
               {i + 1 < step ? '✓' : i + 1}
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
                 className="h-1 flex-1 mx-2 rounded-full transition-all duration-300"
                 style={{
                   background:
-                    i + 1 < step ? '#6D5EF5' : 'var(--border)',
+                    i + 1 < step ? 'var(--gold)' : 'var(--border)',
                 }}
               />
             )}
@@ -142,11 +142,11 @@ export default function OnboardingPage() {
                     className="py-3 px-4 rounded-xl text-sm font-medium transition-all"
                     style={{
                       background:
-                        societe === c ? 'rgba(109, 94, 245, 0.15)' : 'var(--bg-input)',
+                        societe === c ? 'var(--gold-bg)' : 'var(--bg-input)',
                       color:
-                        societe === c ? '#a78bfa' : 'var(--text-secondary)',
+                        societe === c ? 'var(--gold)' : 'var(--text-secondary)',
                       border: `1px solid ${
-                        societe === c ? '#6D5EF5' : 'var(--border)'
+                        societe === c ? 'var(--gold)' : 'var(--border)'
                       }`,
                     }}
                   >
@@ -200,11 +200,11 @@ export default function OnboardingPage() {
                     className="py-3 px-2 rounded-xl text-sm font-medium transition-all"
                     style={{
                       background:
-                        niveau === l ? 'rgba(109, 94, 245, 0.15)' : 'var(--bg-input)',
+                        niveau === l ? 'var(--gold-bg)' : 'var(--bg-input)',
                       color:
-                        niveau === l ? '#a78bfa' : 'var(--text-secondary)',
+                        niveau === l ? 'var(--gold)' : 'var(--text-secondary)',
                       border: `1px solid ${
-                        niveau === l ? '#6D5EF5' : 'var(--border)'
+                        niveau === l ? 'var(--gold)' : 'var(--border)'
                       }`,
                     }}
                   >
@@ -231,14 +231,14 @@ export default function OnboardingPage() {
                     style={{
                       background:
                         experience === exp.value
-                          ? 'rgba(109, 94, 245, 0.15)'
+                          ? 'var(--gold-bg)'
                           : 'var(--bg-input)',
                       color:
                         experience === exp.value
-                          ? '#a78bfa'
+                          ? 'var(--gold)'
                           : 'var(--text-secondary)',
                       border: `1px solid ${
-                        experience === exp.value ? '#6D5EF5' : 'var(--border)'
+                        experience === exp.value ? 'var(--gold)' : 'var(--border)'
                       }`,
                     }}
                   >
@@ -270,19 +270,19 @@ export default function OnboardingPage() {
                       onClick={() => toggleObjectif(obj)}
                       className="py-3 px-4 rounded-xl text-sm font-medium transition-all flex items-center gap-3 text-left"
                       style={{
-                        background: selected ? 'rgba(109, 94, 245, 0.15)' : 'var(--bg-input)',
-                        color: selected ? '#a78bfa' : 'var(--text-secondary)',
+                        background: selected ? 'var(--gold-bg)' : 'var(--bg-input)',
+                        color: selected ? 'var(--gold)' : 'var(--text-secondary)',
                         border: `1px solid ${
-                          selected ? '#6D5EF5' : 'var(--border)'
+                          selected ? 'var(--gold)' : 'var(--border)'
                         }`,
                       }}
                     >
                       <span
                         className="w-5 h-5 rounded-md flex items-center justify-center text-xs transition-all"
                         style={{
-                          background: selected ? '#6D5EF5' : 'transparent',
+                          background: selected ? 'var(--gold)' : 'transparent',
                           border: `1.5px solid ${
-                            selected ? '#6D5EF5' : 'var(--border)'
+                            selected ? 'var(--gold)' : 'var(--border)'
                           }`,
                           color: selected ? '#fff' : 'transparent',
                         }}
@@ -418,8 +418,8 @@ export default function OnboardingPage() {
                       key={obj}
                       className="px-3 py-1 rounded-full text-xs font-medium"
                       style={{
-                        background: 'rgba(109, 94, 245, 0.15)',
-                        color: '#a78bfa',
+                        background: 'var(--gold-bg)',
+                        color: 'var(--gold)',
                       }}
                     >
                       {obj}
@@ -450,16 +450,16 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="w-full max-w-md px-6 py-8" style={{ background: '#0F172A' }}>
+    <div className="w-full max-w-md px-6 py-8">
       {/* Logo */}
       <div className="flex justify-center mb-6">
         <div
           className="flex items-center gap-1 text-2xl font-bold"
           style={{ fontFamily: 'var(--font-title), sans-serif' }}
         >
-          <span style={{ color: 'var(--text)' }}>Atline.</span>
-          <span style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ai</span>
-          <span style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="text-3xl ml-0.5">
+          <span style={{ color: 'var(--text)' }}>Upline.</span>
+          <span style={{ color: 'var(--gold)' }}>ai</span>
+          <span style={{ color: 'var(--gold)' }} className="text-3xl ml-0.5">
             A
           </span>
         </div>
@@ -470,7 +470,7 @@ export default function OnboardingPage() {
         className="text-3xl font-bold text-center mb-2"
         style={{ fontFamily: 'var(--font-title), sans-serif', color: 'var(--text)' }}
       >
-        Bienvenue sur Atline.ai 🏔️
+        Bienvenue sur Upline.ai 🏔️
       </h1>
       <p className="text-center mb-8" style={{ color: 'var(--text-muted)' }}>
         Personnalisons votre expérience en quelques étapes
@@ -515,15 +515,15 @@ export default function OnboardingPage() {
             disabled={!canGoNext()}
             className="flex-1 py-3.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             style={{
-              background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+              background: 'var(--gold)',
               color: '#fff',
             }}
             onMouseEnter={(e) => {
               if (canGoNext())
-                (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #5a4dd4, #1cbad1)'
+                (e.target as HTMLElement).style.background = 'var(--gold-hover)'
             }}
             onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #6D5EF5, #22D3EE)'
+              (e.target as HTMLElement).style.background = 'var(--gold)'
             }}
           >
             Continuer →
@@ -535,15 +535,15 @@ export default function OnboardingPage() {
             disabled={loading}
             className="flex-1 py-3.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             style={{
-              background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+              background: 'var(--gold)',
               color: '#fff',
             }}
             onMouseEnter={(e) => {
               if (!loading)
-                (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #5a4dd4, #1cbad1)'
+                (e.target as HTMLElement).style.background = 'var(--gold-hover)'
             }}
             onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #6D5EF5, #22D3EE)'
+              (e.target as HTMLElement).style.background = 'var(--gold)'
             }}
           >
             {loading ? 'Démarrage...' : 'Démarrer avec Atlas →'}
