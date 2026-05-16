@@ -30,6 +30,8 @@ export default function AtlasChat({
   const [loading, setLoading] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [sessionId] = useState<string>(() => propsSessionId || `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
+  const [quote, setQuote] = useState<{ text: string; author: string } | null>(null)
+  const [quoteLoading, setQuoteLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const tokenQueueRef = useRef<string[]>([])
   const displayIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -42,6 +44,38 @@ export default function AtlasChat({
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  useEffect(() => {
+    const fetchQuote = async () => {
+      setQuoteLoading(true)
+      try {
+        const heure = new Date().getHours()
+        const moment = heure < 12 ? 'matin' : heure < 18 ? 'après-midi' : 'soir'
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 150,
+            messages: [{
+              role: 'user',
+              content: `Donne-moi UNE citation courte et impactante d'un auteur célèbre (Jim Rohn, Eric Worre, Dale Carnegie, Napoleon Hill, Tony Robbins, Simon Sinek, Robert Kiyosaki, Winston Churchill, ou autre grand auteur) qui soit inspirante pour un distributeur MLM ce ${moment}. Le prénom de l'utilisateur est ${prenom || 'un distributeur MLM'}. Réponds UNIQUEMENT en JSON strict sans markdown ni backticks : {"text": "la citation en français", "author": "Prénom Nom"}`
+            }]
+          })
+        })
+        const data = await response.json()
+        const raw = data.content?.[0]?.text || ''
+        const clean = raw.replace(/```json|```/g, '').trim()
+        const parsed = JSON.parse(clean)
+        setQuote(parsed)
+      } catch {
+        setQuote({ text: "Le succès est la somme de petits efforts répétés jour après jour.", author: "Robert Collier" })
+      } finally {
+        setQuoteLoading(false)
+      }
+    }
+    fetchQuote()
+  }, [prenom])
 
   const startDisplayInterval = () => {
     if (displayIntervalRef.current) return
@@ -223,9 +257,34 @@ export default function AtlasChat({
             <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 8, fontFamily: 'var(--font-title)' }}>
               {prenom ? `Bonjour ${prenom} 👋` : 'Bonjour 👋'}
             </h1>
-            <p style={{ fontSize: 16, color: 'var(--text-secondary)', maxWidth: 400 }}>
-              Je suis Atlas, ton coach MLM personnel. Comment puis-je t'aider aujourd'hui ?
+            <p style={{ fontSize: 16, color: 'var(--text-secondary)', maxWidth: 400, marginBottom: 28 }}>
+              Je suis Atlas, ton coach MLM personnel.
             </p>
+
+            {/* Citation inspirante */}
+            {quoteLoading ? (
+              <div style={{ maxWidth: 480, textAlign: 'center', marginBottom: 32 }}>
+                <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', display: 'inline-block', animation: 'bounce 1s infinite' }} />
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', display: 'inline-block', animation: 'bounce 1s infinite 0.15s' }} />
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', display: 'inline-block', animation: 'bounce 1s infinite 0.3s' }} />
+                </div>
+              </div>
+            ) : quote && (
+              <div style={{
+                maxWidth: 480, textAlign: 'center', marginBottom: 32,
+                background: 'var(--primary-bg)',
+                border: '1px solid rgba(109,94,245,0.2)',
+                borderRadius: 16, padding: '20px 24px',
+                position: 'relative',
+              }}>
+                <div style={{ fontSize: 32, color: '#6D5EF5', opacity: 0.3, lineHeight: 1, marginBottom: 8, fontFamily: 'Georgia, serif' }}>{'"'}</div>
+                <p style={{ fontSize: 15, color: 'var(--text)', lineHeight: 1.7, fontStyle: 'italic', margin: '0 0 12px', fontFamily: 'Georgia, serif' }}>
+                  {quote.text}
+                </p>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#a78bfa' }}>— {quote.author}</div>
+              </div>
+            )}
           </div>
 
           {/* Suggestions */}
