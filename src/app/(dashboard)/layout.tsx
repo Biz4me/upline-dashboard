@@ -1,30 +1,12 @@
 'use client'
-import { SessionProvider, signOut } from 'next-auth/react'
+import { SessionProvider } from 'next-auth/react'
 import { SidebarProvider, useSidebar } from '@/context/SidebarContext'
 import Sidebar from '@/components/layout/Sidebar'
 import ThemeToggle from '@/components/layout/ThemeToggle'
-import { Bell, LogOut, User, Menu } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useState, useRef, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { Bell, Menu } from 'lucide-react'
 
 function DashboardInner({ children }: { children: React.ReactNode }) {
   const { mobileOpen, setMobileOpen, isMobile } = useSidebar()
-  const router = useRouter()
-  const { data: session } = useSession()
-  const [showMenu, setShowMenu] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-  const initials = session?.user?.name ? session.user.name.slice(0, 1).toUpperCase() : 'U'
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--bg-page)' }}>
@@ -82,59 +64,6 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
             }}>
               <Bell size={16} strokeWidth={1.8} />
             </button>
-
-            {/* Avatar dropdown */}
-            <div ref={menuRef} style={{ position: 'relative' }}>
-              <button
-                onClick={() => setShowMenu(!showMenu)}
-                style={{
-                  width: 36, height: 36, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
-                  border: 'none', color: 'white',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 14, fontWeight: 800, cursor: 'pointer',
-                  boxShadow: '0 2px 8px rgba(109,94,245,0.35)',
-                }}
-              >
-                {initials}
-              </button>
-
-              {showMenu && (
-                <div style={{
-                  position: 'absolute', right: 0, top: 44,
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 14,
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
-                  zIndex: 50,
-                  minWidth: 180,
-                  padding: 6,
-                }}>
-                  <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--border)', marginBottom: 4 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{session?.user?.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{session?.user?.email}</div>
-                  </div>
-                  <button
-                    onClick={() => { setShowMenu(false); router.push('/profil') }}
-                    style={{ width: '100%', background: 'transparent', border: 'none', padding: '9px 14px', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, fontWeight: 600, color: 'var(--text)', textAlign: 'left' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-bg)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <User size={14} color="#a78bfa" />
-                    Mon profil
-                  </button>
-                  <button
-                    onClick={() => signOut({ callbackUrl: '/login' })}
-                    style={{ width: '100%', background: 'transparent', border: 'none', padding: '9px 14px', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, fontWeight: 600, color: '#EF4444', textAlign: 'left' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <LogOut size={14} />
-                    Se déconnecter
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </header>
 

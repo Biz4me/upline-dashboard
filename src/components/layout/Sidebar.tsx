@@ -5,8 +5,10 @@ import { useSidebar } from '@/context/SidebarContext'
 import {
   Home, Sparkles, Rocket, Users, CalendarDays,
   TrendingUp, ChevronLeft, ChevronRight, X,
-  User, Trophy, Settings, CreditCard, ArrowLeft, LogOut
+  User, Trophy, Settings, CreditCard, ArrowLeft, LogOut,
+  MoreHorizontal, Globe, Share2, Bell, Check
 } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 
 const navItems = [
@@ -34,10 +36,20 @@ export default function Sidebar() {
   const user = session?.user
   const initials = user?.name ? user.name.slice(0, 1).toUpperCase() : 'U'
 
-  const handleAvatarClick = () => {
-    setProfileMode(true)
-    router.push('/profil')
-  }
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [langOpen, setLangOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false)
+        setLangOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleBack = () => {
     setProfileMode(false)
@@ -217,35 +229,153 @@ export default function Sidebar() {
               })}
             </nav>
 
-            {/* Footer — Avatar cliquable */}
-            <div style={{ padding: '12px 8px', borderTop: '1px solid var(--sidebar-border)' }}>
+            <div ref={menuRef} style={{ padding: '8px', borderTop: '1px solid var(--sidebar-border)', position: 'relative' }}>
+
+              {/* Menu déroulant — s'ouvre vers le haut */}
+              {menuOpen && (
+                <div style={{
+                  position: 'absolute', bottom: '100%', left: 8, right: 8,
+                  background: 'var(--bg-card)', border: '1px solid var(--border)',
+                  borderRadius: 14, boxShadow: '0 -8px 32px rgba(0,0,0,0.15)',
+                  zIndex: 50, overflow: 'hidden', marginBottom: 6,
+                }}>
+                  {/* Infos utilisateur */}
+                  <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{user?.name || 'Utilisateur'}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6 }}>{user?.email || ''}</div>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(109,94,245,0.1)', color: '#a78bfa', fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20 }}>
+                      ✦ Coach · $19/mois
+                    </div>
+                  </div>
+
+                  {/* Actions principales */}
+                  <div style={{ padding: '6px' }}>
+                    {[
+                      { icon: Settings, label: 'Paramètres', shortcut: '⌘,', action: () => { setMenuOpen(false); setProfileMode(true); setProfileTab('parametres'); router.push('/profil') } },
+                    ].map((item, i) => {
+                      const Icon = item.icon
+                      return (
+                        <button key={i} onClick={item.action} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 10, border: 'none', background: 'transparent', color: 'var(--text)', fontSize: 13, cursor: 'pointer', textAlign: 'left' }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-bg)'}
+                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                        >
+                          <Icon size={15} color="var(--text-secondary)" />
+                          <span style={{ flex: 1 }}>{item.label}</span>
+                          {item.shortcut && <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.shortcut}</span>}
+                        </button>
+                      )
+                    })}
+
+                    {/* Langue avec sous-menu */}
+                    <div style={{ position: 'relative' }}>
+                      <button
+                        onClick={() => setLangOpen(!langOpen)}
+                        style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 10, border: 'none', background: langOpen ? 'var(--primary-bg)' : 'transparent', color: 'var(--text)', fontSize: 13, cursor: 'pointer', textAlign: 'left' }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-bg)'}
+                        onMouseLeave={e => { if (!langOpen) e.currentTarget.style.background = 'transparent' }}
+                      >
+                        <Globe size={15} color="var(--text-secondary)" />
+                        <span style={{ flex: 1 }}>Langue</span>
+                        <ChevronRight size={14} color="var(--text-muted)" />
+                      </button>
+                      {langOpen && (
+                        <div style={{ position: 'absolute', left: '100%', bottom: 0, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 60, overflow: 'hidden', width: 160, marginLeft: 4 }}>
+                          {[
+                            { flag: '🇫🇷', label: 'Français', active: true },
+                            { flag: '🇬🇧', label: 'English', active: false },
+                            { flag: '🇪🇸', label: 'Español', active: false },
+                          ].map((lang, i) => (
+                            <button key={i} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', border: 'none', background: lang.active ? 'rgba(109,94,245,0.08)' : 'transparent', color: lang.active ? '#6D5EF5' : 'var(--text)', fontSize: 13, cursor: 'pointer', textAlign: 'left' }}
+                              onMouseEnter={e => { if (!lang.active) e.currentTarget.style.background = 'var(--primary-bg)' }}
+                              onMouseLeave={e => { if (!lang.active) e.currentTarget.style.background = 'transparent' }}
+                            >
+                              <span style={{ fontSize: 16 }}>{lang.flag}</span>
+                              <span style={{ flex: 1 }}>{lang.label}</span>
+                              {lang.active && <Check size={14} color="#6D5EF5" />}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => { setMenuOpen(false); setProfileMode(true); setProfileTab('compte'); router.push('/profil') }}
+                      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 10, border: 'none', background: 'transparent', color: 'var(--text)', fontSize: 13, cursor: 'pointer', textAlign: 'left' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-bg)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <Bell size={15} color="var(--text-secondary)" />
+                      <span>Notifications</span>
+                    </button>
+                  </div>
+
+                  {/* Séparateur */}
+                  <div style={{ borderTop: '1px solid var(--border)', padding: '6px' }}>
+                    <button
+                      onClick={() => { setMenuOpen(false); setProfileMode(true); setProfileTab('compte'); router.push('/profil') }}
+                      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 10, border: 'none', background: 'transparent', color: 'var(--text)', fontSize: 13, cursor: 'pointer', textAlign: 'left' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-bg)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <TrendingUp size={15} color="var(--text-secondary)" />
+                      <span>Passer Pro</span>
+                    </button>
+                    <button
+                      onClick={() => { setMenuOpen(false); router.push('/croissance') }}
+                      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 10, border: 'none', background: 'transparent', color: 'var(--text)', fontSize: 13, cursor: 'pointer', textAlign: 'left' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-bg)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <Share2 size={15} color="var(--text-secondary)" />
+                      <span>Parrainer un ami</span>
+                    </button>
+                  </div>
+
+                  {/* Déconnexion */}
+                  <div style={{ borderTop: '1px solid var(--border)', padding: '6px' }}>
+                    <button
+                      onClick={() => signOut({ callbackUrl: '/login' })}
+                      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 10, border: 'none', background: 'transparent', color: '#EF4444', fontSize: 13, cursor: 'pointer', textAlign: 'left' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <LogOut size={15} />
+                      <span>Se déconnecter</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Bouton avatar — ouvre le menu */}
               <button
-                onClick={handleAvatarClick}
-                title={!isExpanded ? 'Mon Profil' : undefined}
+                onClick={() => { setMenuOpen(!menuOpen); setLangOpen(false) }}
                 style={{
-                  display: 'flex', alignItems: 'center',
+                  width: '100%', display: 'flex', alignItems: 'center',
                   gap: isExpanded ? 10 : 0,
                   padding: isExpanded ? '8px 10px' : '8px 0',
                   justifyContent: isExpanded ? 'flex-start' : 'center',
                   borderRadius: 10, border: 'none',
-                  background: 'transparent', cursor: 'pointer',
-                  width: '100%', transition: 'background 0.15s',
+                  background: menuOpen ? 'var(--primary-bg)' : 'transparent',
+                  cursor: 'pointer', transition: 'background 0.15s',
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-muted)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                onMouseEnter={e => { if (!menuOpen) e.currentTarget.style.background = 'var(--primary-muted)' }}
+                onMouseLeave={e => { if (!menuOpen) e.currentTarget.style.background = 'transparent' }}
               >
                 <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, color: 'white', flexShrink: 0, boxShadow: '0 2px 8px rgba(109,94,245,0.3)' }}>
                   {initials}
                 </div>
                 {isExpanded && (
-                  <div style={{ minWidth: 0, textAlign: 'left' }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {user?.name || 'Profil'}
+                  <>
+                    <div style={{ minWidth: 0, flex: 1, textAlign: 'left' }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {user?.name || 'Profil'}
+                      </div>
+                      <div style={{ fontSize: 10, color: 'var(--primary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
+                        ✦ Premium
+                      </div>
                     </div>
-                    <div style={{ fontSize: 10, color: 'var(--primary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
-                      ✦ Premium
-                    </div>
-                  </div>
+                    <MoreHorizontal size={16} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                  </>
                 )}
               </button>
 
@@ -253,7 +383,7 @@ export default function Sidebar() {
               {!forceExpanded && (
                 <button
                   onClick={() => setCollapsed(!collapsed)}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: 10, background: 'transparent', border: '1px solid var(--sidebar-border)', color: 'var(--sidebar-text)', cursor: 'pointer', transition: 'all 0.15s', width: '100%', marginTop: 6 }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px', borderRadius: 10, background: 'transparent', border: '1px solid var(--sidebar-border)', color: 'var(--sidebar-text)', cursor: 'pointer', width: '100%', marginTop: 4 }}
                   onMouseEnter={e => { e.currentTarget.style.background = 'var(--primary-muted)'; e.currentTarget.style.color = 'var(--primary)' }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--sidebar-text)' }}
                 >
