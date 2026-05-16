@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Mic, MicOff, Volume2, VolumeX, Phone, PhoneOff } from 'lucide-react'
+import { Mic, MicOff, Send } from 'lucide-react'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -33,16 +33,9 @@ export default function AtlasChat({
   const [sessionId] = useState<string>(() => propsSessionId || `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
   const [quote, setQuote] = useState<{ text: string; author: string } | null>(null)
   const [quoteLoading, setQuoteLoading] = useState(false)
-  const [voiceMode, setVoiceMode] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
-  const [isSpeaking, setIsSpeaking] = useState(false)
-  const [voiceMuted, setVoiceMuted] = useState(false)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const sentencesQueueRef = useRef<string[]>([])
-  const isSpeakingQueueRef = useRef(false)
-  const sentenceBufferRef = useRef('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const tokenQueueRef = useRef<string[]>([])
   const displayIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -184,7 +177,6 @@ export default function AtlasChat({
               if (parsed.token) {
                 fullText += parsed.token
                 tokenQueueRef.current.push(parsed.token)
-                feedSentenceBuffer(parsed.token)
               }
             } catch {
               // Ignorer les lignes non-JSON
@@ -205,7 +197,6 @@ export default function AtlasChat({
               if (parsed.token) {
                 fullText += parsed.token
                 tokenQueueRef.current.push(parsed.token)
-                feedSentenceBuffer(parsed.token)
               }
             } catch {
               // Ignorer
@@ -222,11 +213,6 @@ export default function AtlasChat({
     } finally {
       setLoading(false)
       setIsStreaming(false)
-      if (voiceMode && sentenceBufferRef.current.trim().length > 0) {
-        sentencesQueueRef.current.push(sentenceBufferRef.current.trim())
-        sentenceBufferRef.current = ''
-        processSpeakQueue()
-      }
       // Attendre que la queue soit vide avant de stopper
       const waitQueue = setInterval(() => {
         if (tokenQueueRef.current.length === 0) {
@@ -261,63 +247,6 @@ export default function AtlasChat({
 
   const hasMessages = messages.length > 0
 
-  const speakSentence = async (sentence: string) => {
-    try {
-      const cleanText = sentence.replace(/[#*`]/g, '').trim()
-      if (!cleanText) return
-      const response = await fetch('/api/voice/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText }),
-      })
-      if (!response.ok) return
-      const audioBlob = await response.blob()
-      const audioUrl = URL.createObjectURL(audioBlob)
-      await new Promise<void>((resolve) => {
-        const audio = new Audio(audioUrl)
-        audioRef.current = audio
-        audio.onended = () => { URL.revokeObjectURL(audioUrl); resolve() }
-        audio.onerror = () => { URL.revokeObjectURL(audioUrl); resolve() }
-        audio.play().catch(() => resolve())
-      })
-    } catch {}
-  }
-
-  const processSpeakQueue = async () => {
-    if (isSpeakingQueueRef.current) return
-    isSpeakingQueueRef.current = true
-    setIsSpeaking(true)
-    while (sentencesQueueRef.current.length > 0) {
-      const sentence = sentencesQueueRef.current.shift()!
-      if (!voiceMuted) await speakSentence(sentence)
-    }
-    isSpeakingQueueRef.current = false
-    setIsSpeaking(false)
-  }
-
-  const speakText = async (text: string) => {
-    if (voiceMuted || !voiceMode) return
-    sentencesQueueRef.current.push(text)
-    processSpeakQueue()
-  }
-
-  const feedSentenceBuffer = (token: string) => {
-    if (!voiceMode || voiceMuted) return
-    sentenceBufferRef.current += token
-    const sentenceEnd = /[.!?。]\s*/
-    const parts = sentenceBufferRef.current.split(sentenceEnd)
-    if (parts.length > 1) {
-      for (let i = 0; i < parts.length - 1; i++) {
-        const sentence = parts[i].trim()
-        if (sentence.length > 10) {
-          sentencesQueueRef.current.push(sentence)
-          processSpeakQueue()
-        }
-      }
-      sentenceBufferRef.current = parts[parts.length - 1]
-    }
-  }
-
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -335,7 +264,7 @@ export default function AtlasChat({
         try {
           const res = await fetch('/api/voice/stt', { method: 'POST', body: formData })
           const data = await res.json()
-          if (data.text?.trim()) await sendMessage(data.text.trim())
+          if (data.text?.trim()) setInput(data.text.trim())
         } catch {}
       }
       mediaRecorder.start()
@@ -350,15 +279,6 @@ export default function AtlasChat({
       mediaRecorderRef.current.stop()
       setIsRecording(false)
     }
-  }
-
-  const toggleVoiceMode = () => {
-    if (voiceMode) {
-      stopRecording()
-      if (audioRef.current) audioRef.current.pause()
-      setIsSpeaking(false)
-    }
-    setVoiceMode(!voiceMode)
   }
 
   return (
@@ -404,24 +324,6 @@ export default function AtlasChat({
               </div>
             )}
           </div>
-
-          {/* Bouton mode vocal */}
-          <button
-            onClick={toggleVoiceMode}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              background: voiceMode ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : 'var(--bg-card)',
-              border: voiceMode ? 'none' : '1.5px solid var(--border)',
-              color: voiceMode ? 'white' : 'var(--text-secondary)',
-              borderRadius: 50, padding: '10px 24px',
-              fontSize: 14, fontWeight: 700, cursor: 'pointer',
-              boxShadow: voiceMode ? '0 4px 16px rgba(109,94,245,0.35)' : 'none',
-              marginBottom: 24, transition: 'all 0.2s',
-            }}
-          >
-            {voiceMode ? <Phone size={18} /> : <Mic size={18} />}
-            {voiceMode ? 'Mode vocal actif' : 'Démarrer en mode vocal'}
-          </button>
 
           {/* Suggestions */}
           {suggestions.length > 0 && (
@@ -513,17 +415,6 @@ export default function AtlasChat({
                   </div>
                 </div>
               )}
-              {isSpeaking && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0' }}>
-                  <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🏔️</div>
-                  <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', animation: 'bounce 0.6s infinite' }} />
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', animation: 'bounce 0.6s infinite 0.15s' }} />
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', animation: 'bounce 0.6s infinite 0.3s' }} />
-                    <span style={{ fontSize: 12, color: '#a78bfa', fontWeight: 600, marginLeft: 6 }}>Atlas parle...</span>
-                  </div>
-                </div>
-              )}
               <div ref={messagesEndRef} />
             </div>
           </div>
@@ -540,49 +431,55 @@ export default function AtlasChat({
                   disabled={loading || isStreaming}
                   style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 14, color: 'var(--text)', caretColor: '#6D5EF5' }}
                 />
-                {voiceMode && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setVoiceMuted(!voiceMuted)}
-                      style={{ background: 'transparent', border: 'none', color: voiceMuted ? '#EF4444' : 'var(--text-muted)', cursor: 'pointer', padding: '8px', borderRadius: 8, display: 'flex', alignItems: 'center' }}
-                    >
-                      {voiceMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                    </button>
-                    <button
-                      type="button"
-                      onMouseDown={startRecording}
-                      onMouseUp={stopRecording}
-                      onTouchStart={startRecording}
-                      onTouchEnd={stopRecording}
-                      style={{
-                        background: isRecording ? '#EF4444' : 'rgba(109,94,245,0.15)',
-                        border: isRecording ? 'none' : '1.5px solid rgba(109,94,245,0.3)',
-                        color: isRecording ? 'white' : '#a78bfa',
-                        borderRadius: 10, padding: '8px 14px',
-                        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                        fontSize: 13, fontWeight: 700,
-                      }}
-                    >
-                      {isRecording ? <MicOff size={16} /> : <Mic size={16} />}
-                      {isRecording ? 'Relâcher' : 'Parler'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={toggleVoiceMode}
-                      style={{ background: 'transparent', border: 'none', color: '#EF4444', cursor: 'pointer', padding: '8px', borderRadius: 8, display: 'flex', alignItems: 'center' }}
-                    >
-                      <PhoneOff size={18} />
-                    </button>
-                  </>
+                {/* Micro ou Flèche selon contexte */}
+                {input.trim() === '' && !isRecording ? (
+                  <button
+                    type="button"
+                    onMouseDown={startRecording}
+                    onTouchStart={startRecording}
+                    style={{
+                      background: 'rgba(109,94,245,0.1)',
+                      border: '1.5px solid rgba(109,94,245,0.25)',
+                      color: '#a78bfa',
+                      borderRadius: 10, padding: '8px 14px',
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                      fontSize: 13, fontWeight: 700,
+                    }}
+                  >
+                    <Mic size={16} /> Dicter
+                  </button>
+                ) : isRecording ? (
+                  <button
+                    type="button"
+                    onMouseUp={stopRecording}
+                    onTouchEnd={stopRecording}
+                    style={{
+                      background: '#EF4444',
+                      border: 'none',
+                      color: 'white',
+                      borderRadius: 10, padding: '8px 14px',
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                      fontSize: 13, fontWeight: 700,
+                      animation: 'pulse 1s infinite',
+                    }}
+                  >
+                    <MicOff size={16} /> Relâcher
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={loading || isStreaming}
+                    style={{
+                      background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+                      border: 'none', color: 'white',
+                      borderRadius: 10, padding: '8px 18px',
+                      cursor: 'pointer', display: 'flex', alignItems: 'center',
+                      opacity: (loading || isStreaming) ? 0.5 : 1,
+                    }}
+                  >
+                    <Send size={16} />
+                  </button>
                 )}
-                <button
-                  type="submit"
-                  disabled={loading || isStreaming || !input.trim()}
-                  style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 10, padding: '8px 16px', fontSize: 14, fontWeight: 700, cursor: 'pointer', opacity: (!input.trim() || loading || isStreaming) ? 0.5 : 1 }}
-                >
-                  →
-                </button>
               </form>
             </div>
           </div>
