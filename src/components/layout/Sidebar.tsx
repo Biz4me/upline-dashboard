@@ -3,19 +3,18 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSidebar } from '@/context/SidebarContext'
 import {
-  Home, Rocket, BarChart2, MessageCircle, Trophy,
-  Share2, ChevronLeft, ChevronRight, Users, X
+  Home, Sparkles, Rocket, Users, CalendarDays,
+  TrendingUp, ChevronLeft, ChevronRight, X
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
 const navItems = [
   { href: '/', icon: Home, label: 'Accueil' },
+  { href: '/atlas', icon: Sparkles, label: 'Atlas' },
   { href: '/formation', icon: Rocket, label: 'Formation' },
-  { href: '/business', icon: BarChart2, label: 'Business' },
-  { href: '/chat', icon: MessageCircle, label: 'Chat Atlas' },
-  { href: '/communaute', icon: Users, label: 'Communauté' },
-  { href: '/achievements', icon: Trophy, label: 'Succès' },
-  { href: '/parrainage', icon: Share2, label: 'Parrainage' },
+  { href: '/reseau', icon: Users, label: 'Réseau' },
+  { href: '/agenda', icon: CalendarDays, label: 'Agenda' },
+  { href: '/croissance', icon: TrendingUp, label: 'Croissance' },
 ]
 
 export default function Sidebar() {
