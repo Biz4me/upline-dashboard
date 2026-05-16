@@ -127,12 +127,10 @@ export default function SimulationsPage() {
     try {
       conversationRef.current.push({ role: 'user', content: userText })
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/api/simulation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 150,
           system: conversationRef.current[0]?.content || '',
           messages: conversationRef.current.slice(1).map(m => ({
             role: m.role === 'user' ? 'user' : 'assistant',
@@ -142,7 +140,7 @@ export default function SimulationsPage() {
       })
 
       const data = await response.json()
-      const atlasText = data.content?.[0]?.text || ''
+      const atlasText = data.text || ''
       conversationRef.current.push({ role: 'assistant', content: atlasText })
 
       const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
@@ -225,20 +223,16 @@ export default function SimulationsPage() {
         .map(m => `${m.role === 'user' ? prenom : 'Prospect'}: ${m.content}`)
         .join('\n')
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/api/simulation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 500,
-          messages: [{
-            role: 'user',
-            content: `Tu es Atlas, coach MLM expert. Analyse cette simulation d'appel et donne un debrief structuré en français.\n\nScénario : ${selectedScenario?.title}\n\nConversation :\n${conversation}\n\nDonne :\n1. Score global /10\n2. 3 points forts\n3. 3 points à améliorer\n4. Un conseil clé pour le prochain appel\n\nSois précis et bienveillant.`
-          }]
+          system: 'Tu es Atlas, coach MLM expert. Réponds en français.',
+          messages: [{ role: 'user', content: `Tu es Atlas, coach MLM expert. Analyse cette simulation d'appel et donne un debrief structuré en français.\n\nScénario : ${selectedScenario?.title}\n\nConversation :\n${conversation}\n\nDonne :\n1. Score global /10\n2. 3 points forts\n3. 3 points à améliorer\n4. Un conseil clé pour le prochain appel\n\nSois précis et bienveillant.` }]
         }),
       })
       const data = await response.json()
-      setDebrief(data.content?.[0]?.text || '')
+      setDebrief(data.text || '')
     } catch {
       setDebrief('Impossible de générer le debrief. Réessaie.')
     } finally {
