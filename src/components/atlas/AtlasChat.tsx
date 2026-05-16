@@ -273,9 +273,9 @@ export default function AtlasChat({
             ) : quote && (
               <div style={{
                 maxWidth: 480, textAlign: 'center', marginBottom: 32,
-                background: 'var(--primary-bg)',
-                border: '1px solid rgba(109,94,245,0.2)',
-                borderRadius: 16, padding: '20px 24px',
+                background: 'transparent',
+                border: '1px solid rgba(109,94,245,0.1)',
+                borderRadius: 16, padding: '14px 20px',
                 position: 'relative',
               }}>
                 <div style={{ fontSize: 32, color: '#6D5EF5', opacity: 0.3, lineHeight: 1, marginBottom: 8, fontFamily: 'Georgia, serif' }}>{'"'}</div>
