@@ -7,6 +7,10 @@ interface SidebarContextType {
   mobileOpen: boolean
   setMobileOpen: (v: boolean) => void
   isMobile: boolean
+  profileMode: boolean
+  setProfileMode: (v: boolean) => void
+  profileTab: string
+  setProfileTab: (v: string) => void
 }
 
 const SidebarContext = createContext<SidebarContextType>({
@@ -15,23 +19,26 @@ const SidebarContext = createContext<SidebarContextType>({
   mobileOpen: false,
   setMobileOpen: () => {},
   isMobile: false,
+  profileMode: false,
+  setProfileMode: () => {},
+  profileTab: 'profil',
+  setProfileTab: () => {},
 })
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [profileMode, setProfileMode] = useState(false)
+  const [profileTab, setProfileTab] = useState('profil')
 
-  // Collapse automatique sur tablette + détection mobile
   useEffect(() => {
     const handleResize = () => {
-      const width = window.innerWidth
-      setIsMobile(width < 768)
-      if (width < 1024 && width >= 768) {
-        setCollapsed(true)
-      } else if (width >= 1024) {
-        setCollapsed(false)
-      }
+      const mobile = window.innerWidth < 768
+      const tablet = window.innerWidth >= 768 && window.innerWidth < 1024
+      setIsMobile(mobile)
+      if (tablet) setCollapsed(true)
+      if (window.innerWidth >= 1024) setCollapsed(false)
     }
     handleResize()
     window.addEventListener('resize', handleResize)
@@ -39,7 +46,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <SidebarContext.Provider value={{ collapsed, setCollapsed, mobileOpen, setMobileOpen, isMobile }}>
+    <SidebarContext.Provider value={{ collapsed, setCollapsed, mobileOpen, setMobileOpen, isMobile, profileMode, setProfileMode, profileTab, setProfileTab }}>
       {children}
     </SidebarContext.Provider>
   )
