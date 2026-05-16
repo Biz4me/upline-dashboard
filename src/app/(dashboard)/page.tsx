@@ -32,7 +32,7 @@ const stats = [
   { label: 'Sessions de coaching', value: '47', change: '+12%', icon: MessageSquare, color: '#6D5EF5' },
   { label: "Temps d'apprentissage", value: '24h', change: '+8%', icon: Clock, color: '#22D3EE' },
   { label: 'Objectifs atteints', value: '18/25', change: '72%', icon: Target, color: '#22C55E' },
-  { label: 'Badges obtenus', value: '12', change: '+3 nouveau', icon: Award, color: '#F59E0B' },
+  { label: 'Badges obtenus', value: '12', change: '+3', icon: Award, color: '#F59E0B' },
 ]
 
 // Daily Briefing data (simulé — sera connecté à l'API)
@@ -178,7 +178,7 @@ export default function Accueil() {
                   <div style={{ width: 40, height: 40, borderRadius: 10, background: `${stat.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={18} color={stat.color} strokeWidth={2} />
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#22C55E' }}>{stat.change}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#22C55E', whiteSpace: 'nowrap', flexShrink: 0 }}>{stat.change}</span>
                 </div>
                 <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--text)', marginBottom: 4 }}>{stat.value}</div>
                 <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{stat.label}</div>
