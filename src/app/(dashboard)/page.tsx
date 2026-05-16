@@ -1,8 +1,15 @@
 'use client'
+import { useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { TrendingUp, MessageSquare, Clock, Target, Award, ChevronRight, Flame, Calendar, AlertCircle } from 'lucide-react'
+import { TrendingUp, MessageSquare, Clock, Target, Award, ChevronRight, Flame, Calendar, AlertCircle, Bell } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import Link from 'next/link'
+
+const alertesFilleuls = [
+  { id: 1, name: 'Jean Martin', type: 'inactif', message: 'Inactif depuis 8 jours', color: '#FF9600', bg: 'rgba(255,150,0,0.1)', icon: '⚠️' },
+  { id: 2, name: 'Sophie Bernard', type: 'succes', message: 'Vient de recruter son 1er distributeur !', color: '#22C55E', bg: 'rgba(34,197,94,0.1)', icon: '🎉' },
+  { id: 3, name: 'Marc Dubois', type: 'formation', message: 'Module 4 terminé — encourage-le !', color: '#6D5EF5', bg: 'rgba(109,94,245,0.1)', icon: '📚' },
+]
 
 const weeklyActivity = [
   { day: 'Lun', sessions: 8 },
@@ -59,6 +66,8 @@ export default function Accueil() {
   const prenom = session?.user?.name?.split(' ')[0] || 'toi'
   const heure = new Date().getHours()
   const salutation = heure < 12 ? 'Bonjour' : heure < 18 ? 'Bon après-midi' : 'Bonsoir'
+  const [alertesDismissed, setAlerteDismissed] = useState<number[]>([])
+  const alertesVisibles = alertesFilleuls.filter(a => !alertesDismissed.includes(a.id))
 
   return (
     <div style={{ minHeight: '100vh', padding: '32px 28px 60px' }}>
@@ -155,6 +164,52 @@ export default function Accueil() {
             </div>
           </div>
         </div>
+
+        {/* Widget alertes filleuls */}
+        {alertesVisibles.length > 0 && (
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: '20px 24px', marginBottom: 28 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Bell size={16} color="#EF4444" />
+                </div>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>Alertes filleuls</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{alertesVisibles.length} notification{alertesVisibles.length > 1 ? 's' : ''} en attente</div>
+                </div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {alertesVisibles.map(alerte => (
+                <div key={alerte.id} style={{ display: 'flex', alignItems: 'center', gap: 10, background: alerte.bg, border: `1px solid ${alerte.color}25`, borderRadius: 12, padding: '12px 16px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 20, flexShrink: 0 }}>{alerte.icon}</span>
+                  <div style={{ flex: 1, minWidth: 150 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{alerte.name}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{alerte.message}</div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap' }}>
+                    {alerte.type === 'inactif' && (
+                      <>
+                        <Link href={`/atlas?context=appel-${alerte.name}`} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(109,94,245,0.1)', border: '1px solid rgba(109,94,245,0.25)', color: '#a78bfa', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                          🎯 Préparer avec Atlas
+                        </Link>
+                        <a href={`tel:`} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', color: '#22C55E', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                          📞 Appeler
+                        </a>
+                      </>
+                    )}
+                    {(alerte.type === 'succes' || alerte.type === 'formation') && (
+                      <Link href={`/reseau?feliciter=${alerte.id}`} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', color: '#22C55E', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                        🎉 Envoyer une card
+                      </Link>
+                    )}
+                    <button onClick={() => setAlerteDismissed(prev => [...prev, alerte.id])} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '6px', borderRadius: 8, fontSize: 16 }}>✕</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ===== STATS ===== */}
         <div style={{ marginBottom: 8 }}>

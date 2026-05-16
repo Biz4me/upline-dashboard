@@ -27,9 +27,38 @@ const statusColors: Record<string, { bg: string; color: string }> = {
 export default function ReseauPage() {
   const [view, setView] = useState<'liste' | 'pipeline'>('liste')
   const [search, setSearch] = useState('')
+  const [cardModal, setCardModal] = useState<{ name: string; succes: string } | null>(null)
+  const [cardGenerated, setCardGenerated] = useState('')
+  const [cardLoading, setCardLoading] = useState(false)
+  const [cardCopied, setCardCopied] = useState(false)
   const prospects = initialProspects.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase())
   )
+
+  const generateCard = async (name: string, succes: string) => {
+    setCardLoading(true)
+    setCardGenerated('')
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 200,
+          messages: [{
+            role: 'user',
+            content: `Génère un message de félicitation chaleureux et professionnel pour ${name} qui vient de : ${succes}. Le message doit faire 3-4 lignes maximum, être motivant, sincère et MLM-friendly. Réponds UNIQUEMENT avec le message, sans guillemets ni signature.`
+          }]
+        })
+      })
+      const data = await response.json()
+      setCardGenerated(data.content?.[0]?.text || '')
+    } catch {
+      setCardGenerated(`Félicitations ${name} ! C'est une victoire qui montre ta persévérance et ton engagement. Continue sur cette lancée, les meilleurs résultats arrivent à ceux qui n'abandonnent pas !`)
+    } finally {
+      setCardLoading(false)
+    }
+  }
 
   const stats = [
     { label: 'À contacter', value: 1, icon: Users, color: '#6D5EF5' },
@@ -136,6 +165,12 @@ export default function ReseauPage() {
                 <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: statusColors[p.status]?.bg, color: statusColors[p.status]?.color, display: 'flex', alignItems: 'center', gap: 4 }}>
                   {p.status === 'Oui !' ? '✅' : p.status === 'Présenté' ? '👁' : p.status === 'Invité' ? '📞' : p.status === 'Suivi' ? '📋' : '📝'} {p.status}
                 </span>
+                <button
+                  onClick={() => { setCardModal({ name: p.name, succes: 'son avancement dans le business' }); generateCard(p.name, 'son avancement dans le business') }}
+                  style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 14 }}
+                >
+                  🎉
+                </button>
                 <button style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(109,94,245,0.1)', border: '1px solid rgba(109,94,245,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                   <Phone size={14} color="#a78bfa" />
                 </button>
@@ -171,6 +206,92 @@ export default function ReseauPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Modal Card de félicitation */}
+      {cardModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          onClick={e => { if (e.target === e.currentTarget) setCardModal(null) }}>
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 480, boxShadow: '0 24px 64px rgba(0,0,0,0.4)' }}>
+
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                🎉 Card pour {cardModal.name}
+              </div>
+              <button onClick={() => setCardModal(null)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 20 }}>✕</button>
+            </div>
+
+            {/* Card preview */}
+            <div style={{ background: 'linear-gradient(135deg, rgba(109,94,245,0.08), rgba(34,211,238,0.05))', border: '1.5px solid rgba(109,94,245,0.2)', borderRadius: 16, padding: 24, marginBottom: 20, minHeight: 120, position: 'relative' }}>
+              <div style={{ fontSize: 24, marginBottom: 12 }}>🏆</div>
+              {cardLoading ? (
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', display: 'inline-block' }} />
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', display: 'inline-block' }} />
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6D5EF5', display: 'inline-block' }} />
+                </div>
+              ) : (
+                <>
+                  <p style={{ fontSize: 14, color: 'var(--text)', lineHeight: 1.7, marginBottom: 12 }}>{cardGenerated}</p>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#a78bfa' }}>— Patrice, ton upline ✨</div>
+                </>
+              )}
+            </div>
+
+            {/* Sélecteur de succès */}
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Type de succès</div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {[
+                  '1er prospect contacté',
+                  '1er recrutement',
+                  'Module terminé',
+                  'Rang atteint',
+                  'Objectif dépassé',
+                ].map(s => (
+                  <button key={s} onClick={() => { setCardModal({ ...cardModal, succes: s }); generateCard(cardModal.name, s) }}
+                    style={{ background: cardModal.succes === s ? 'rgba(109,94,245,0.15)' : 'var(--bg-page)', border: `1.5px solid ${cardModal.succes === s ? '#6D5EF5' : 'var(--border)'}`, color: cardModal.succes === s ? '#a78bfa' : 'var(--text-secondary)', borderRadius: 20, padding: '5px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Bouton regénérer */}
+            <button onClick={() => generateCard(cardModal.name, cardModal.succes)}
+              style={{ width: '100%', background: 'var(--bg-page)', border: '1px solid var(--border)', color: 'var(--text-secondary)', borderRadius: 10, padding: '10px', fontSize: 13, fontWeight: 600, cursor: 'pointer', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              🔄 Regénérer avec Atlas
+            </button>
+
+            {/* Actions envoi */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <button
+                onClick={() => { navigator.clipboard.writeText(cardGenerated + '\n— Patrice, ton upline ✨'); setCardCopied(true); setTimeout(() => setCardCopied(false), 2000) }}
+                style={{ background: 'rgba(109,94,245,0.1)', border: '1.5px solid rgba(109,94,245,0.25)', color: '#a78bfa', borderRadius: 10, padding: '11px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+              >
+                {cardCopied ? '✅ Copié !' : '📋 Copier'}
+              </button>
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(cardGenerated + '\n— Patrice, ton upline ✨')}`}
+                target="_blank" rel="noreferrer"
+                style={{ background: 'rgba(34,197,94,0.1)', border: '1.5px solid rgba(34,197,94,0.25)', color: '#22C55E', borderRadius: 10, padding: '11px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, textDecoration: 'none' }}
+              >
+                💬 WhatsApp
+              </a>
+              <button
+                style={{ background: 'rgba(34,211,238,0.1)', border: '1.5px solid rgba(34,211,238,0.25)', color: '#22D3EE', borderRadius: 10, padding: '11px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+              >
+                📧 Email
+              </button>
+              <button
+                style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 10, padding: '11px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+              >
+                🌍 Communauté
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
