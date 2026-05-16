@@ -239,7 +239,7 @@ export default function SimulationsPage() {
         analyserRef.current.getByteFrequencyData(dataArray)
         const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length
 
-        if (avg < 25) {
+        if (avg < 40) {
           if (!silenceTimerRef.current) {
             silenceTimerRef.current = setTimeout(() => {
               stopRecording()
@@ -263,6 +263,7 @@ export default function SimulationsPage() {
   const stopRecording = () => {
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
     if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null }
+    audioChunksRef.current = []
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop()
       setIsRecording(false)
@@ -292,6 +293,7 @@ export default function SimulationsPage() {
   }
 
   const endCall = async () => {
+    audioChunksRef.current = [] // vider avant d'arrêter
     stopRecording()
     if (audioRef.current) audioRef.current.pause()
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
