@@ -1,7 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import { PhoneOff, RotateCcw, Clock } from 'lucide-react'
+import { PhoneOff, RotateCcw, Clock, Mic } from 'lucide-react'
 
 const SCENARIOS = [
   {
@@ -384,6 +384,9 @@ export default function SimulationsPage() {
         padding: '40px 24px 48px',
         overflow: 'hidden',
       }}>
+        <style>{`
+          body { background: #000 !important; }
+        `}</style>
 
         {/* Info appel en haut */}
         <div style={{ textAlign: 'center', zIndex: 2 }}>
@@ -464,64 +467,42 @@ export default function SimulationsPage() {
           <div style={{ fontSize: 15, fontWeight: 700, color: statusColor, marginBottom: 12, transition: 'color 0.3s' }}>
             {statusLabel}
           </div>
-          {callMessages.length > 0 && (
-            <div style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 16, padding: '12px 20px',
-              maxWidth: 320, fontSize: 13,
-              color: 'rgba(255,255,255,0.8)',
-              lineHeight: 1.5,
-            }}>
-              {callMessages[callMessages.length - 1].text}
-            </div>
-          )}
         </div>
 
-        <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-          {/* Bouton maintenir pour parler */}
+        <div style={{ zIndex: 2, display: 'flex', alignItems: 'center', gap: 32 }}>
+          {/* Micro */}
           <button
             onPointerDown={startRecording}
             onPointerUp={stopRecording}
             onPointerLeave={stopRecording}
             disabled={isSpeaking || isLoading}
             style={{
-              width: 80, height: 80, borderRadius: '50%',
-              background: isRecording 
-                ? '#EF4444' 
-                : 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
-              border: 'none', color: 'white', cursor: 'pointer',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center', gap: 4,
-              boxShadow: isRecording 
-                ? '0 0 0 12px rgba(239,68,68,0.2)' 
-                : '0 4px 24px rgba(109,94,245,0.4)',
+              width: 64, height: 64, borderRadius: '50%',
+              background: isRecording ? '#EF4444' : 'rgba(109,94,245,0.3)',
+              border: `2px solid ${isRecording ? '#EF4444' : '#6D5EF5'}`,
+              color: 'white', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: isRecording ? '0 0 0 10px rgba(239,68,68,0.15)' : 'none',
               transition: 'all 0.15s',
               opacity: (isSpeaking || isLoading) ? 0.4 : 1,
             }}
           >
-            <span style={{ fontSize: 28 }}>🎙️</span>
-            <span style={{ fontSize: 10, fontWeight: 700 }}>
-              {isRecording ? 'Relâcher' : 'Maintenir'}
-            </span>
+            <Mic size={26} />
           </button>
 
-          {/* Bouton raccrocher */}
+          {/* Raccrocher */}
           <button
             onClick={endCall}
             style={{
-              width: 56, height: 56, borderRadius: '50%',
+              width: 64, height: 64, borderRadius: '50%',
               background: '#EF4444', border: 'none',
               color: 'white', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: '0 4px 16px rgba(239,68,68,0.4)',
             }}
           >
-            <PhoneOff size={22} />
+            <PhoneOff size={26} />
           </button>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>
-            Raccrocher
-          </div>
         </div>
       </div>
     )
