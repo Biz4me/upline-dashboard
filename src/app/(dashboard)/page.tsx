@@ -70,8 +70,8 @@ export default function Accueil() {
   const alertesVisibles = alertesFilleuls.filter(a => !alertesDismissed.includes(a.id))
 
   return (
-    <div style={{ minHeight: '100vh', padding: '32px 28px 60px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <div className="page-container">
+      <div className="page-inner">
 
         {/* ===== DAILY BRIEFING ===== */}
         <div style={{

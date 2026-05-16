@@ -250,3 +250,27 @@
   .tabs-scroll { overflow-x: auto; flex-wrap: nowrap !important; }
   .tabs-scroll button { flex-shrink: 0; }
 }
+
+/* Dashboard responsive */
+.page-container {
+  min-height: 100vh;
+  padding: 32px 28px 60px;
+}
+.page-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .page-container {
+    padding: 20px 16px 80px;
+  }
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+  .grid-auto {
+    grid-template-columns: 1fr !important;
+  }
+}

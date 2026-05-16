@@ -8,8 +8,10 @@ export default function AtlasPage() {
   const prenom = session?.user?.name?.split(' ')[0] || ''
 
   return (
-    <div style={{ height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}>
-      <AtlasChat userId={userId} prenom={prenom} />
+    <div className="page-container" style={{ display: 'flex', flexDirection: 'column' }}>
+      <div className="page-inner" style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <AtlasChat userId={userId} prenom={prenom} />
+      </div>
     </div>
   )
 }

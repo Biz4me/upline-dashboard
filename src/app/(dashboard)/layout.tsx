@@ -23,7 +23,8 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
           height: 64,
           flexShrink: 0,
           borderBottom: '1px solid var(--border)',
-          background: 'var(--bg-page)',
+          background: 'var(--bg-card)',
+          color: 'var(--text)',
         }}>
 
           {/* Hamburger — mobile uniquement via JS */}

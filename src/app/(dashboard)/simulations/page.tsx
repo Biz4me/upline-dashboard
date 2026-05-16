@@ -327,7 +327,8 @@ export default function SimulationsPage() {
   // ===== SÉLECTION =====
   if (state === 'selection') {
     return (
-      <div className="overflow-x-fix" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 28px 60px' }}>
+      <div className="page-container overflow-x-fix">
+        <div className="page-inner">
         <div style={{ marginBottom: 28 }}>
           <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 4, fontFamily: 'var(--font-title)' }}>
             Simulations d'appel
@@ -356,13 +357,15 @@ export default function SimulationsPage() {
           ))}
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
   // ===== SETUP =====
   if (state === 'setup') {
     return (
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 28px 60px' }}>
+      <div className="page-container overflow-x-fix">
+        <div className="page-inner">
 
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
@@ -461,8 +464,9 @@ export default function SimulationsPage() {
           </div>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
   // ===== APPEL IMMERSIF =====
   if (state === 'calling') {
