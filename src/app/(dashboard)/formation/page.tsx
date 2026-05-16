@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { modules, getGlobalStats } from '@/lib/formation-data'
 import { getUnlockTestState } from '@/lib/unlock-test'
-import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw, StickyNote, Info } from 'lucide-react'
+import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw, StickyNote } from 'lucide-react'
 
 const getModuleNoteCount = (moduleId: number) => {
   if (typeof window === 'undefined') return 0
@@ -22,7 +22,7 @@ export default function FormationOverview() {
   const stats = getGlobalStats()
   const router = useRouter()
   const [unlockStates, setUnlockStates] = useState<Record<number, { state: string; cooldownHoursLeft?: number }>>({})
-  const [tooltipId, setTooltipId] = useState<number | null>(null)
+  const [expandedId, setExpandedId] = useState<number | null>(null)
 
   useEffect(() => {
     const states: Record<number, { state: string; cooldownHoursLeft?: number }> = {}
@@ -111,7 +111,11 @@ export default function FormationOverview() {
               e.preventDefault()
               return
             }
-            router.push(`/formation/${mod.id}`)
+            if (expandedId === mod.id) {
+              router.push(`/formation/${mod.id}`)
+            } else {
+              setExpandedId(expandedId === mod.id ? null : mod.id)
+            }
           }
 
           return (
@@ -125,10 +129,10 @@ export default function FormationOverview() {
                 padding: '16px 24px',
                 display: 'flex',
                 alignItems: 'center',
-                height: 100,
                 minHeight: 100,
-                maxHeight: 100,
-                overflow: 'hidden',
+                height: 'auto',
+                maxHeight: expandedId === mod.id ? 'none' : 100,
+                overflow: expandedId === mod.id ? 'visible' : 'hidden',
                 gap: 20,
                 opacity: effectiveLocked ? 0.85 : 1,
                 cursor: effectiveLocked ? 'default' : 'pointer',
@@ -189,10 +193,13 @@ export default function FormationOverview() {
               </div>
 
               <div style={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', flexDirection: 'column', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 2, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1 }}>
-                    Module {mod.id} · {mod.duree}
-                  </span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2, display: 'block' }}>
+                  Module {mod.id} · {mod.duree}
+                </span>
+                <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 4, fontFamily: 'var(--font-title)' }}>
+                  {mod.title}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                   {mod.status === 'current' && (
                     <span style={{ fontSize: 10, fontWeight: 800, color: '#6D5EF5', background: 'rgba(109,94,245,0.12)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
                       🔥 En cours
@@ -207,28 +214,6 @@ export default function FormationOverview() {
                     <span style={{ fontSize: 10, fontWeight: 800, color: '#1CB0F6', background: 'rgba(28,176,246,0.15)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
                       ⚡ Test réussi
                     </span>
-                  )}
-                </div>
-                <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 2, fontFamily: 'var(--font-title)' }}>
-                  {mod.title}
-                </div>
-                <div style={{ position: 'relative', display: 'inline-flex', marginLeft: 'auto', flexShrink: 0 }}>
-                  <button
-                    onClick={e => { e.stopPropagation(); setTooltipId(tooltipId === mod.id ? null : mod.id) }}
-                    style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 4, display: 'flex', alignItems: 'center' }}
-                  >
-                    <Info size={16} />
-                  </button>
-                  {tooltipId === mod.id && (
-                    <div style={{
-                      position: 'absolute', right: 0, top: 28, zIndex: 50,
-                      background: 'var(--bg-card)', border: '1px solid var(--border)',
-                      borderRadius: 12, padding: '12px 14px', width: 220,
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.2)', fontSize: 13,
-                      color: 'var(--text-secondary)', lineHeight: 1.6,
-                    }}>
-                      {mod.description}
-                    </div>
                   )}
                 </div>
                 {(() => {
@@ -283,6 +268,23 @@ export default function FormationOverview() {
                       <RotateCcw size={12} strokeWidth={2.5} />
                       Réviser
                     </button>
+                  </div>
+                )}
+
+                {expandedId === mod.id && (
+                  <div style={{
+                    marginTop: 10,
+                    paddingTop: 10,
+                    borderTop: '1px solid var(--border)',
+                    fontSize: 13,
+                    color: 'var(--text-secondary)',
+                    lineHeight: 1.6,
+                    animation: 'fadeIn 0.15s ease',
+                  }}>
+                    {mod.description}
+                    <div style={{ marginTop: 8, fontSize: 12, color: '#a78bfa', fontWeight: 600 }}>
+                      Cliquer à nouveau pour ouvrir →
+                    </div>
                   </div>
                 )}
 
