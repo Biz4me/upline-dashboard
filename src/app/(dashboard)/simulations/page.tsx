@@ -148,10 +148,9 @@ export default function SimulationsPage() {
       setIsSpeaking(false)
       setSpherePulse(false)
       setStatus('waiting')
-      // Auto-démarrer écoute après qu'Atlas parle
-      if (state === 'calling') {
-        setTimeout(() => startRecording(), 500)
-      }
+      setTimeout(() => {
+        if (!isRecording) startRecording()
+      }, 1000)
     }
   }
 
@@ -220,7 +219,7 @@ export default function SimulationsPage() {
             await atlasRespond(sttData.text.trim())
           } else {
             setStatus('waiting')
-            setTimeout(() => startRecording(), 500)
+            setTimeout(() => startRecording(), 800)
           }
         } catch {
           setStatus('waiting')
