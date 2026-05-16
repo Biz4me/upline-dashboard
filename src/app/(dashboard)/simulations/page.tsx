@@ -136,7 +136,12 @@ export default function SimulationsPage() {
       await new Promise<void>((resolve) => {
         audioRef.current!.onended = () => resolve()
         audioRef.current!.onerror = () => resolve()
-        audioRef.current!.play().catch(() => resolve())
+        audioRef.current!.play().catch(() => {
+          // Retry once
+          setTimeout(() => {
+            audioRef.current!.play().catch(() => resolve())
+          }, 300)
+        })
       })
     } catch {}
     finally {
@@ -276,6 +281,10 @@ export default function SimulationsPage() {
 
     conversationRef.current = [{ role: 'system', content: systemPrompt }]
 
+    // Débloquer l'autoplay avec un son silencieux
+    const ctx = new AudioContext()
+    await ctx.resume()
+    ctx.close()
     // Atlas décroche et dit bonjour en premier
     await atlasRespond('Tu viens de décrocher le téléphone. Dis juste "Allô ?" ou "Oui bonjour ?" naturellement.')
   }
@@ -411,12 +420,13 @@ export default function SimulationsPage() {
 
     return (
       <div style={{
+        position: 'fixed', inset: 0, zIndex: 10,
         height: 'calc(100vh - 64px)',
         background: 'radial-gradient(ellipse at center, #1a0a2e 0%, #0a0a1a 60%, #000000 100%)',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'space-between',
         padding: '40px 24px 48px',
-        position: 'relative', overflow: 'hidden',
+        overflow: 'hidden',
       }}>
 
         {/* Info appel en haut */}
