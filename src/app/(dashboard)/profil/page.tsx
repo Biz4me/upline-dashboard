@@ -2,7 +2,9 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useSidebar } from '@/context/SidebarContext'
-import { Edit2, Check, User, Mail, Phone, MapPin, Globe, FileText, Trophy, Settings, CreditCard, Sparkles, Link, Camera, MessageCircle, Bell, Lock, Trash2, ChevronRight } from 'lucide-react'
+import { Edit2, Check, User, Mail, Phone, MapPin, Globe, FileText, Trophy, Settings, CreditCard, Sparkles, Bell, Lock, Trash2, ChevronRight } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faWhatsapp, faLinkedin, faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons'
 
 const TABS = [
   { id: 'profil', label: 'Mon Profil', icon: User },
@@ -169,13 +171,13 @@ export default function ProfilPage() {
           </Section>
           <Section title="Réseaux sociaux" icon={Globe}>
             {[
-              { label: 'LinkedIn', k: 'linkedin', icon: Link, placeholder: 'linkedin.com/in/votre-profil' },
-              { label: 'Instagram', k: 'instagram', icon: Camera, placeholder: '@votre_pseudo' },
-              { label: 'Facebook', k: 'facebook', icon: MessageCircle, placeholder: 'facebook.com/votre-profil' },
-            ].map(({ label, k, icon: Icon, placeholder }) => (
+              { label: 'LinkedIn', k: 'linkedin', icon: <FontAwesomeIcon icon={faLinkedin} style={{ fontSize: 18, color: '#0A66C2' }} />, placeholder: 'linkedin.com/in/votre-profil' },
+              { label: 'Instagram', k: 'instagram', icon: <FontAwesomeIcon icon={faInstagram} style={{ fontSize: 18, color: '#E1306C' }} />, placeholder: '@votre_pseudo' },
+              { label: 'Facebook', k: 'facebook', icon: <FontAwesomeIcon icon={faFacebook} style={{ fontSize: 18, color: '#1877F2' }} />, placeholder: 'facebook.com/votre-profil' },
+            ].map(({ label, k, icon, placeholder }) => (
               <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(109,94,245,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={16} color="#6D5EF5" />
+                  {icon}
                 </div>
                 {editing ? (
                   <input value={profile[k as keyof typeof profile]} onChange={e => set(k, e.target.value)} placeholder={placeholder} style={{ ...inputStyle, flex: 1 }} />

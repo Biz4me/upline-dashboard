@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
-import { Heart, MessageSquare, Share2, Plus, Trophy, Users, Copy, Check, Gift, TrendingUp, UserCheck, Lock, Star } from 'lucide-react'
+import { Heart, MessageSquare, Share2, Plus, Trophy, Users, Copy, Check, Gift, TrendingUp, UserCheck, Lock, Star, Mail } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faWhatsapp, faLinkedin, faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons'
 
 const posts = [
   { id: 1, author: 'Marie D.', initials: 'M', company: 'Herbalife', time: 'Il y a 2h', content: "J'ai recruté mon 1er distributeur aujourd'hui ! 6 mois de travail, 47 invitations, 12 présentations. La persévérance paie toujours 🎉", likes: 24, comments: 8, color: '#FF9600' },
@@ -265,7 +267,12 @@ export default function CroissancePage() {
               </button>
             </div>
             <div className="grid-4">
-              {[{ icon: '💬', label: 'WhatsApp', color: '#22C55E' }, { icon: '📧', label: 'Email', color: '#6D5EF5' }, { icon: '💼', label: 'LinkedIn', color: '#22D3EE' }, { icon: '📱', label: 'SMS', color: '#F59E0B' }].map((opt, i) => (
+              {[
+                { icon: <FontAwesomeIcon icon={faWhatsapp} style={{ fontSize: 20 }} />, label: 'WhatsApp', color: '#22C55E' },
+                { icon: <Mail size={20} />, label: 'Email', color: '#6D5EF5' },
+                { icon: <FontAwesomeIcon icon={faLinkedin} style={{ fontSize: 20 }} />, label: 'LinkedIn', color: '#22D3EE' },
+                { icon: <MessageSquare size={20} />, label: 'SMS', color: '#F59E0B' },
+              ].map((opt, i) => (
                 <button key={i} style={{ background: 'var(--bg-page)', border: '1.5px solid var(--border)', borderRadius: 12, padding: '12px 8px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                   <span style={{ fontSize: 22 }}>{opt.icon}</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: opt.color }}>{opt.label}</span>

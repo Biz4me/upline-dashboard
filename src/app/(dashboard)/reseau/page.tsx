@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
-import { Plus, Phone, Search, Users, TrendingUp, UserCheck, Target } from 'lucide-react'
+import { Plus, Phone, Search, Users, TrendingUp, UserCheck, Target, Mail } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faWhatsapp, faLinkedin, faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons'
 
 const initialProspects = [
   { id: 1, name: 'Marie Dupont', initials: 'M', note: 'Relancer jeudi', temp: 'Chaud', status: 'Suivi', color: '#EF4444' },
@@ -278,12 +280,12 @@ export default function ReseauPage() {
                 target="_blank" rel="noreferrer"
                 style={{ background: 'rgba(34,197,94,0.1)', border: '1.5px solid rgba(34,197,94,0.25)', color: '#22C55E', borderRadius: 10, padding: '11px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, textDecoration: 'none' }}
               >
-                💬 WhatsApp
+                <FontAwesomeIcon icon={faWhatsapp} style={{ fontSize: 16 }} /> WhatsApp
               </a>
               <button
                 style={{ background: 'rgba(34,211,238,0.1)', border: '1.5px solid rgba(34,211,238,0.25)', color: '#22D3EE', borderRadius: 10, padding: '11px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
               >
-                📧 Email
+                <Mail size={16} /> Email
               </button>
               <button
                 style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 10, padding: '11px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
