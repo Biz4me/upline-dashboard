@@ -3,12 +3,16 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function POST(req: NextRequest) {
   try {
     const { messages, system } = await req.json()
-    
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+        'anthropic-version': '2023-06-01',
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 150,
         system,
         messages,
@@ -16,8 +20,15 @@ export async function POST(req: NextRequest) {
     })
 
     const data = await response.json()
+    
+    if (!response.ok) {
+      console.error('Anthropic error:', data)
+      return NextResponse.json({ error: data.error?.message || 'API error', text: '' }, { status: 500 })
+    }
+
     return NextResponse.json({ text: data.content?.[0]?.text || '' })
-  } catch {
-    return NextResponse.json({ error: 'failed' }, { status: 500 })
+  } catch (err) {
+    console.error('Simulation error:', err)
+    return NextResponse.json({ error: 'failed', text: '' }, { status: 500 })
   }
 }
