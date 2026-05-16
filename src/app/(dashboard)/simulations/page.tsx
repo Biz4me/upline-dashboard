@@ -83,6 +83,7 @@ export default function SimulationsPage() {
   const [customDesc, setCustomDesc] = useState('')
   const [callMessages, setCallMessages] = useState<CallMessage[]>([])
   const [isRecording, setIsRecording] = useState(false)
+  const isRecordingRef = useRef(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [callDuration, setCallDuration] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
@@ -149,7 +150,7 @@ export default function SimulationsPage() {
       setSpherePulse(false)
       setStatus('waiting')
       setTimeout(() => {
-        if (!isRecording) startRecording()
+        if (!isRecordingRef.current) startRecording()
       }, 1000)
     }
   }
@@ -228,6 +229,7 @@ export default function SimulationsPage() {
 
       mediaRecorder.start(100)
       setIsRecording(true)
+      isRecordingRef.current = true
       setStatus('listening')
 
       // Détection silence automatique
@@ -264,6 +266,7 @@ export default function SimulationsPage() {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop()
       setIsRecording(false)
+      isRecordingRef.current = false
       setStatus('thinking')
     }
   }
