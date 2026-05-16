@@ -72,7 +72,8 @@ export default function ReseauPage() {
   const pipeline = ['Liste', 'Invité', 'Présenté', 'Suivi', 'Oui !']
 
   return (
-    <div className="overflow-x-fix page-padding" style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div className="overflow-x-fix page-padding" style={{ minHeight: '100vh', padding: '32px 28px 60px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', marginBottom: 28 }}>
@@ -296,6 +297,7 @@ export default function ReseauPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }

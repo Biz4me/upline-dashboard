@@ -104,7 +104,7 @@ export default function Sidebar() {
             {/* Avatar mini */}
             {isExpanded && (
               <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid var(--sidebar-border)', textAlign: 'center' }}>
-                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, color: 'white', margin: '0 auto 8px', boxShadow: '0 4px 12px rgba(109,94,245,0.3)' }}>
+                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, color: 'var(--text)', margin: '0 auto 8px', boxShadow: '0 4px 12px rgba(109,94,245,0.3)' }}>
                   {initials}
                 </div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{user?.name || 'Profil'}</div>
@@ -181,7 +181,7 @@ export default function Sidebar() {
               minHeight: 64, gap: 10,
             }}>
               <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(109,94,245,0.35)' }}>
-                <span style={{ color: 'white', fontWeight: 800, fontSize: 16 }}>A</span>
+                <span style={{ color: 'var(--text)', fontWeight: 800, fontSize: 16 }}>A</span>
               </div>
               {isExpanded && (
                 <span style={{ fontSize: 18, fontWeight: 800, background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -0.5, whiteSpace: 'nowrap' }}>
@@ -362,7 +362,7 @@ export default function Sidebar() {
                 onMouseEnter={e => { if (!menuOpen) e.currentTarget.style.background = 'var(--primary-muted)' }}
                 onMouseLeave={e => { if (!menuOpen) e.currentTarget.style.background = 'transparent' }}
               >
-                <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, color: 'white', flexShrink: 0, boxShadow: '0 2px 8px rgba(109,94,245,0.3)' }}>
+                <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, color: 'var(--text)', flexShrink: 0, boxShadow: '0 2px 8px rgba(109,94,245,0.3)' }}>
                   {initials}
                 </div>
                 {isExpanded && (

@@ -117,7 +117,8 @@ export default function ProfilPage() {
   )
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto', padding: '28px 32px 60px', overflowY: 'auto' }}>
+    <div style={{ minHeight: '100vh', padding: '32px 28px 60px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
       {/* Header section */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
@@ -345,6 +346,7 @@ export default function ProfilPage() {
           </Section>
         </>
       )}
+      </div>
     </div>
   )
 }

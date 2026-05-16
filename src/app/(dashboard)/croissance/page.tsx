@@ -58,7 +58,8 @@ export default function CroissancePage() {
   }
 
   return (
-    <div className="overflow-x-fix" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 28px 60px' }}>
+    <div className="overflow-x-fix" style={{ minHeight: '100vh', padding: '32px 28px 60px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
@@ -331,6 +332,7 @@ export default function CroissancePage() {
           </div>
         </>
       )}
+      </div>
     </div>
   )
 }

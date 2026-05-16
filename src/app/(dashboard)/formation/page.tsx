@@ -49,7 +49,8 @@ export default function FormationOverview() {
   }
 
   return (
-    <div className="overflow-x-fix page-padding" style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div className="overflow-x-fix page-padding" style={{ minHeight: '100vh', padding: '32px 28px 60px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 6, fontFamily: 'var(--font-title)' }}>
           Formation
@@ -95,7 +96,7 @@ export default function FormationOverview() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
         {modules.map((mod) => {
           const colors = getStatusColors(mod.status)
           const isLocked = mod.status === 'locked'
@@ -226,6 +227,7 @@ export default function FormationOverview() {
             </div>
           )
         })}
+      </div>
       </div>
     </div>
   )
