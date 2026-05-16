@@ -482,9 +482,8 @@ export default function SimulationsPage() {
 
     return (
       <div style={{
-        position: 'fixed', inset: 0, zIndex: 10,
-        height: 'calc(100vh - 64px)',
-        background: 'radial-gradient(ellipse at center, #1a0a2e 0%, #0a0a1a 60%, #000000 100%)',
+        position: 'fixed', inset: 0, zIndex: 50,
+        background: 'var(--bg-page)',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'space-between',
         padding: '40px 24px 48px',
@@ -496,13 +495,13 @@ export default function SimulationsPage() {
 
         {/* Info appel en haut */}
         <div style={{ textAlign: 'center', zIndex: 2 }}>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 2 }}>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 2 }}>
             Simulation en cours
           </div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: 'white', marginBottom: 4 }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
             {selectedScenario?.title}
           </div>
-          <div style={{ fontSize: 24, fontWeight: 800, color: 'rgba(255,255,255,0.6)', fontFamily: 'monospace' }}>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-muted)', fontFamily: 'monospace' }}>
             {formatTime(callDuration)}
           </div>
         </div>
@@ -586,7 +585,7 @@ export default function SimulationsPage() {
               width: 64, height: 64, borderRadius: '50%',
               background: isRecording ? '#EF4444' : 'rgba(109,94,245,0.3)',
               border: `2px solid ${isRecording ? '#EF4444' : '#6D5EF5'}`,
-              color: 'white', cursor: 'pointer',
+              color: 'var(--text)', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: isRecording ? '0 0 0 10px rgba(239,68,68,0.15)' : 'none',
               transition: 'all 0.15s',
@@ -602,7 +601,7 @@ export default function SimulationsPage() {
             style={{
               width: 64, height: 64, borderRadius: '50%',
               background: '#EF4444', border: 'none',
-              color: 'white', cursor: 'pointer',
+              color: 'var(--text)', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: '0 4px 16px rgba(239,68,68,0.4)',
             }}
