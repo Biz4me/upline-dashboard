@@ -237,11 +237,11 @@ export default function SimulationsPage() {
         analyserRef.current.getByteFrequencyData(dataArray)
         const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length
 
-        if (avg < 8) {
+        if (avg < 25) {
           if (!silenceTimerRef.current) {
             silenceTimerRef.current = setTimeout(() => {
               stopRecording()
-            }, 1800)
+            }, 1200)
           }
         } else {
           if (silenceTimerRef.current) {
