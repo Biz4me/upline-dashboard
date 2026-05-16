@@ -40,6 +40,9 @@ export default function AtlasChat({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const sentencesQueueRef = useRef<string[]>([])
+  const isSpeakingQueueRef = useRef(false)
+  const sentenceBufferRef = useRef('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const tokenQueueRef = useRef<string[]>([])
   const displayIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -181,6 +184,7 @@ export default function AtlasChat({
               if (parsed.token) {
                 fullText += parsed.token
                 tokenQueueRef.current.push(parsed.token)
+                feedSentenceBuffer(parsed.token)
               }
             } catch {
               // Ignorer les lignes non-JSON
@@ -201,6 +205,7 @@ export default function AtlasChat({
               if (parsed.token) {
                 fullText += parsed.token
                 tokenQueueRef.current.push(parsed.token)
+                feedSentenceBuffer(parsed.token)
               }
             } catch {
               // Ignorer
@@ -217,7 +222,11 @@ export default function AtlasChat({
     } finally {
       setLoading(false)
       setIsStreaming(false)
-      if (voiceMode) speakText(displayedTextRef.current)
+      if (voiceMode && sentenceBufferRef.current.trim().length > 0) {
+        sentencesQueueRef.current.push(sentenceBufferRef.current.trim())
+        sentenceBufferRef.current = ''
+        processSpeakQueue()
+      }
       // Attendre que la queue soit vide avant de stopper
       const waitQueue = setInterval(() => {
         if (tokenQueueRef.current.length === 0) {
@@ -252,11 +261,10 @@ export default function AtlasChat({
 
   const hasMessages = messages.length > 0
 
-  const speakText = async (text: string) => {
-    if (voiceMuted || !voiceMode) return
+  const speakSentence = async (sentence: string) => {
     try {
-      setIsSpeaking(true)
-      const cleanText = text.replace(/[#*`]/g, '').slice(0, 500)
+      const cleanText = sentence.replace(/[#*`]/g, '').trim()
+      if (!cleanText) return
       const response = await fetch('/api/voice/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -265,16 +273,48 @@ export default function AtlasChat({
       if (!response.ok) return
       const audioBlob = await response.blob()
       const audioUrl = URL.createObjectURL(audioBlob)
-      if (audioRef.current) {
-        audioRef.current.pause()
-        URL.revokeObjectURL(audioRef.current.src)
+      await new Promise<void>((resolve) => {
+        const audio = new Audio(audioUrl)
+        audioRef.current = audio
+        audio.onended = () => { URL.revokeObjectURL(audioUrl); resolve() }
+        audio.onerror = () => { URL.revokeObjectURL(audioUrl); resolve() }
+        audio.play().catch(() => resolve())
+      })
+    } catch {}
+  }
+
+  const processSpeakQueue = async () => {
+    if (isSpeakingQueueRef.current) return
+    isSpeakingQueueRef.current = true
+    setIsSpeaking(true)
+    while (sentencesQueueRef.current.length > 0) {
+      const sentence = sentencesQueueRef.current.shift()!
+      if (!voiceMuted) await speakSentence(sentence)
+    }
+    isSpeakingQueueRef.current = false
+    setIsSpeaking(false)
+  }
+
+  const speakText = async (text: string) => {
+    if (voiceMuted || !voiceMode) return
+    sentencesQueueRef.current.push(text)
+    processSpeakQueue()
+  }
+
+  const feedSentenceBuffer = (token: string) => {
+    if (!voiceMode || voiceMuted) return
+    sentenceBufferRef.current += token
+    const sentenceEnd = /[.!?。]\s*/
+    const parts = sentenceBufferRef.current.split(sentenceEnd)
+    if (parts.length > 1) {
+      for (let i = 0; i < parts.length - 1; i++) {
+        const sentence = parts[i].trim()
+        if (sentence.length > 10) {
+          sentencesQueueRef.current.push(sentence)
+          processSpeakQueue()
+        }
       }
-      audioRef.current = new Audio(audioUrl)
-      audioRef.current.onended = () => setIsSpeaking(false)
-      audioRef.current.onerror = () => setIsSpeaking(false)
-      await audioRef.current.play()
-    } catch {
-      setIsSpeaking(false)
+      sentenceBufferRef.current = parts[parts.length - 1]
     }
   }
 
