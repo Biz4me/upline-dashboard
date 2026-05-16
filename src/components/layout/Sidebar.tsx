@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useSidebar } from '@/context/SidebarContext'
 import {
-  Home, Sparkles, Rocket, Users, CalendarDays,
+  Home, Sparkles, Rocket, Phone, Users, CalendarDays,
   TrendingUp, ChevronLeft, ChevronRight, X,
   User, Trophy, Settings, CreditCard, ArrowLeft, LogOut,
   MoreHorizontal, Globe, Share2, Bell, Check
@@ -15,6 +15,7 @@ const navItems = [
   { href: '/', icon: Home, label: 'Accueil' },
   { href: '/atlas', icon: Sparkles, label: 'Atlas' },
   { href: '/formation', icon: Rocket, label: 'Formation' },
+  { href: '/simulations', icon: Phone, label: 'Simulations' },
   { href: '/reseau', icon: Users, label: 'Réseau' },
   { href: '/agenda', icon: CalendarDays, label: 'Agenda' },
   { href: '/croissance', icon: TrendingUp, label: 'Croissance' },
