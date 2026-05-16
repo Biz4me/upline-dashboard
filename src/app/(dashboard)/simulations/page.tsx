@@ -227,7 +227,7 @@ export default function SimulationsPage() {
         }
       }
 
-      mediaRecorder.start(100)
+      mediaRecorder.start()
       setIsRecording(true)
       isRecordingRef.current = true
       setStatus('listening')
@@ -243,7 +243,7 @@ export default function SimulationsPage() {
           if (!silenceTimerRef.current) {
             silenceTimerRef.current = setTimeout(() => {
               stopRecording()
-            }, 2000)
+            }, 2500)
           }
         } else {
           if (silenceTimerRef.current) {
