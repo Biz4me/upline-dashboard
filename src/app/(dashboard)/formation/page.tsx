@@ -126,14 +126,10 @@ export default function FormationOverview() {
                 background: 'var(--bg-card)',
                 border: `2px solid ${effectiveStatus === 'current' ? '#6D5EF5' : 'var(--border)'}`,
                 borderRadius: 16,
-                padding: '16px 24px',
+                padding: '16px 20px',
                 display: 'flex',
-                alignItems: 'center',
-                minHeight: 100,
-                height: 'auto',
-                maxHeight: expandedId === mod.id ? 'none' : 100,
-                overflow: expandedId === mod.id ? 'visible' : 'hidden',
-                gap: 20,
+                flexDirection: 'column',
+                gap: 0,
                 opacity: effectiveLocked ? 0.85 : 1,
                 cursor: effectiveLocked ? 'default' : 'pointer',
                 transition: 'all 0.2s',
@@ -141,208 +137,120 @@ export default function FormationOverview() {
               }}
               onMouseEnter={(e) => {
                 if (!effectiveLocked) {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
                   e.currentTarget.style.borderColor = '#6D5EF5'
                 }
               }}
               onMouseLeave={(e) => {
                 if (!effectiveLocked) {
-                  e.currentTarget.style.transform = 'translateY(0)'
                   e.currentTarget.style.borderColor = effectiveStatus === 'current' ? '#6D5EF5' : 'var(--border)'
                 }
               }}
             >
-              <div
-                style={{
-                  width: 72,
-                  height: 72,
+              {/* Ligne principale : icône + contenu */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                
+                {/* Icône ronde */}
+                <div style={{
+                  width: 64, height: 64,
                   background: colors.bg,
                   border: `3px solid ${colors.border}`,
                   borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 28,
-                  fontWeight: 800,
-                  color: colors.text,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 24, fontWeight: 800, color: colors.text,
                   boxShadow: `0 4px 0 ${colors.shadow}`,
-                  flexShrink: 0,
-                  position: 'relative',
-                }}
-              >
-                {isDone ? <CheckCircle2 size={32} strokeWidth={2.5} /> : effectiveLocked ? <Lock size={26} strokeWidth={2.5} /> : mod.id}
-                {mod.status === 'current' && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: -8,
-                      right: -8,
-                      background: '#FF9600',
-                      borderRadius: '50%',
-                      width: 28,
-                      height: 28,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '3px solid var(--bg-card)',
-                    }}
-                  >
-                    <Flame size={14} color="white" strokeWidth={2.5} />
-                  </div>
-                )}
-              </div>
-
-              <div style={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', flexDirection: 'column', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2, display: 'block' }}>
-                  Module {mod.id} · {mod.duree}
-                </span>
-                <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 4, fontFamily: 'var(--font-title)' }}>
-                  {mod.title}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                  flexShrink: 0, position: 'relative',
+                }}>
+                  {isDone ? <CheckCircle2 size={28} strokeWidth={2.5} /> : effectiveLocked ? <Lock size={22} strokeWidth={2.5} /> : mod.id}
                   {mod.status === 'current' && (
-                    <span style={{ fontSize: 10, fontWeight: 800, color: '#6D5EF5', background: 'rgba(109,94,245,0.12)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
-                      🔥 En cours
-                    </span>
-                  )}
-                  {isDone && (
-                    <span style={{ fontSize: 10, fontWeight: 800, color: '#22C55E', background: 'rgba(34,197,94,0.15)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
-                      ✓ Terminé
-                    </span>
-                  )}
-                  {testPassed && isLocked && (
-                    <span style={{ fontSize: 10, fontWeight: 800, color: '#1CB0F6', background: 'rgba(28,176,246,0.15)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1 }}>
-                      ⚡ Test réussi
-                    </span>
+                    <div style={{ position: 'absolute', bottom: -6, right: -6, background: '#FF9600', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--bg-card)' }}>
+                      <Flame size={12} color="white" strokeWidth={2.5} />
+                    </div>
                   )}
                 </div>
-                {(() => {
-                  const noteCount = getModuleNoteCount(mod.id)
-                  return noteCount > 0 ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
-                      <StickyNote size={12} color="#a78bfa" />
-                      <span style={{ fontSize: 11, fontWeight: 700, color: '#a78bfa' }}>
-                        {noteCount} note{noteCount > 1 ? 's' : ''}
+
+                {/* Contenu texte */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {/* Module X · durée */}
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 3 }}>
+                    Module {mod.id} · {mod.duree}
+                  </div>
+                  {/* Titre */}
+                  <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-title)', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {mod.title}
+                  </div>
+                  {/* Zone action — toujours à la même hauteur */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 32 }}>
+                    {isDone && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#22C55E', fontSize: 12, fontWeight: 700 }}>
+                          <Trophy size={13} strokeWidth={2.5} />
+                          Module maîtrisé
+                        </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); router.push(`/formation/${mod.id}`) }}
+                          style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'transparent', border: '1.5px solid #22C55E', color: '#22C55E', borderRadius: 8, padding: '5px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', height: 32 }}
+                        >
+                          ↺ Réviser
+                        </button>
+                      </div>
+                    )}
+                    {mod.status === 'current' && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontSize: 11, fontWeight: 800, color: '#6D5EF5', background: 'rgba(109,94,245,0.12)', padding: '5px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: 1, height: 32, display: 'flex', alignItems: 'center' }}>
+                          🔥 En cours
+                        </span>
+                        {mod.progression > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{ width: 80, height: 6, background: 'rgba(109,94,245,0.15)', borderRadius: 3, overflow: 'hidden' }}>
+                              <div style={{ width: `${mod.progression}%`, height: '100%', background: '#6D5EF5', borderRadius: 3 }} />
+                            </div>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: '#6D5EF5' }}>{mod.progression}%</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {testPassed && isLocked && (
+                      <span style={{ fontSize: 11, fontWeight: 800, color: '#1CB0F6', background: 'rgba(28,176,246,0.15)', padding: '5px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: 1, height: 32, display: 'flex', alignItems: 'center' }}>
+                        ⚡ Test réussi
                       </span>
-                    </div>
-                  ) : null
-                })()}
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4, flexWrap: 'nowrap' }}>
-                {mod.progression > 0 && mod.progression < 100 && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ flex: 1, height: 8, background: 'rgba(109,94,245,0.15)', borderRadius: 4, overflow: 'hidden', maxWidth: 150 }}>
-                      <div style={{ width: `${mod.progression}%`, height: '100%', background: '#6D5EF5', borderRadius: 4 }} />
-                    </div>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#6D5EF5' }}>{mod.progression}%</span>
-                  </div>
-                )}
-
-                {isDone && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'nowrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#22C55E', fontSize: 12, fontWeight: 700 }}>
-                      <Trophy size={14} strokeWidth={2.5} />
-                      Module maîtrisé
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        router.push(`/formation/${mod.id}?mode=revision`)
-                      }}
-                      style={{
-                        background: 'transparent',
-                        border: '1.5px solid #22C55E',
-                        color: '#22C55E',
-                        borderRadius: 10,
-                        padding: '6px 14px',
-                        fontSize: 11,
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        textTransform: 'uppercase',
-                        letterSpacing: 0.5,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 6,
-                      }}
-                    >
-                      <RotateCcw size={12} strokeWidth={2.5} />
-                      Réviser
-                    </button>
-                  </div>
-                )}
-
-                {expandedId === mod.id && (
-                  <div style={{
-                    marginTop: 10,
-                    paddingTop: 10,
-                    borderTop: '1px solid var(--border)',
-                    fontSize: 13,
-                    color: 'var(--text-secondary)',
-                    lineHeight: 1.6,
-                    animation: 'fadeIn 0.15s ease',
-                  }}>
-                    {mod.description}
-                    <div style={{ marginTop: 8, fontSize: 12, color: '#a78bfa', fontWeight: 600 }}>
-                      Cliquer à nouveau pour ouvrir →
-                    </div>
-                  </div>
-                )}
-
-                {effectiveLocked && (
-                  <div>
-                    {!unlockState || unlockState.state === 'available' ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'nowrap' }}>
+                    )}
+                    {inCooldown && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,75,75,0.08)', border: '1.5px solid rgba(255,75,75,0.3)', borderRadius: 10, padding: '7px 12px', fontSize: 12, fontWeight: 700, color: '#FF4B4B', height: 32 }}>
+                        <Clock size={13} strokeWidth={2.5} />
+                        Test à nouveau dans {unlockState.cooldownHoursLeft}h
+                      </div>
+                    )}
+                    {effectiveLocked && !inCooldown && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                           🔒 Prérequis : module {mod.id - 1}
                         </span>
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/formation/${mod.id}/unlock-test`)
-                          }}
-                          style={{
-                            background: 'rgba(28,176,246,0.12)',
-                            border: '1.5px solid #1CB0F6',
-                            color: '#1CB0F6',
-                            borderRadius: 10,
-                            padding: '7px 14px',
-                            fontSize: 11,
-                            fontWeight: 800,
-                            cursor: 'pointer',
-                            textTransform: 'uppercase',
-                            letterSpacing: 0.5,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 6,
-                          }}
+                          onClick={(e) => { e.stopPropagation(); router.push(`/formation/${mod.id}/unlock-test`) }}
+                          style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(28,176,246,0.1)', border: '1.5px solid #1CB0F6', color: '#1CB0F6', borderRadius: 8, padding: '5px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', height: 32 }}
                         >
-                          <Sparkles size={12} strokeWidth={2.5} />
-                          Débloquer
+                          ⚡ Débloquer
                         </button>
                       </div>
-                    ) : inCooldown ? (
-                      <div
-                        style={{
-                          alignItems: 'center',
-                          gap: 8,
-                          background: 'rgba(255,75,75,0.08)',
-                          border: '1.5px solid rgba(255,75,75,0.3)',
-                          borderRadius: 10,
-                          padding: '7px 12px',
-                          fontSize: 12,
-                          fontWeight: 700,
-                          color: '#FF4B4B',
-                          display: 'inline-flex',
-                        }}
-                      >
-                        <Clock size={13} strokeWidth={2.5} />
-                        Test à nouveau dans {unlockState.cooldownHoursLeft}h
-                      </div>
-                    ) : null}
+                    )}
+                    {!isDone && !effectiveLocked && mod.status !== 'current' && (
+                      <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', height: 32, display: 'flex', alignItems: 'center' }}>
+                        Disponible
+                      </span>
+                    )}
                   </div>
-                )}
                 </div>
               </div>
+
+              {/* Accordéon description */}
+              {expandedId === mod.id && (
+                <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)', fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                  {mod.description}
+                  <div style={{ marginTop: 8, fontSize: 12, color: '#a78bfa', fontWeight: 600 }}>
+                    Cliquer à nouveau pour ouvrir →
+                  </div>
+                </div>
+              )}
             </div>
           )
         })}
