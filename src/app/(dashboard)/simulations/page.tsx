@@ -382,13 +382,22 @@ export default function SimulationsPage() {
           </div>
         )}
 
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: '16px 20px', marginBottom: 28, textAlign: 'left' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>💡 Comment ça marche</div>
-          <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-            • Atlas décroche et dit bonjour — toi tu parles en premier<br />
-            • Parle naturellement, la détection s'arrête automatiquement<br />
-            • Atlas répond vocalement comme un vrai prospect<br />
-            • Un debrief complet t'attend à la fin
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: '16px 20px', marginBottom: 24 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            💡 Mode d'emploi
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { icon: '1️⃣', text: 'Atlas décroche et dit bonjour — c\'est toi qui passes l\'appel' },
+              { icon: '2️⃣', text: 'Appuie sur le 🎙️ pour parler, relâche quand tu as fini' },
+              { icon: '3️⃣', text: 'Atlas répond vocalement — attends qu\'il finisse avant de reparler' },
+              { icon: '4️⃣', text: 'Appuie sur 📵 pour raccrocher et obtenir ton rapport complet' },
+            ].map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
+                <span style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{item.text}</span>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -594,58 +603,81 @@ export default function SimulationsPage() {
 
   // ===== DEBRIEF =====
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto', padding: '40px 28px 60px' }}>
-      <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>📊</div>
-        <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', marginBottom: 4 }}>Debrief de l'appel</h2>
-        <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-          {selectedScenario?.title} · {formatTime(callDuration)} · {callMessages.length} échanges
+    <div style={{ maxWidth: 680, margin: '0 auto', padding: '40px 28px 60px' }}>
+      
+      {/* Header */}
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
+          Rapport de simulation
+        </div>
+        <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', marginBottom: 8, fontFamily: 'var(--font-title)' }}>
+          {selectedScenario?.title}
+        </h2>
+        <div style={{ display: 'flex', gap: 20 }}>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Clock size={13} /> {formatTime(callDuration)}
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+            {callMessages.length} échanges
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+            {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </div>
         </div>
       </div>
 
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24, marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+      {/* Analyse Atlas */}
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 28, marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)' }}>
           <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🏔️</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>Analyse d'Atlas</div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>Analyse d'Atlas</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Coach MLM professionnel</div>
+          </div>
         </div>
         {debriefLoading ? (
-          <div style={{ display: 'flex', gap: 6, padding: '20px 0' }}>
+          <div style={{ display: 'flex', gap: 6, padding: '12px 0' }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6D5EF5', animation: 'bounce 0.6s infinite' }} />
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6D5EF5', animation: 'bounce 0.6s infinite 0.15s' }} />
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6D5EF5', animation: 'bounce 0.6s infinite 0.3s' }} />
           </div>
         ) : (
-          <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{debrief}</div>
+          <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.9, whiteSpace: 'pre-wrap' }}>{debrief}</div>
         )}
       </div>
 
+      {/* Transcription */}
       {callMessages.length > 0 && (
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 24, marginBottom: 24 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>📝 Transcription</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 200, overflowY: 'auto' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: 28, marginBottom: 28 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 16, paddingBottom: 12, borderBottom: '1px solid var(--border)' }}>
+            Transcription de l'appel
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 240, overflowY: 'auto' }}>
             {callMessages.map((msg, i) => (
-              <div key={i} style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-                <strong style={{ color: msg.role === 'user' ? '#6D5EF5' : 'var(--text)' }}>
-                  {msg.role === 'user' ? prenom : 'Prospect'} :
-                </strong> {msg.text}
+              <div key={i} style={{ display: 'flex', gap: 10 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: msg.role === 'user' ? '#6D5EF5' : 'var(--text-muted)', whiteSpace: 'nowrap', minWidth: 80 }}>
+                  {msg.role === 'user' ? prenom : 'Prospect'}
+                </div>
+                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{msg.text}</div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+      {/* Actions */}
+      <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
         <button
           onClick={() => { setState('selection'); setCallMessages([]); setDebrief('') }}
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
+          style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-secondary)', borderRadius: 10, padding: '11px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
         >
-          <RotateCcw size={16} /> Nouveau scénario
+          <RotateCcw size={14} /> Nouveau scénario
         </button>
         <button
           onClick={startCall}
-          style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 12px rgba(109,94,245,0.3)' }}
+          style={{ background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', border: 'none', color: 'white', borderRadius: 10, padding: '11px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 12px rgba(109,94,245,0.3)' }}
         >
-          <RotateCcw size={16} /> Rejouer
+          <RotateCcw size={14} /> Rejouer
         </button>
       </div>
     </div>
