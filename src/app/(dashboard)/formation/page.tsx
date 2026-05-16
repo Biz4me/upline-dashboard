@@ -145,6 +145,11 @@ export default function FormationOverview() {
                       <Flame size={11} color="white" strokeWidth={2.5} />
                     </div>
                   )}
+                  {effectiveLocked && !testPassed && (
+                    <div style={{ position: 'absolute', bottom: -4, right: -4, background: '#64748B', borderRadius: '50%', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--bg-card)' }}>
+                      <Lock size={10} color="white" strokeWidth={2.5} />
+                    </div>
+                  )}
                 </div>
 
                 {/* Contenu */}
@@ -166,25 +171,13 @@ export default function FormationOverview() {
                         <CheckCircle2 size={14} strokeWidth={2.5} /> Maîtrisé
                       </span>
                     )}
-                    {mod.status === 'current' && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 700, color: '#6D5EF5', background: 'rgba(109,94,245,0.12)', padding: '0 10px', borderRadius: 8, height: 28 }}>
-                          <Flame size={13} strokeWidth={2.5} /> En cours
-                        </span>
-                        {mod.progression > 0 && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <div style={{ width: 60, height: 5, background: 'rgba(109,94,245,0.15)', borderRadius: 3, overflow: 'hidden' }}>
-                              <div style={{ width: `${mod.progression}%`, height: '100%', background: '#6D5EF5', borderRadius: 3 }} />
-                            </div>
-                            <span style={{ fontSize: 12, fontWeight: 700, color: '#6D5EF5' }}>{mod.progression}%</span>
-                          </div>
-                        )}
+                    {mod.status === 'current' && mod.progression > 0 && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div style={{ width: 60, height: 5, background: 'rgba(109,94,245,0.15)', borderRadius: 3, overflow: 'hidden' }}>
+                          <div style={{ width: `${mod.progression}%`, height: '100%', background: '#6D5EF5', borderRadius: 3 }} />
+                        </div>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#6D5EF5' }}>{mod.progression}%</span>
                       </div>
-                    )}
-                    {effectiveLocked && !testPassed && (
-                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                        🔒 Prérequis : module {mod.id - 1}
-                      </span>
                     )}
                     {!isDone && !effectiveLocked && mod.status !== 'current' && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
