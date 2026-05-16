@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, BookOpen, Sparkles } from 'lucide-react'
+import { ArrowLeft, BookOpen, Sparkles, StickyNote } from 'lucide-react'
 import { getModuleById } from '@/lib/formation-data'
 import type { Unit } from '@/lib/formation-data'
 import LessonNode from '@/components/formation/LessonNode'
@@ -11,6 +11,31 @@ export default function ModuleDetail({ params }: { params: { moduleId: string } 
   const { moduleId } = params
   const router = useRouter()
   const mod = getModuleById(Number(moduleId))
+
+  const getNoteCount = (moduleId: string, unitId: string, lessonCount: number) => {
+    let count = 0
+    for (let i = 1; i <= lessonCount; i++) {
+      const key = `note-${moduleId}-${unitId}-${i}`
+      const note = localStorage.getItem(key)
+      if (note && note.trim().length > 0) count++
+    }
+    return count
+  }
+
+  const getTotalNotes = () => {
+    if (typeof window === 'undefined') return 0
+    let count = 0
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      if (key && key.startsWith('note-')) {
+        const val = localStorage.getItem(key)
+        if (val && val.trim().length > 0) count++
+      }
+    }
+    return count
+  }
+
+  const totalNotes = typeof window !== 'undefined' ? getTotalNotes() : 0
 
   if (!mod) {
     return (
@@ -224,6 +249,17 @@ function UnitSection({ unit, moduleId, unitIndex }: { unit: Unit; moduleId: numb
               />
             )}
             <LessonNode lesson={lesson} moduleId={moduleId} unitId={unit.id} showAtlas={lesson.status === 'current'} />
+            {(() => {
+              if (typeof window === 'undefined') return null
+              const noteKey = `note-${moduleId}-${unit.id}-${lesson.id}`
+              const noteVal = localStorage.getItem(noteKey)
+              const hasNote = noteVal ? noteVal.trim().length > 0 : false
+              return hasNote ? (
+                <div style={{ position: 'absolute', top: -4, right: -4, width: 16, height: 16, borderRadius: '50%', background: '#6D5EF5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'white', fontWeight: 800, zIndex: 5 }}>
+                  📝
+                </div>
+              ) : null
+            })()}
           </div>
           {(i < unit.lessons.length - 1 || unit.bossLesson) && (
             <div

@@ -1,7 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, Heart } from 'lucide-react'
+import { X, Heart, FileText, Save, StickyNote } from 'lucide-react'
 import { getModuleById, getUnitById, getLessonById } from '@/lib/formation-data'
 
 const sampleQuestions = [
@@ -52,6 +52,26 @@ export default function LessonPage({
   const [validated, setValidated] = useState(false)
   const [hearts, setHearts] = useState(5)
   const [finished, setFinished] = useState(false)
+
+  const [showNote, setShowNote] = useState(false)
+  const [noteText, setNoteText] = useState('')
+  const [noteSaved, setNoteSaved] = useState(false)
+
+  // Charger la note depuis localStorage au montage
+  useEffect(() => {
+    const key = `note-${moduleId}-${unitId}-${lessonId}`
+    const saved = localStorage.getItem(key)
+    if (saved) setNoteText(saved)
+  }, [moduleId, unitId, lessonId])
+
+  const saveNote = () => {
+    const key = `note-${moduleId}-${unitId}-${lessonId}`
+    localStorage.setItem(key, noteText)
+    setNoteSaved(true)
+    setTimeout(() => setNoteSaved(false), 2000)
+  }
+
+  const hasNote = noteText.trim().length > 0
 
   if (!mod || !unit || !lesson) {
     return (
@@ -155,6 +175,19 @@ export default function LessonPage({
           aria-label="Quitter"
         >
           <X size={22} />
+        </button>
+        <button
+          onClick={() => setShowNote(!showNote)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: hasNote ? 'rgba(109,94,245,0.15)' : 'rgba(255,255,255,0.08)',
+            border: hasNote ? '1.5px solid rgba(109,94,245,0.4)' : '1.5px solid rgba(255,255,255,0.15)',
+            color: hasNote ? '#a78bfa' : 'rgba(255,255,255,0.7)',
+            borderRadius: 10, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+          }}
+        >
+          <StickyNote size={15} />
+          {hasNote ? '📝 Ma note' : 'Notes'}
         </button>
         <div style={{ flex: 1, height: 12, background: 'var(--bg-card)', borderRadius: 6, overflow: 'hidden' }}>
           <div
@@ -337,6 +370,66 @@ export default function LessonPage({
           </button>
         )}
       </div>
+
+      {/* Panneau Notes */}
+      {showNote && (
+        <div style={{
+          position: 'fixed', right: 0, top: 64, bottom: 0, width: 340,
+          background: 'var(--bg-card)', borderLeft: '1px solid var(--border)',
+          zIndex: 40, display: 'flex', flexDirection: 'column',
+          boxShadow: '-8px 0 24px rgba(0,0,0,0.15)',
+          animation: 'slideInRight 0.2s ease',
+        }}>
+          <style>{`@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }`}</style>
+          
+          {/* Header note */}
+          <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <StickyNote size={18} color="#6D5EF5" />
+              <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>Ma note</span>
+            </div>
+            <button onClick={() => setShowNote(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Context leçon */}
+          <div style={{ padding: '12px 20px', background: 'var(--primary-bg)', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 }}>Leçon en cours</div>
+            <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Module {moduleId} · Unité {unitId} · Leçon {lessonId}</div>
+          </div>
+
+          {/* Textarea */}
+          <div style={{ flex: 1, padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <textarea
+              value={noteText}
+              onChange={e => setNoteText(e.target.value)}
+              placeholder="Prends des notes sur cette leçon...\n\nEx: La technique Feel/Felt/Found fonctionne bien avec les sceptiques. Tester demain avec Jean."
+              style={{
+                flex: 1, width: '100%', background: 'var(--bg-page)',
+                border: '1.5px solid var(--border)', borderRadius: 12,
+                padding: '14px', fontSize: 14, color: 'var(--text)',
+                outline: 'none', resize: 'none', lineHeight: 1.6,
+                fontFamily: 'inherit', boxSizing: 'border-box',
+              }}
+              onFocus={e => e.target.style.borderColor = '#6D5EF5'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+            />
+            <button
+              onClick={saveNote}
+              style={{
+                background: noteSaved ? '#22C55E' : 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+                border: 'none', color: 'white', borderRadius: 10,
+                padding: '12px 0', fontSize: 14, fontWeight: 700,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(109,94,245,0.3)',
+              }}
+            >
+              {noteSaved ? '✅ Note sauvegardée !' : <><Save size={16} /> Sauvegarder</>}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

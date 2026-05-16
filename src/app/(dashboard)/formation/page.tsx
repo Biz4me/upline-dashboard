@@ -3,7 +3,20 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { modules, getGlobalStats } from '@/lib/formation-data'
 import { getUnlockTestState } from '@/lib/unlock-test'
-import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw } from 'lucide-react'
+import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw, StickyNote } from 'lucide-react'
+
+const getModuleNoteCount = (moduleId: number) => {
+  if (typeof window === 'undefined') return 0
+  let count = 0
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    if (key && key.startsWith(`note-${moduleId}-`)) {
+      const val = localStorage.getItem(key)
+      if (val && val.trim().length > 0) count++
+    }
+  }
+  return count
+}
 
 export default function FormationOverview() {
   const stats = getGlobalStats()
@@ -201,6 +214,17 @@ export default function FormationOverview() {
                 <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 4 }}>
                   {mod.description}
                 </div>
+                {(() => {
+                  const noteCount = getModuleNoteCount(mod.id)
+                  return noteCount > 0 ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
+                      <StickyNote size={12} color="#a78bfa" />
+                      <span style={{ fontSize: 11, fontWeight: 700, color: '#a78bfa' }}>
+                        {noteCount} note{noteCount > 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  ) : null
+                })()}
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4, flexWrap: 'nowrap' }}>
                 {mod.progression > 0 && mod.progression < 100 && (
