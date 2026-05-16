@@ -67,6 +67,52 @@ const SCENARIOS = [
   },
 ]
 
+const SCENARIO_STEPS: Record<number, { step: string; desc: string; icon: string }[]> = {
+  1: [
+    { step: 'Être pressé', desc: 'Montre que tu as peu de temps — ça réduit la pression', icon: '⚡' },
+    { step: 'Compliment sincère', desc: 'Un compliment authentique sur la personne', icon: '🌟' },
+    { step: 'L\'invitation', desc: 'Pose ta question d\'invitation directement', icon: '🎯' },
+    { step: 'Confirmer le RDV', desc: 'Valide la date et l\'heure concrètement', icon: '📅' },
+    { step: 'Raccrocher', desc: 'Termine rapidement — reste pressé jusqu\'au bout', icon: '📵' },
+  ],
+  2: [
+    { step: 'Être pressé', desc: 'Montre que tu as peu de temps', icon: '⚡' },
+    { step: 'Compliment sincère', desc: 'Trouve quelque chose d\'authentique', icon: '🌟' },
+    { step: 'Référence commune', desc: 'Rappelle comment vous vous connaissez', icon: '🤝' },
+    { step: 'L\'invitation', desc: 'Pose ta question d\'invitation', icon: '🎯' },
+    { step: 'Confirmer le RDV', desc: 'Valide la date et l\'heure', icon: '📅' },
+    { step: 'Raccrocher vite', desc: 'Reste pressé et raccroche rapidement', icon: '📵' },
+  ],
+  3: [
+    { step: 'Saluer chaleureusement', desc: 'Commence par prendre des nouvelles', icon: '👋' },
+    { step: 'Rappeler le contexte', desc: 'Mentionne la présentation qu\'il a vue', icon: '🔄' },
+    { step: 'Question ouverte', desc: 'Demande ce qu\'il a pensé honnêtement', icon: '💭' },
+    { step: 'Écouter activement', desc: 'Laisse-le parler sans l\'interrompre', icon: '👂' },
+    { step: 'Identifier l\'objection', desc: 'Trouve la vraie raison de son hésitation', icon: '🔍' },
+    { step: 'Proposer une solution', desc: 'Réponds précisément à son objection', icon: '✅' },
+  ],
+  4: [
+    { step: 'Rester calme', desc: 'Ne te défends pas — reste professionnel', icon: '😌' },
+    { step: 'Feel Felt Found', desc: '"Je comprends... d\'autres ont ressenti... ils ont trouvé..."', icon: '💡' },
+    { step: 'Poser une question', desc: 'Demande ce qu\'il entend par pyramide', icon: '❓' },
+    { step: 'Expliquer la différence', desc: 'Pyramide illégale vs réseau de distribution légal', icon: '📊' },
+    { step: 'Rediriger', desc: 'Reviens à son besoin initial', icon: '🎯' },
+  ],
+  5: [
+    { step: 'Identifier le frein', desc: 'Qu\'est-ce qui l\'empêche vraiment de décider ?', icon: '🔍' },
+    { step: 'Valider ses craintes', desc: 'Montre que tu comprends ses peurs', icon: '🤝' },
+    { step: 'Raconter une histoire', desc: 'Partage l\'histoire de quelqu\'un dans sa situation', icon: '📖' },
+    { step: 'Question de décision', desc: '"Si tu n\'avais pas cette crainte, tu le ferais ?"', icon: '💭' },
+    { step: 'Proposer un premier pas', desc: 'Suggère une action simple pour commencer', icon: '👣' },
+  ],
+  6: [
+    { step: 'Comprendre la situation', desc: 'Écoute bien le contexte décrit', icon: '👂' },
+    { step: 'Adapter ton approche', desc: 'Utilise la technique la plus appropriée', icon: '🎯' },
+    { step: 'Rester naturel', desc: 'Parle comme dans une vraie conversation', icon: '😊' },
+    { step: 'Gérer les objections', desc: 'Feel Felt Found pour toute résistance', icon: '💡' },
+  ],
+}
+
 type SimState = 'selection' | 'setup' | 'calling' | 'debrief'
 
 interface CallMessage {
@@ -345,6 +391,44 @@ export default function SimulationsPage() {
             • Un debrief complet t'attend à la fin
           </div>
         </div>
+
+        {/* Étapes à suivre */}
+        {selectedScenario && SCENARIO_STEPS[selectedScenario.id] && (
+          <div style={{ marginBottom: 28, textAlign: 'left' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span>📋</span> Étapes à suivre — Méthode Eric Worre
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {SCENARIO_STEPS[selectedScenario.id].map((s, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 12, padding: '12px 16px',
+                  minHeight: 60,
+                }}>
+                  {/* Numéro */}
+                  <div style={{
+                    width: 28, height: 28, borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, fontWeight: 800, color: 'white',
+                    flexShrink: 0,
+                  }}>
+                    {i + 1}
+                  </div>
+                  {/* Icône */}
+                  <div style={{ fontSize: 20, flexShrink: 0, width: 28, textAlign: 'center' }}>{s.icon}</div>
+                  {/* Texte */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{s.step}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{s.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
           <button onClick={() => setState('selection')} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
