@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { modules, getGlobalStats } from '@/lib/formation-data'
 import { getUnlockTestState } from '@/lib/unlock-test'
-import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw, StickyNote } from 'lucide-react'
+import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw, StickyNote, Info } from 'lucide-react'
 
 const getModuleNoteCount = (moduleId: number) => {
   if (typeof window === 'undefined') return 0
@@ -22,6 +22,7 @@ export default function FormationOverview() {
   const stats = getGlobalStats()
   const router = useRouter()
   const [unlockStates, setUnlockStates] = useState<Record<number, { state: string; cooldownHoursLeft?: number }>>({})
+  const [tooltipId, setTooltipId] = useState<number | null>(null)
 
   useEffect(() => {
     const states: Record<number, { state: string; cooldownHoursLeft?: number }> = {}
@@ -124,9 +125,9 @@ export default function FormationOverview() {
                 padding: '16px 24px',
                 display: 'flex',
                 alignItems: 'center',
-                minHeight: 120,
-                height: 'auto',
-                maxHeight: 'none',
+                height: 100,
+                minHeight: 100,
+                maxHeight: 100,
                 overflow: 'hidden',
                 gap: 20,
                 opacity: effectiveLocked ? 0.85 : 1,
@@ -211,8 +212,24 @@ export default function FormationOverview() {
                 <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 2, fontFamily: 'var(--font-title)' }}>
                   {mod.title}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 4 }}>
-                  {mod.description}
+                <div style={{ position: 'relative', display: 'inline-flex', marginLeft: 'auto', flexShrink: 0 }}>
+                  <button
+                    onClick={e => { e.stopPropagation(); setTooltipId(tooltipId === mod.id ? null : mod.id) }}
+                    style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 4, display: 'flex', alignItems: 'center' }}
+                  >
+                    <Info size={16} />
+                  </button>
+                  {tooltipId === mod.id && (
+                    <div style={{
+                      position: 'absolute', right: 0, top: 28, zIndex: 50,
+                      background: 'var(--bg-card)', border: '1px solid var(--border)',
+                      borderRadius: 12, padding: '12px 14px', width: 220,
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.2)', fontSize: 13,
+                      color: 'var(--text-secondary)', lineHeight: 1.6,
+                    }}>
+                      {mod.description}
+                    </div>
+                  )}
                 </div>
                 {(() => {
                   const noteCount = getModuleNoteCount(mod.id)
@@ -273,9 +290,9 @@ export default function FormationOverview() {
                   <div>
                     {!unlockState || unlockState.state === 'available' ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'nowrap' }}>
-                        <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>
-                          🔒 Termine le module {mod.id - 1} d'abord
-                        </div>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                          🔒 Prérequis : module {mod.id - 1}
+                        </span>
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
