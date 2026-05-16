@@ -97,9 +97,6 @@ export default function SimulationsPage() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const conversationRef = useRef<{ role: string; content: string }[]>([])
-  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const analyserRef = useRef<AnalyserNode | null>(null)
-  const animFrameRef = useRef<number | null>(null)
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0')
@@ -149,9 +146,6 @@ export default function SimulationsPage() {
       setIsSpeaking(false)
       setSpherePulse(false)
       setStatus('waiting')
-      setTimeout(() => {
-        if (!isRecordingRef.current) startRecording()
-      }, 1000)
     }
   }
 
@@ -185,30 +179,18 @@ export default function SimulationsPage() {
   }
 
   const startRecording = async () => {
-    if (isRecording || isSpeaking || isLoading) return
+    if (isRecordingRef.current || isSpeaking || isLoading) return
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-
-      // Détection silence
-      const audioCtx = new AudioContext()
-      const source = audioCtx.createMediaStreamSource(stream)
-      const analyser = audioCtx.createAnalyser()
-      analyser.fftSize = 256
-      source.connect(analyser)
-      analyserRef.current = analyser
-
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
+      const mediaRecorder = new MediaRecorder(stream)
       mediaRecorderRef.current = mediaRecorder
       audioChunksRef.current = []
-
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) audioChunksRef.current.push(e.data)
       }
-
       mediaRecorder.onstop = async () => {
         stream.getTracks().forEach(t => t.stop())
-        audioCtx.close()
-        if (audioChunksRef.current.length === 0) return
+        if (audioChunksRef.current.length === 0) { setStatus('waiting'); return }
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
         const formData = new FormData()
         formData.append('audio', audioBlob, 'recording.webm')
@@ -220,56 +202,27 @@ export default function SimulationsPage() {
             await atlasRespond(sttData.text.trim())
           } else {
             setStatus('waiting')
-            setTimeout(() => startRecording(), 800)
           }
         } catch {
           setStatus('waiting')
         }
       }
-
       mediaRecorder.start()
       setIsRecording(true)
       isRecordingRef.current = true
       setStatus('listening')
-
-      // Détection silence automatique
-      const checkSilence = () => {
-        if (!analyserRef.current) return
-        const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
-        analyserRef.current.getByteFrequencyData(dataArray)
-        const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length
-
-        if (avg < 30) {
-          if (!silenceTimerRef.current) {
-            silenceTimerRef.current = setTimeout(() => {
-              stopRecording()
-            }, 2500)
-          }
-        } else {
-          if (silenceTimerRef.current) {
-            clearTimeout(silenceTimerRef.current)
-            silenceTimerRef.current = null
-          }
-        }
-        animFrameRef.current = requestAnimationFrame(checkSilence)
-      }
-      animFrameRef.current = requestAnimationFrame(checkSilence)
-
     } catch {
       alert('Microphone non accessible.')
     }
   }
 
   const stopRecording = () => {
-    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
-    if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null }
-    audioChunksRef.current = []
-    if (mediaRecorderRef.current && isRecording) {
+    if (!isRecordingRef.current) return
+    if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop()
-      setIsRecording(false)
-      isRecordingRef.current = false
-      setStatus('thinking')
     }
+    setIsRecording(false)
+    isRecordingRef.current = false
   }
 
   const startCall = async () => {
@@ -296,7 +249,6 @@ export default function SimulationsPage() {
     audioChunksRef.current = [] // vider avant d'arrêter
     stopRecording()
     if (audioRef.current) audioRef.current.pause()
-    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
     setState('debrief')
     setDebriefLoading(true)
 
@@ -526,24 +478,48 @@ export default function SimulationsPage() {
           )}
         </div>
 
-        {/* Bouton raccrocher */}
-        <div style={{ zIndex: 2 }}>
+        <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          {/* Bouton maintenir pour parler */}
+          <button
+            onPointerDown={startRecording}
+            onPointerUp={stopRecording}
+            onPointerLeave={stopRecording}
+            disabled={isSpeaking || isLoading}
+            style={{
+              width: 80, height: 80, borderRadius: '50%',
+              background: isRecording 
+                ? '#EF4444' 
+                : 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
+              border: 'none', color: 'white', cursor: 'pointer',
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', gap: 4,
+              boxShadow: isRecording 
+                ? '0 0 0 12px rgba(239,68,68,0.2)' 
+                : '0 4px 24px rgba(109,94,245,0.4)',
+              transition: 'all 0.15s',
+              opacity: (isSpeaking || isLoading) ? 0.4 : 1,
+            }}
+          >
+            <span style={{ fontSize: 28 }}>🎙️</span>
+            <span style={{ fontSize: 10, fontWeight: 700 }}>
+              {isRecording ? 'Relâcher' : 'Maintenir'}
+            </span>
+          </button>
+
+          {/* Bouton raccrocher */}
           <button
             onClick={endCall}
             style={{
-              width: 72, height: 72, borderRadius: '50%',
+              width: 56, height: 56, borderRadius: '50%',
               background: '#EF4444', border: 'none',
               color: 'white', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 24px rgba(239,68,68,0.5)',
-              transition: 'transform 0.15s',
+              boxShadow: '0 4px 16px rgba(239,68,68,0.4)',
             }}
-            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
           >
-            <PhoneOff size={28} />
+            <PhoneOff size={22} />
           </button>
-          <div style={{ textAlign: 'center', marginTop: 10, fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>
             Raccrocher
           </div>
         </div>
