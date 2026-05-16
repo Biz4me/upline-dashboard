@@ -67,49 +67,49 @@ const SCENARIOS = [
   },
 ]
 
-const SCENARIO_STEPS: Record<number, { step: string; desc: string; icon: string }[]> = {
+const SCENARIO_STEPS: Record<number, { step: string; desc: string; icon: string; example: string }[]> = {
   1: [
-    { step: 'Être pressé', desc: 'Montre que tu as peu de temps — ça réduit la pression', icon: '⚡' },
-    { step: 'Compliment sincère', desc: 'Un compliment authentique sur la personne', icon: '🌟' },
-    { step: 'L\'invitation', desc: 'Pose ta question d\'invitation directement', icon: '🎯' },
-    { step: 'Confirmer le RDV', desc: 'Valide la date et l\'heure concrètement', icon: '📅' },
-    { step: 'Raccrocher', desc: 'Termine rapidement — reste pressé jusqu\'au bout', icon: '📵' },
+    { step: 'Être pressé', desc: 'Montre que tu as peu de temps', icon: '⚡', example: '"Je suis pressé mais je voulais t\'appeler..."' },
+    { step: 'Compliment sincère', desc: 'Un compliment authentique', icon: '🌟', example: '"Tu as toujours su voir les opportunités..."' },
+    { step: 'L\'invitation', desc: 'Pose ta question directement', icon: '🎯', example: '"Est-ce que tu serais ouvert à regarder quelque chose si ça ne changeait pas ta vie actuelle ?"' },
+    { step: 'Confirmer le RDV', desc: 'Valide la date et l\'heure', icon: '📅', example: '"Parfait, jeudi 20h ça te va ?"' },
+    { step: 'Raccrocher', desc: 'Reste pressé jusqu\'au bout', icon: '📵', example: '"Super ! Je te laisse, on se voit jeudi !"' },
   ],
   2: [
-    { step: 'Être pressé', desc: 'Montre que tu as peu de temps', icon: '⚡' },
-    { step: 'Compliment sincère', desc: 'Trouve quelque chose d\'authentique', icon: '🌟' },
-    { step: 'Référence commune', desc: 'Rappelle comment vous vous connaissez', icon: '🤝' },
-    { step: 'L\'invitation', desc: 'Pose ta question d\'invitation', icon: '🎯' },
-    { step: 'Confirmer le RDV', desc: 'Valide la date et l\'heure', icon: '📅' },
-    { step: 'Raccrocher vite', desc: 'Reste pressé et raccroche rapidement', icon: '📵' },
+    { step: 'Être pressé', desc: 'Montre que tu as peu de temps', icon: '⚡', example: '"Salut Sophie, j\'ai 2 minutes..."' },
+    { step: 'Compliment sincère', desc: 'Trouve quelque chose d\'authentique', icon: '🌟', example: '"Tu as toujours été quelqu\'un de motivé..."' },
+    { step: 'Référence commune', desc: 'Rappelle comment vous vous connaissez', icon: '🤝', example: '"On s\'est croisés chez Marie l\'année dernière..."' },
+    { step: 'L\'invitation', desc: 'Pose ta question d\'invitation', icon: '🎯', example: '"Serais-tu ouverte à regarder quelque chose ?"' },
+    { step: 'Confirmer le RDV', desc: 'Valide la date et l\'heure', icon: '📅', example: '"Mardi soir 19h, ça te convient ?"' },
+    { step: 'Raccrocher vite', desc: 'Reste pressé et raccroche', icon: '📵', example: '"Parfait ! Je file, à mardi !"' },
   ],
   3: [
-    { step: 'Saluer chaleureusement', desc: 'Commence par prendre des nouvelles', icon: '👋' },
-    { step: 'Rappeler le contexte', desc: 'Mentionne la présentation qu\'il a vue', icon: '🔄' },
-    { step: 'Question ouverte', desc: 'Demande ce qu\'il a pensé honnêtement', icon: '💭' },
-    { step: 'Écouter activement', desc: 'Laisse-le parler sans l\'interrompre', icon: '👂' },
-    { step: 'Identifier l\'objection', desc: 'Trouve la vraie raison de son hésitation', icon: '🔍' },
-    { step: 'Proposer une solution', desc: 'Réponds précisément à son objection', icon: '✅' },
+    { step: 'Saluer chaleureusement', desc: 'Commence par prendre des nouvelles', icon: '👋', example: '"Salut Jean ! Comment tu vas depuis la semaine dernière ?"' },
+    { step: 'Rappeler le contexte', desc: 'Mentionne la présentation', icon: '🔄', example: '"Je voulais avoir ton retour sur ce que tu as vu..."' },
+    { step: 'Question ouverte', desc: 'Demande ce qu\'il a pensé', icon: '💭', example: '"Qu\'est-ce que tu as pensé honnêtement ?"' },
+    { step: 'Écouter activement', desc: 'Laisse-le parler sans interrompre', icon: '👂', example: '(Silence — laisse-le parler complètement)' },
+    { step: 'Identifier l\'objection', desc: 'Trouve la vraie raison', icon: '🔍', example: '"Si ce n\'était pas ça, tu serais partant ?"' },
+    { step: 'Proposer une solution', desc: 'Réponds précisément', icon: '✅', example: '"D\'autres avaient la même crainte et voilà ce qu\'ils ont trouvé..."' },
   ],
   4: [
-    { step: 'Rester calme', desc: 'Ne te défends pas — reste professionnel', icon: '😌' },
-    { step: 'Feel Felt Found', desc: '"Je comprends... d\'autres ont ressenti... ils ont trouvé..."', icon: '💡' },
-    { step: 'Poser une question', desc: 'Demande ce qu\'il entend par pyramide', icon: '❓' },
-    { step: 'Expliquer la différence', desc: 'Pyramide illégale vs réseau de distribution légal', icon: '📊' },
-    { step: 'Rediriger', desc: 'Reviens à son besoin initial', icon: '🎯' },
+    { step: 'Rester calme', desc: 'Ne te défends pas', icon: '😌', example: '"Je comprends tout à fait ta question..."' },
+    { step: 'Feel Felt Found', desc: 'La méthode des 3F', icon: '💡', example: '"D\'autres ont ressenti la même chose... et ils ont trouvé que..."' },
+    { step: 'Poser une question', desc: 'Demande ce qu\'il entend par pyramide', icon: '❓', example: '"Qu\'est-ce que tu entends exactement par système pyramidal ?"' },
+    { step: 'Expliquer la différence', desc: 'Pyramide illégale vs réseau légal', icon: '📊', example: '"Une pyramide n\'a pas de produit réel. Nous, on vend..."' },
+    { step: 'Rediriger', desc: 'Reviens à son besoin initial', icon: '🎯', example: '"Au-delà de ça, est-ce que le revenu complémentaire t\'intéresse ?"' },
   ],
   5: [
-    { step: 'Identifier le frein', desc: 'Qu\'est-ce qui l\'empêche vraiment de décider ?', icon: '🔍' },
-    { step: 'Valider ses craintes', desc: 'Montre que tu comprends ses peurs', icon: '🤝' },
-    { step: 'Raconter une histoire', desc: 'Partage l\'histoire de quelqu\'un dans sa situation', icon: '📖' },
-    { step: 'Question de décision', desc: '"Si tu n\'avais pas cette crainte, tu le ferais ?"', icon: '💭' },
-    { step: 'Proposer un premier pas', desc: 'Suggère une action simple pour commencer', icon: '👣' },
+    { step: 'Identifier le frein', desc: 'Qu\'est-ce qui l\'empêche vraiment ?', icon: '🔍', example: '"Qu\'est-ce qui te retient exactement ?"' },
+    { step: 'Valider ses craintes', desc: 'Montre que tu comprends', icon: '🤝', example: '"C\'est tout à fait normal d\'avoir cette crainte..."' },
+    { step: 'Raconter une histoire', desc: 'Partage l\'histoire de quelqu\'un', icon: '📖', example: '"Marie avait exactement la même peur et aujourd\'hui..."' },
+    { step: 'Question de décision', desc: '"Si tu n\'avais pas cette crainte..."', icon: '💭', example: '"Si l\'argent n\'était pas un problème, tu le ferais ?"' },
+    { step: 'Proposer un premier pas', desc: 'Suggère une action simple', icon: '👣', example: '"Et si on commençait juste par une semaine d\'essai ?"' },
   ],
   6: [
-    { step: 'Comprendre la situation', desc: 'Écoute bien le contexte décrit', icon: '👂' },
-    { step: 'Adapter ton approche', desc: 'Utilise la technique la plus appropriée', icon: '🎯' },
-    { step: 'Rester naturel', desc: 'Parle comme dans une vraie conversation', icon: '😊' },
-    { step: 'Gérer les objections', desc: 'Feel Felt Found pour toute résistance', icon: '💡' },
+    { step: 'Comprendre la situation', desc: 'Écoute bien le contexte', icon: '👂', example: '(Écoute attentivement le prospect)' },
+    { step: 'Adapter ton approche', desc: 'Utilise la technique appropriée', icon: '🎯', example: '(Choisis selon la réaction du prospect)' },
+    { step: 'Rester naturel', desc: 'Parle comme dans une vraie conversation', icon: '😊', example: '"Je comprends, dis-moi en plus..."' },
+    { step: 'Gérer les objections', desc: 'Feel Felt Found pour toute résistance', icon: '💡', example: '"D\'autres ont ressenti la même chose..."' },
   ],
 }
 
@@ -327,7 +327,7 @@ export default function SimulationsPage() {
   // ===== SÉLECTION =====
   if (state === 'selection') {
     return (
-      <div className="overflow-x-fix" style={{ maxWidth: 900, margin: '0 auto', padding: '32px 28px 60px' }}>
+      <div className="overflow-x-fix" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 28px 60px' }}>
         <div style={{ marginBottom: 28 }}>
           <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 4, fontFamily: 'var(--font-title)' }}>
             Simulations d'appel
@@ -362,90 +362,103 @@ export default function SimulationsPage() {
   // ===== SETUP =====
   if (state === 'setup') {
     return (
-      <div style={{ maxWidth: 560, margin: '0 auto', padding: '60px 28px', textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>{selectedScenario?.icon}</div>
-        <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>{selectedScenario?.title}</h2>
-        <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 28, lineHeight: 1.6 }}>{selectedScenario?.desc}</p>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 28px 60px' }}>
 
-        {selectedScenario?.custom && (
-          <div style={{ marginBottom: 24, textAlign: 'left' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Décris ta situation</div>
-            <textarea
-              value={customDesc}
-              onChange={e => setCustomDesc(e.target.value)}
-              placeholder="Ex: Je rappelle Marie qui a vu une présentation hier et hésite à cause de son mari..."
-              rows={4}
-              style={{ width: '100%', background: 'var(--bg-card)', border: '1.5px solid var(--border)', borderRadius: 12, padding: '12px 14px', fontSize: 14, color: 'var(--text)', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
-              onFocus={e => e.target.style.borderColor = '#6D5EF5'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
-            />
-          </div>
-        )}
-
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: '16px 20px', marginBottom: 24 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-            💡 Mode d'emploi
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {[
-              { icon: '1️⃣', text: 'Atlas décroche et dit bonjour — c\'est toi qui passes l\'appel' },
-              { icon: '2️⃣', text: 'Appuie sur le 🎙️ pour parler, relâche quand tu as fini' },
-              { icon: '3️⃣', text: 'Atlas répond vocalement — attends qu\'il finisse avant de reparler' },
-              { icon: '4️⃣', text: 'Appuie sur 📵 pour raccrocher et obtenir ton rapport complet' },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
-                <span style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{item.text}</span>
+        {/* Header */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
+            <span style={{ fontSize: 36 }}>{selectedScenario?.icon}</span>
+            <div>
+              <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', marginBottom: 4, fontFamily: 'var(--font-title)' }}>
+                {selectedScenario?.title}
+              </h2>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, background: `${selectedScenario?.diffColor}15`, color: selectedScenario?.diffColor, padding: '3px 10px', borderRadius: 20 }}>
+                  {selectedScenario?.difficulty}
+                </span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                  <Clock size={11} style={{ display: 'inline', verticalAlign: 'middle' }} /> {selectedScenario?.duration}
+                </span>
               </div>
-            ))}
+            </div>
           </div>
+          <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{selectedScenario?.desc}</p>
         </div>
 
-        {/* Étapes à suivre */}
-        {selectedScenario && SCENARIO_STEPS[selectedScenario.id] && (
-          <div style={{ marginBottom: 28, textAlign: 'left' }}>
+        {/* 2 colonnes */}
+        <div className="grid-auto" style={{ marginBottom: 28 }}>
+
+          {/* Colonne gauche — Étapes */}
+          <div>
             <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span>📋</span> Étapes à suivre — Méthode Eric Worre
+              📋 Étapes à suivre — Méthode Eric Worre
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {SCENARIO_STEPS[selectedScenario.id].map((s, i) => (
+              {selectedScenario && SCENARIO_STEPS[selectedScenario.id]?.map((s, i) => (
                 <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 12, padding: '12px 16px',
-                  minHeight: 60,
+                  display: 'flex', alignItems: 'flex-start', gap: 12,
+                  background: 'var(--bg-card)', border: '1px solid var(--border)',
+                  borderRadius: 12, padding: '14px 16px',
                 }}>
-                  {/* Numéro */}
-                  <div style={{
-                    width: 28, height: 28, borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 12, fontWeight: 800, color: 'white',
-                    flexShrink: 0,
-                  }}>
+                  <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'linear-gradient(135deg, #6D5EF5, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: 'white', flexShrink: 0, marginTop: 2 }}>
                     {i + 1}
                   </div>
-                  {/* Icône */}
-                  <div style={{ fontSize: 20, flexShrink: 0, width: 28, textAlign: 'center' }}>{s.icon}</div>
-                  {/* Texte */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 18, flexShrink: 0, width: 24 }}>{s.icon}</div>
+                  <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{s.step}</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{s.desc}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4 }}>{s.desc}</div>
+                    <div style={{ fontSize: 11, color: '#a78bfa', fontStyle: 'italic' }}>Ex : {s.example}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        )}
 
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-          <button onClick={() => setState('selection')} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-            ← Retour
-          </button>
-          <button onClick={startCall} style={{ background: 'linear-gradient(135deg, #22C55E, #16A34A)', border: 'none', color: 'white', borderRadius: 12, padding: '12px 32px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 16px rgba(34,197,94,0.35)' }}>
-            📞 Démarrer l'appel
-          </button>
+          {/* Colonne droite — Mode d'emploi + simulation libre + boutons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            
+            {/* Mode d'emploi */}
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: '20px 22px' }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>💡 Mode d'emploi</div>
+              {[
+                { icon: '1️⃣', text: 'Atlas décroche et dit bonjour — toi tu parles en premier' },
+                { icon: '2️⃣', text: 'Appuie sur 🎙️ pour parler, relâche quand tu as fini' },
+                { icon: '3️⃣', text: 'Attends qu\'Atlas finisse de répondre avant de reparler' },
+                { icon: '4️⃣', text: 'Appuie sur 📵 pour raccrocher et obtenir ton rapport' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
+                  <span style={{ fontSize: 15, flexShrink: 0 }}>{item.icon}</span>
+                  <span style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Simulation libre custom */}
+            {selectedScenario?.custom && (
+              <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: '20px 22px' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Décris ta situation</div>
+                <textarea
+                  value={customDesc}
+                  onChange={e => setCustomDesc(e.target.value)}
+                  placeholder="Ex: Je rappelle Marie qui a vu une présentation hier et hésite à cause de son mari..."
+                  rows={4}
+                  style={{ width: '100%', background: 'var(--bg-page)', border: '1.5px solid var(--border)', borderRadius: 12, padding: '12px 14px', fontSize: 14, color: 'var(--text)', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
+                  onFocus={e => e.target.style.borderColor = '#6D5EF5'}
+                  onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                />
+              </div>
+            )}
+
+            {/* Boutons */}
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button onClick={() => setState('selection')} style={{ flex: 1, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-secondary)', borderRadius: 12, padding: '13px 0', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                ← Retour
+              </button>
+              <button onClick={startCall} style={{ flex: 2, background: 'linear-gradient(135deg, #22C55E, #16A34A)', border: 'none', color: 'white', borderRadius: 12, padding: '13px 0', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 4px 16px rgba(34,197,94,0.35)' }}>
+                📞 Démarrer l'appel
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     )
