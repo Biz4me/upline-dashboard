@@ -521,44 +521,6 @@ export default function SimulationsPage() {
           )}
         </div>
 
-        {/* Bouton parler manuel */}
-        {!isRecording && !isSpeaking && !isLoading && (
-          <button
-            onPointerDown={startRecording}
-            style={{
-              width: 80, height: 80, borderRadius: '50%',
-              background: 'rgba(109,94,245,0.3)',
-              border: '3px solid #6D5EF5',
-              color: 'white', cursor: 'pointer',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              gap: 4, marginBottom: 16,
-              boxShadow: '0 4px 24px rgba(109,94,245,0.4)',
-            }}
-          >
-            <span style={{ fontSize: 28 }}>🎙️</span>
-            <span style={{ fontSize: 10, fontWeight: 700 }}>Parler</span>
-          </button>
-        )}
-        {isRecording && (
-          <button
-            onPointerUp={stopRecording}
-            style={{
-              width: 80, height: 80, borderRadius: '50%',
-              background: '#EF4444',
-              border: 'none', color: 'white', cursor: 'pointer',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              gap: 4, marginBottom: 16,
-              boxShadow: '0 0 0 8px rgba(239,68,68,0.2)',
-              animation: 'pulse 1s infinite',
-            }}
-          >
-            <span style={{ fontSize: 28 }}>⏹️</span>
-            <span style={{ fontSize: 10, fontWeight: 700 }}>Relâcher</span>
-          </button>
-        )}
-
         {/* Bouton raccrocher */}
         <div style={{ zIndex: 2 }}>
           <button
