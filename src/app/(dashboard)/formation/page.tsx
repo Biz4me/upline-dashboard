@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { modules, getGlobalStats } from '@/lib/formation-data'
 import { getUnlockTestState } from '@/lib/unlock-test'
-import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw, StickyNote } from 'lucide-react'
+import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Clock, RotateCcw, StickyNote, Play, Zap } from 'lucide-react'
 
 const getModuleNoteCount = (moduleId: number) => {
   if (typeof window === 'undefined') return 0
@@ -106,22 +106,10 @@ export default function FormationOverview() {
           const effectiveStatus = isLocked && testPassed ? 'available' : mod.status
           const effectiveLocked = isLocked && !testPassed
 
-          const handleCardClick = (e: React.MouseEvent) => {
-            if (effectiveLocked) {
-              e.preventDefault()
-              return
-            }
-            if (expandedId === mod.id) {
-              router.push(`/formation/${mod.id}`)
-            } else {
-              setExpandedId(expandedId === mod.id ? null : mod.id)
-            }
-          }
-
           return (
             <div
               key={mod.id}
-              onClick={handleCardClick}
+              onClick={() => setExpandedId(expandedId === mod.id ? null : mod.id)}
               style={{
                 background: 'var(--bg-card)',
                 border: `2px solid ${effectiveStatus === 'current' ? '#6D5EF5' : 'var(--border)'}`,
@@ -129,79 +117,63 @@ export default function FormationOverview() {
                 padding: '16px 20px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 0,
-                opacity: effectiveLocked ? 0.85 : 1,
-                cursor: effectiveLocked ? 'default' : 'pointer',
+                opacity: effectiveLocked ? 0.75 : 1,
+                cursor: 'pointer',
                 transition: 'all 0.2s',
                 boxShadow: effectiveStatus === 'current' ? '0 0 0 4px rgba(109,94,245,0.1)' : 'none',
               }}
-              onMouseEnter={(e) => {
-                if (!effectiveLocked) {
-                  e.currentTarget.style.borderColor = '#6D5EF5'
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!effectiveLocked) {
-                  e.currentTarget.style.borderColor = effectiveStatus === 'current' ? '#6D5EF5' : 'var(--border)'
-                }
-              }}
+              onMouseEnter={e => { if (!effectiveLocked) e.currentTarget.style.borderColor = '#6D5EF5' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = effectiveStatus === 'current' ? '#6D5EF5' : 'var(--border)' }}
             >
-              {/* Ligne principale : icône + contenu */}
+              {/* Ligne principale */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                
+
                 {/* Icône ronde */}
                 <div style={{
-                  width: 64, height: 64,
+                  width: 56, height: 56,
                   background: colors.bg,
                   border: `3px solid ${colors.border}`,
                   borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 24, fontWeight: 800, color: colors.text,
+                  fontSize: 22, fontWeight: 800, color: colors.text,
                   boxShadow: `0 4px 0 ${colors.shadow}`,
                   flexShrink: 0, position: 'relative',
                 }}>
-                  {isDone ? <CheckCircle2 size={28} strokeWidth={2.5} /> : effectiveLocked ? <Lock size={22} strokeWidth={2.5} /> : mod.id}
+                  {isDone ? <CheckCircle2 size={26} strokeWidth={2.5} /> : effectiveLocked ? <Lock size={20} strokeWidth={2.5} /> : mod.id}
                   {mod.status === 'current' && (
-                    <div style={{ position: 'absolute', bottom: -6, right: -6, background: '#FF9600', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--bg-card)' }}>
-                      <Flame size={12} color="white" strokeWidth={2.5} />
+                    <div style={{ position: 'absolute', bottom: -4, right: -4, background: '#FF9600', borderRadius: '50%', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--bg-card)' }}>
+                      <Flame size={11} color="white" strokeWidth={2.5} />
                     </div>
                   )}
                 </div>
 
-                {/* Contenu texte */}
+                {/* Contenu */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   {/* Module X · durée */}
                   <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 3 }}>
                     Module {mod.id} · {mod.duree}
                   </div>
                   {/* Titre */}
-                  <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-title)', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-title)', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {mod.title}
                   </div>
-                  {/* Zone action — toujours à la même hauteur */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 32 }}>
+                  {/* Zone action */}
+                  <div style={{ display: 'flex', alignItems: 'center', height: 28 }}>
+
+                    {/* Badge gauche */}
                     {isDone && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#22C55E', fontSize: 12, fontWeight: 700 }}>
-                          <Trophy size={13} strokeWidth={2.5} />
-                          Module maîtrisé
-                        </div>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); router.push(`/formation/${mod.id}`) }}
-                          style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'transparent', border: '1.5px solid #22C55E', color: '#22C55E', borderRadius: 8, padding: '5px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', height: 32 }}
-                        >
-                          ↺ Réviser
-                        </button>
-                      </div>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 700, color: '#22C55E' }}>
+                        <CheckCircle2 size={14} strokeWidth={2.5} /> Maîtrisé
+                      </span>
                     )}
                     {mod.status === 'current' && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ fontSize: 11, fontWeight: 800, color: '#6D5EF5', background: 'rgba(109,94,245,0.12)', padding: '5px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: 1, height: 32, display: 'flex', alignItems: 'center' }}>
-                          🔥 En cours
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 700, color: '#6D5EF5', background: 'rgba(109,94,245,0.12)', padding: '0 10px', borderRadius: 8, height: 28 }}>
+                          <Flame size={13} strokeWidth={2.5} /> En cours
                         </span>
                         {mod.progression > 0 && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <div style={{ width: 80, height: 6, background: 'rgba(109,94,245,0.15)', borderRadius: 3, overflow: 'hidden' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <div style={{ width: 60, height: 5, background: 'rgba(109,94,245,0.15)', borderRadius: 3, overflow: 'hidden' }}>
                               <div style={{ width: `${mod.progression}%`, height: '100%', background: '#6D5EF5', borderRadius: 3 }} />
                             </div>
                             <span style={{ fontSize: 12, fontWeight: 700, color: '#6D5EF5' }}>{mod.progression}%</span>
@@ -209,46 +181,53 @@ export default function FormationOverview() {
                         )}
                       </div>
                     )}
-                    {testPassed && isLocked && (
-                      <span style={{ fontSize: 11, fontWeight: 800, color: '#1CB0F6', background: 'rgba(28,176,246,0.15)', padding: '5px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: 1, height: 32, display: 'flex', alignItems: 'center' }}>
-                        ⚡ Test réussi
+                    {effectiveLocked && !testPassed && (
+                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                        🔒 Prérequis : module {mod.id - 1}
                       </span>
-                    )}
-                    {inCooldown && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,75,75,0.08)', border: '1.5px solid rgba(255,75,75,0.3)', borderRadius: 10, padding: '7px 12px', fontSize: 12, fontWeight: 700, color: '#FF4B4B', height: 32 }}>
-                        <Clock size={13} strokeWidth={2.5} />
-                        Test à nouveau dans {unlockState.cooldownHoursLeft}h
-                      </div>
-                    )}
-                    {effectiveLocked && !inCooldown && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                          🔒 Prérequis : module {mod.id - 1}
-                        </span>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); router.push(`/formation/${mod.id}/unlock-test`) }}
-                          style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(28,176,246,0.1)', border: '1.5px solid #1CB0F6', color: '#1CB0F6', borderRadius: 8, padding: '5px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', height: 32 }}
-                        >
-                          ⚡ Débloquer
-                        </button>
-                      </div>
                     )}
                     {!isDone && !effectiveLocked && mod.status !== 'current' && (
-                      <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', height: 32, display: 'flex', alignItems: 'center' }}>
-                        Disponible
-                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div style={{ width: 60, height: 5, background: 'rgba(109,94,245,0.15)', borderRadius: 3, overflow: 'hidden' }}>
+                          <div style={{ width: `${mod.progression || 0}%`, height: '100%', background: '#6D5EF5', borderRadius: 3 }} />
+                        </div>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)' }}>{mod.progression || 0}%</span>
+                      </div>
+                    )}
+
+                    {/* Bouton droit — largeur fixe 110px */}
+                    {isDone && (
+                      <button
+                        onClick={e => { e.stopPropagation(); router.push(`/formation/${mod.id}`) }}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: 'transparent', border: '1.5px solid #22C55E', color: '#22C55E', borderRadius: 8, height: 28, width: 110, fontSize: 12, fontWeight: 700, cursor: 'pointer', marginLeft: 'auto', flexShrink: 0 }}
+                      >
+                        <RotateCcw size={13} strokeWidth={2.5} /> Réviser
+                      </button>
+                    )}
+                    {!isDone && !effectiveLocked && (
+                      <button
+                        onClick={e => { e.stopPropagation(); router.push(`/formation/${mod.id}`) }}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: 'rgba(109,94,245,0.1)', border: '1.5px solid #6D5EF5', color: '#6D5EF5', borderRadius: 8, height: 28, width: 110, fontSize: 12, fontWeight: 700, cursor: 'pointer', marginLeft: 'auto', flexShrink: 0 }}
+                      >
+                        <Play size={13} strokeWidth={2.5} /> Apprendre
+                      </button>
+                    )}
+                    {effectiveLocked && !testPassed && (
+                      <button
+                        onClick={e => { e.stopPropagation(); router.push(`/formation/${mod.id}/unlock-test`) }}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: 'rgba(28,176,246,0.1)', border: '1.5px solid #1CB0F6', color: '#1CB0F6', borderRadius: 8, height: 28, width: 110, fontSize: 12, fontWeight: 700, cursor: 'pointer', marginLeft: 'auto', flexShrink: 0 }}
+                      >
+                        <Zap size={13} strokeWidth={2.5} /> Débloquer
+                      </button>
                     )}
                   </div>
                 </div>
               </div>
 
-              {/* Accordéon description */}
+              {/* Accordéon */}
               {expandedId === mod.id && (
                 <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)', fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                   {mod.description}
-                  <div style={{ marginTop: 8, fontSize: 12, color: '#a78bfa', fontWeight: 600 }}>
-                    Cliquer à nouveau pour ouvrir →
-                  </div>
                 </div>
               )}
             </div>
