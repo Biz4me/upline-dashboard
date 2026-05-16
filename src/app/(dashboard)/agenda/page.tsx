@@ -24,7 +24,7 @@ const EVENT_TYPES: Record<EventType, { label: string; color: string; bg: string;
 }
 
 const INITIAL_EVENTS: Event[] = [
-  { id: 1, title: 'RDV Marie Dupont', date: '2026-05-18', time: '14:00', type: 'rdv', prospect: 'Marie Dupont', desc: "Préparer objection 'c'est une pyramide'" },
+  { id: 1, title: 'RDV Marie Dupont', date: '2026-05-18', time: '14:00', type: 'rdv', prospect: 'Marie Dupont', desc: 'Préparer objection "c\'est une pyramide"' },
   { id: 2, title: "Réunion d'information", date: '2026-05-19', time: '19:00', type: 'reunion', desc: '3 invités confirmés' },
   { id: 3, title: 'Séminaire Herbalife', date: '2026-05-24', time: '09:00', type: 'evenement', desc: 'Convention régionale — Lyon' },
   { id: 4, title: 'Suivi Jean Martin', date: '2026-05-20', time: '11:00', type: 'suivi', prospect: 'Jean Martin' },
