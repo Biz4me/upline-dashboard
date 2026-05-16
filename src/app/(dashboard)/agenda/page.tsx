@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Plus, Clock, Users, Star, BookOpen, UserCheck, X, Check } from 'lucide-react'
 
 type EventType = 'rdv' | 'reunion' | 'evenement' | 'formation' | 'suivi' | 'autre'
@@ -42,6 +42,11 @@ export default function AgendaPage() {
   const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate())
   const [showModal, setShowModal] = useState(false)
   const [view, setView] = useState<'mois' | 'liste'>('mois')
+
+  useEffect(() => {
+    if (window.innerWidth < 768) setView('liste')
+  }, [])
+
   const [newEvent, setNewEvent] = useState<Partial<Event>>({ type: 'rdv', date: '', time: '', title: '' })
 
   const year = currentDate.getFullYear()
@@ -108,10 +113,10 @@ export default function AgendaPage() {
       </div>
 
       {view === 'mois' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 20 }}>
+        <div className="grid-auto" style={{ gap: 20 }}>
 
           {/* Calendrier */}
-          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden', overflowX: 'auto' }}>
             {/* Nav mois */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
               <button onClick={prevMonth} style={{ background: 'var(--bg-page)', border: '1px solid var(--border)', borderRadius: 8, padding: '6px 10px', cursor: 'pointer', color: 'var(--text)', display: 'flex', alignItems: 'center' }}>

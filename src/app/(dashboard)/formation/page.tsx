@@ -124,9 +124,9 @@ export default function FormationOverview() {
                 padding: '16px 24px',
                 display: 'flex',
                 alignItems: 'center',
-                height: 140,
-                minHeight: 140,
-                maxHeight: 140,
+                minHeight: 120,
+                height: 'auto',
+                maxHeight: 'none',
                 overflow: 'hidden',
                 gap: 20,
                 opacity: effectiveLocked ? 0.85 : 1,
@@ -187,7 +187,7 @@ export default function FormationOverview() {
                 )}
               </div>
 
-              <div style={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', flexDirection: 'column', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 2, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1 }}>
                     Module {mod.id} · {mod.duree}

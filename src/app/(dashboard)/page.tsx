@@ -94,7 +94,7 @@ export default function Accueil() {
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+            <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 20, fontWeight: 900, color: '#FF9600' }}>{briefing.streak} 🔥</div>
                 <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Streak</div>
@@ -107,7 +107,7 @@ export default function Accueil() {
           </div>
 
           {/* Contenu briefing en grille */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, position: 'relative' }}>
+          <div className="grid-3" style={{ gap: 16, position: 'relative' }}>
 
             {/* RDV du jour */}
             <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '14px 16px' }}>

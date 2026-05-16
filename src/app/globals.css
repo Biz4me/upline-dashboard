@@ -227,3 +227,26 @@
   .hide-mobile { display: none !important; }
   .full-mobile { width: 100% !important; }
 }
+
+/* Daily Briefing responsive */
+@media (max-width: 768px) {
+  .briefing-grid { grid-template-columns: 1fr !important; }
+  .briefing-streak { display: none !important; }
+}
+
+/* Agenda responsive */
+@media (max-width: 768px) {
+  .agenda-calendar { overflow-x: auto; min-width: 500px; }
+}
+
+/* Formation cards */
+@media (max-width: 768px) {
+  .formation-card { height: auto !important; min-height: 100px !important; max-height: none !important; }
+  .formation-card-inner { flex-wrap: wrap !important; }
+}
+
+/* Tabs responsive */
+@media (max-width: 480px) {
+  .tabs-scroll { overflow-x: auto; flex-wrap: nowrap !important; }
+  .tabs-scroll button { flex-shrink: 0; }
+}

@@ -184,9 +184,9 @@ export default function CroissancePage() {
           </div>
 
           {/* Sous-tabs */}
-          <div style={{ display: 'flex', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 5, marginBottom: 24, width: 'fit-content' }}>
+          <div style={{ display: 'flex', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 5, marginBottom: 24, width: '100%' }}>
             {[['badges', '🏅 Badges'], ['defis', '⚡ Défis']].map(([id, label]) => (
-              <button key={id} onClick={() => setBadgeTab(id as any)} style={{ background: badgeTab === id ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : 'transparent', border: 'none', color: badgeTab === id ? 'white' : 'var(--text-secondary)', borderRadius: 10, padding: '9px 22px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+              <button key={id} onClick={() => setBadgeTab(id as any)} style={{ background: badgeTab === id ? 'linear-gradient(135deg, #6D5EF5, #22D3EE)' : 'transparent', border: 'none', color: badgeTab === id ? 'white' : 'var(--text-secondary)', borderRadius: 10, padding: '9px 22px', fontSize: 13, fontWeight: 700, cursor: 'pointer', flex: 1 }}>
                 {label}
               </button>
             ))}
